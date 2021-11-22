@@ -17,6 +17,9 @@ public class ReviewDTO {
 
     private Long productId;
 
+    public ReviewDTO() {
+    }
+
     public ReviewDTO(Long id) {
         this.id = id;
     }
