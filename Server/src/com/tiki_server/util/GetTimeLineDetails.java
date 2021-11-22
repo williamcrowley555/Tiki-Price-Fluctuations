@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GetReviewDetails {
+public class GetTimeLineDetails {
 
-    public ArrayList getProductDetails(String id)
+    public ArrayList getTimelineDetails(String id)
     {
         String url = "https://tiki.vn/api/v2/reviews?product_id=" + id + "&include=comments&page=1&limit=-1";
         Connection.Response response = null;
@@ -26,12 +26,10 @@ public class GetReviewDetails {
             {
                 hashMap = new HashMap<String,String>();
                 hashMap.put("id",node.get("data").get(i).get("id").textValue());
-                hashMap.put("title",node.get("data").get(i).get("title").textValue());
-                hashMap.put("content",node.get("data").get(i).get("content").textValue());
-                hashMap.put("commentCount",node.get("data").get(i).get("comment_count").textValue());
-                hashMap.put("rating",node.get("data").get(i).get("rating").textValue());
-                hashMap.put("imageUrl",node.get("data").get(i).get("images").get(0).get("full_path").textValue());
-                hashMap.put("productId",node.get("data").get(i).get("product_id").textValue());
+                hashMap.put("reviewCreatedDate",node.get("data").get(i).get("timeline").get("review_create_date").textValue());
+                hashMap.put("deliveryDate",node.get("data").get(i).get("timeline").get("delivery_date").textValue());
+                hashMap.put("content",node.get("data").get(i).get("timeline").get("content").textValue());
+                hashMap.put("explanation",node.get("data").get(i).get("timeline").get("explain").textValue());
                 arrayList.add(hashMap);
             }
 
