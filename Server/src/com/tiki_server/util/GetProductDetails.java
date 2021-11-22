@@ -20,7 +20,7 @@ public class GetProductDetails {
             Document document = response.parse();
             JsonNode node = new ObjectMapper().readTree(document.text());
             HashMap<String, String> hashMap = new HashMap<String,String>();
-            hashMap.put("id",node.get(id).textValue());
+            hashMap.put("id",node.get("id").textValue());
             hashMap.put("sku",node.get("sku").textValue());
             hashMap.put("name",node.get("name").textValue());
             hashMap.put("urlKey",node.get("url_key").textValue());
