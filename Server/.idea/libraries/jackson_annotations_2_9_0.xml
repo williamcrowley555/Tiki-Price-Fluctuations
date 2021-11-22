@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="jackson-annotations-2.9.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/com/tiki_server/libs/jackson-annotations-2.9.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/com/tiki_server/libs/jackson-core-2.9.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/com/tiki_server/libs/jackson-databind-2.9.5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

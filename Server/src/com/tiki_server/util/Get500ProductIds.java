@@ -1,5 +1,8 @@
 package com.tiki_server.util;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -24,12 +27,16 @@ public class Get500ProductIds {
                 {
                     return null;
                 }
+                JsonNode node = new ObjectMapper().readTree(document.text());
+                for (int j =0;i<100;j++) {
+                    arrayList.add(node.get("data").get(j).get("id").textValue());
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return null;
+        return arrayList;
     }
 
     private boolean isValid(String input)
@@ -48,4 +55,5 @@ public class Get500ProductIds {
             return true;
         return false;
     }
+
 }
