@@ -1,6 +1,6 @@
 package com.tiki_server.dto;
 
-public class OnfigurableProductDTO {
+public class ConfigurableProductDTO {
     private Long id;
 
     private Long childId;
@@ -21,10 +21,10 @@ public class OnfigurableProductDTO {
 
     private Long productId;
 
-    public OnfigurableProductDTO() {
+    public ConfigurableProductDTO() {
     }
 
-    public OnfigurableProductDTO(Long id, Long childId, String imageUrl, String inventoryStatus, String name, String option1, Long price, String sku, String thumbnailUrl, Long productId) {
+    public ConfigurableProductDTO(Long id, Long childId, String imageUrl, String inventoryStatus, String name, String option1, Long price, String sku, String thumbnailUrl, Long productId) {
         this.id = id;
         this.childId = childId;
         this.imageUrl = imageUrl;

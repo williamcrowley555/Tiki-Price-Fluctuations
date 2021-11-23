@@ -1,16 +1,16 @@
 package com.tiki_server.mapper.impl;
 
-import com.tiki_server.dto.OnfigurableProductDTO;
+import com.tiki_server.dto.ConfigurableProductDTO;
 import com.tiki_server.mapper.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class OnfigurableProductMapper implements RowMapper<OnfigurableProductDTO> {
+public class ConfigurableProductMapper implements RowMapper<ConfigurableProductDTO> {
     @Override
-    public OnfigurableProductDTO mapRow(ResultSet rs) {
+    public ConfigurableProductDTO mapRow(ResultSet rs) {
         try {
-            OnfigurableProductDTO onfigurableProduct = new OnfigurableProductDTO();
+            ConfigurableProductDTO onfigurableProduct = new ConfigurableProductDTO();
             onfigurableProduct.setId(rs.getLong("id"));
             onfigurableProduct.setChildId(rs.getLong("childId"));
             onfigurableProduct.setImageUrl(rs.getString("imageUrl"));
