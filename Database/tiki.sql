@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 8.0.23, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.13, for Win64 (x86_64)
 --
 -- Host: localhost    Database: tiki
 -- ------------------------------------------------------
--- Server version	8.0.23
+-- Server version	8.0.13
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
+ SET NAMES utf8 ;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -21,9 +21,9 @@
 
 DROP TABLE IF EXISTS `category`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `category` (
-  `id` bigint NOT NULL,
+  `id` bigint(20) NOT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -35,6 +35,7 @@ CREATE TABLE `category` (
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
+INSERT INTO `category` VALUES (316,'Sách tiếng Việt'),(1795,'Điện thoại Smartphone'),(2342,'Thiết Bị Y Tế'),(2553,'Tã quần'),(28618,'Bàn Phím Rời - Ốp Tích Hợp Bàn Phím'),(49288,'Chân váy bút chì'),(49588,'Giày lười mũi nhọn'),(53058,'Phụ kiện cây & hoa');
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -44,17 +45,17 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `comment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `comment` (
-  `id` bigint NOT NULL,
+  `id` bigint(20) NOT NULL,
   `avatar_url` varchar(255) DEFAULT NULL,
   `commentator` varchar(255) DEFAULT NULL,
   `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `create_at` bigint DEFAULT NULL,
+  `create_at` bigint(20) DEFAULT NULL,
   `fullname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `is_reported` bit(1) DEFAULT NULL,
-  `status` bigint DEFAULT NULL,
-  `review_id` bigint DEFAULT NULL,
+  `status` bigint(20) DEFAULT NULL,
+  `review_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKnf4ni761w29tmtgdxymmgvg8r` (`review_id`),
   CONSTRAINT `FKnf4ni761w29tmtgdxymmgvg8r` FOREIGN KEY (`review_id`) REFERENCES `review` (`id`)
@@ -76,18 +77,18 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `configurable_product`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `configurable_product` (
-  `id` bigint NOT NULL,
-  `child_id` bigint DEFAULT NULL,
+  `id` bigint(20) NOT NULL,
+  `child_id` bigint(20) DEFAULT NULL,
   `image_url` varchar(255) DEFAULT NULL,
   `inventory_status` varchar(255) DEFAULT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `option1` varchar(255) DEFAULT NULL,
-  `price` bigint DEFAULT NULL,
+  `price` bigint(20) DEFAULT NULL,
   `sku` varchar(255) DEFAULT NULL,
   `thumbnail_url` varchar(255) DEFAULT NULL,
-  `product_id` bigint DEFAULT NULL,
+  `product_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKkp6o26wn5hymwboyns4sbpbn9` (`product_id`),
   CONSTRAINT `FKkp6o26wn5hymwboyns4sbpbn9` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
@@ -109,16 +110,16 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `history` (
-  `id` bigint NOT NULL,
+  `id` bigint(20) NOT NULL,
   `date` date DEFAULT NULL,
-  `discount` bigint DEFAULT NULL,
-  `discount_rate` int DEFAULT NULL,
-  `list_price` bigint DEFAULT NULL,
-  `original_price` bigint DEFAULT NULL,
-  `price` bigint DEFAULT NULL,
-  `product_id` bigint DEFAULT NULL,
+  `discount` bigint(20) DEFAULT NULL,
+  `discount_rate` int(11) DEFAULT NULL,
+  `list_price` bigint(20) DEFAULT NULL,
+  `original_price` bigint(20) DEFAULT NULL,
+  `price` bigint(20) DEFAULT NULL,
+  `product_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKk7kr6qqrnq1owjvmy7pk1tak6` (`product_id`),
   CONSTRAINT `FKk7kr6qqrnq1owjvmy7pk1tak6` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
@@ -140,26 +141,26 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `product`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `product` (
-  `id` bigint NOT NULL,
-  `all_time_quantity_sold` bigint DEFAULT NULL,
+  `id` bigint(20) NOT NULL,
+  `all_time_quantity_sold` bigint(20) DEFAULT NULL,
   `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `discount` bigint DEFAULT NULL,
-  `discount_rate` bigint DEFAULT NULL,
-  `favourite_count` bigint DEFAULT NULL,
+  `discount` bigint(20) DEFAULT NULL,
+  `discount_rate` bigint(20) DEFAULT NULL,
+  `favourite_count` bigint(20) DEFAULT NULL,
   `image_url` varchar(255) DEFAULT NULL,
-  `list_price` bigint DEFAULT NULL,
+  `list_price` bigint(20) DEFAULT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `original_price` bigint DEFAULT NULL,
-  `price` bigint DEFAULT NULL,
-  `rating_average` bigint DEFAULT NULL,
-  `review_count` bigint DEFAULT NULL,
+  `original_price` bigint(20) DEFAULT NULL,
+  `price` bigint(20) DEFAULT NULL,
+  `rating_average` bigint(20) DEFAULT NULL,
+  `review_count` bigint(20) DEFAULT NULL,
   `short_description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `sku` varchar(255) DEFAULT NULL,
   `url_key` varchar(255) DEFAULT NULL,
   `url_path` varchar(255) DEFAULT NULL,
-  `category_id` bigint DEFAULT NULL,
+  `category_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK1mtsbur82frn64de7balymq9s` (`category_id`),
   CONSTRAINT `FK1mtsbur82frn64de7balymq9s` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`)
@@ -181,16 +182,16 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `review`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `review` (
-  `id` bigint NOT NULL,
-  `comment_count` bigint DEFAULT NULL,
+  `id` bigint(20) NOT NULL,
+  `comment_count` bigint(20) DEFAULT NULL,
   `content` varchar(255) DEFAULT NULL,
   `image_url` varchar(255) DEFAULT NULL,
-  `rating` int DEFAULT NULL,
+  `rating` int(11) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
-  `product_id` bigint DEFAULT NULL,
+  `product_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKiyof1sindb9qiqr9o8npj8klt` (`product_id`),
   CONSTRAINT `FKiyof1sindb9qiqr9o8npj8klt` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`)
@@ -212,14 +213,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `timeline`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `timeline` (
-  `id` bigint NOT NULL,
+  `id` bigint(20) NOT NULL,
   `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `delivery_date` datetime DEFAULT NULL,
   `explaination` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `review_created_date` datetime DEFAULT NULL,
-  `review_id` bigint DEFAULT NULL,
+  `review_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK8poei6hvewfurpd95gubna118` (`review_id`),
   CONSTRAINT `FK8poei6hvewfurpd95gubna118` FOREIGN KEY (`review_id`) REFERENCES `review` (`id`)
@@ -234,10 +235,6 @@ LOCK TABLES `timeline` WRITE;
 /*!40000 ALTER TABLE `timeline` DISABLE KEYS */;
 /*!40000 ALTER TABLE `timeline` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Dumping routines for database 'tiki'
---
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -248,4 +245,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-21 18:39:15
+-- Dump completed on 2021-11-23 20:38:56
