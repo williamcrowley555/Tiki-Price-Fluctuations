@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 public class GetProductDetails {
 
-    public HashMap<String, String> getProductDetails(String id)
+    public HashMap<String, Object> getProductDetails(Long id)
     {
         String url = "https://tiki.vn/api/v2/products/"+id;
         Connection.Response response = null;
@@ -19,24 +19,26 @@ public class GetProductDetails {
             response = Jsoup.connect(url).ignoreContentType(true).method(Connection.Method.GET).execute();
             Document document = response.parse();
             JsonNode node = new ObjectMapper().readTree(document.text());
-            HashMap<String, String> hashMap = new HashMap<String,String>();
-            hashMap.put("id",node.get("id").textValue());
-            hashMap.put("sku",node.get("sku").textValue());
-            hashMap.put("name",node.get("name").textValue());
-            hashMap.put("urlKey",node.get("url_key").textValue());
-            hashMap.put("urlPath",node.get("url_path").textValue());
-            hashMap.put("price",node.get("price").textValue());
-            hashMap.put("listPrice",node.get("list_price").textValue());
-            hashMap.put("originalPrice",node.get("original_price").textValue());
-            hashMap.put("discount",node.get("discount").textValue());
-            hashMap.put("discountRate",node.get("discount_rate").textValue());
-            hashMap.put("ratingAverage",node.get("rating_average").textValue());
-            hashMap.put("reviewCount",node.get("review_count").textValue());
-            hashMap.put("favoriteCount",node.get("favorite_count").textValue());
-            hashMap.put("shortDescription",node.get("short_description").textValue());
-            hashMap.put("description",node.get("description").textValue());
-            hashMap.put("imagesUrl",node.get("images").get("base_url").textValue());
-            hashMap.put("allTimeQuantitySold",node.get("all_time_quantity_sold").textValue());
+            System.out.println(node.get("id"));
+            HashMap<String, Object> hashMap = new HashMap<String,Object>();
+            hashMap.put("id",node.get("id"));
+            hashMap.put("sku",node.get("sku"));
+            hashMap.put("name",node.get("name"));
+            hashMap.put("urlKey",node.get("url_key"));
+            hashMap.put("urlPath",node.get("url_path"));
+            hashMap.put("price",node.get("price"));
+            hashMap.put("listPrice",node.get("list_price"));
+            hashMap.put("originalPrice",node.get("original_price"));
+            hashMap.put("discount",node.get("discount"));
+            hashMap.put("discountRate",node.get("discount_rate"));
+            hashMap.put("ratingAverage",node.get("rating_average"));
+            hashMap.put("reviewCount",node.get("review_count"));
+            hashMap.put("favoriteCount",node.get("favorite_count"));
+            hashMap.put("shortDescription",node.get("short_description"));
+            hashMap.put("description",node.get("description"));
+            hashMap.put("imagesUrl",node.get("images").get(0).get("base_url"));
+            hashMap.put("allTimeQuantitySold",node.get("all_time_quantity_sold"));
+            System.out.println(hashMap);
             return hashMap;
         } catch (IOException e) {
             e.printStackTrace();

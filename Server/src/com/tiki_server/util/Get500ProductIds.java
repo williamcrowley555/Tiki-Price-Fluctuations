@@ -28,14 +28,16 @@ public class Get500ProductIds {
                     return null;
                 }
                 JsonNode node = new ObjectMapper().readTree(document.text());
-                for (int j =0;i<100;j++) {
-                    arrayList.add(node.get("data").get(j).get("id").textValue());
+
+                for (int j =0;j<100;j++) {
+                    arrayList.add(node.get("data").get(j).get("id"));
                 }
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        System.out.println(arrayList);
         return arrayList;
     }
 
