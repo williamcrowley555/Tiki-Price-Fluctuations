@@ -21,7 +21,7 @@ public class ProductDTO {
 
     private Long discountRate;
 
-    private Long ratingAverage;
+    private float ratingAverage;
 
     private Long reviewCount;
 
@@ -133,19 +133,17 @@ public class ProductDTO {
         this.discount = discount;
     }
 
-    public Long getDiscountRate() {
-        return discountRate;
-    }
+    public Long getDiscountRate() { return discountRate; }
 
     public void setDiscountRate(Long discountRate) {
         this.discountRate = discountRate;
     }
 
-    public Long getRatingAverage() {
+    public float getRatingAverage() {
         return ratingAverage;
     }
 
-    public void setRatingAverage(Long ratingAverage) {
+    public void setRatingAverage(float ratingAverage) {
         this.ratingAverage = ratingAverage;
     }
 
@@ -161,7 +159,7 @@ public class ProductDTO {
         return favouriteCount;
     }
 
-    public void setFavouriteCount(Long favouriteCount) {
+    public void setFavoriteCount(Long favouriteCount) {
         this.favouriteCount = favouriteCount;
     }
 

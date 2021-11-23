@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Get500ProductIds {
-    public ArrayList<String> getget500ProductIds(String id) {
+    public ArrayList get500ProductIds(String id) {
         ArrayList arrayList = new ArrayList();
         String url = "https://tiki.vn/api/personalish/v1/blocks/listings?limit=100&categoryId=" + id + "&category="
                 + id;
@@ -37,7 +37,6 @@ public class Get500ProductIds {
                 e.printStackTrace();
             }
         }
-        System.out.println(arrayList);
         return arrayList;
     }
 
