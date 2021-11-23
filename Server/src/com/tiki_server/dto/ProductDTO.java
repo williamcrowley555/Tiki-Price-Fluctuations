@@ -1,38 +1,61 @@
 package com.tiki_server.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ProductDTO {
+
+    @JsonProperty("id")
     private Long id;
 
+    @JsonProperty("sku")
     private String sku;
 
+    @JsonProperty("name")
     private String name;
 
+    @JsonProperty("url_key")
     private String urlKey;
 
+    @JsonProperty("url_path")
     private String urlPath;
 
+    @JsonProperty("price")
     private Long price;
 
+    @JsonProperty("list_price")
     private Long listPrice;
 
+    @JsonProperty("original_price")
     private Long originalPrice;
 
+    @JsonProperty("discount")
     private Long discount;
 
+    @JsonProperty("discount_rate")
     private Long discountRate;
 
-    private float ratingAverage;
+    @JsonProperty("rating_average")
+    private double ratingAverage;
 
+    @JsonProperty("review_count")
     private Long reviewCount;
 
+    @JsonProperty("favourite_count")
     private Long favouriteCount;
 
+    @JsonProperty("short_description")
     private String shortDescription;
 
-    private String description;
-
+    @JsonProperty("image_url")
     private String imageUrl;
 
+    @JsonProperty("all_time_quantity_sold")
     private Long allTimeQuantitySold;
 
     private Long categoryId;
@@ -40,7 +63,12 @@ public class ProductDTO {
     public ProductDTO() {
     }
 
-    public ProductDTO(Long id, String sku, String name, String urlKey, String urlPath, Long price, Long listPrice, Long originalPrice, Long discount, Long discountRate, Long ratingAverage, Long reviewCount, Long favouriteCount, String shortDescription, String description, String imageUrl, Long allTimeQuantitySold, Long categoryId) {
+    @JsonProperty("images")
+    private void unpackNested(List<Map<String,Object>> product) {
+        this.imageUrl = (String) product.get(0).get("base_url");
+    }
+
+    public ProductDTO(Long id, Long productId, String sku, String name, String urlKey, String urlPath, Long price, Long listPrice, Long originalPrice, Long discount, Long discountRate, Long ratingAverage, Long reviewCount, Long favouriteCount, String shortDescription, String imageUrl, Long allTimeQuantitySold, Long categoryId) {
         this.id = id;
         this.sku = sku;
         this.name = name;
@@ -55,7 +83,6 @@ public class ProductDTO {
         this.reviewCount = reviewCount;
         this.favouriteCount = favouriteCount;
         this.shortDescription = shortDescription;
-        this.description = description;
         this.imageUrl = imageUrl;
         this.allTimeQuantitySold = allTimeQuantitySold;
         this.categoryId = categoryId;
@@ -139,11 +166,11 @@ public class ProductDTO {
         this.discountRate = discountRate;
     }
 
-    public float getRatingAverage() {
+    public double getRatingAverage() {
         return ratingAverage;
     }
 
-    public void setRatingAverage(float ratingAverage) {
+    public void setRatingAverage(double ratingAverage) {
         this.ratingAverage = ratingAverage;
     }
 
@@ -169,14 +196,6 @@ public class ProductDTO {
 
     public void setShortDescription(String shortDescription) {
         this.shortDescription = shortDescription;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getImageUrl() {
@@ -220,7 +239,6 @@ public class ProductDTO {
                 ", reviewCount=" + reviewCount +
                 ", favouriteCount=" + favouriteCount +
                 ", shortDescription='" + shortDescription + '\'' +
-                ", description='" + description + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", allTimeQuantitySold=" + allTimeQuantitySold +
                 ", categoryId=" + categoryId +

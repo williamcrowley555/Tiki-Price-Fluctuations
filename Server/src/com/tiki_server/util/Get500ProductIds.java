@@ -1,5 +1,7 @@
 package com.tiki_server.util;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,26 +12,26 @@ import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
+import java.util.List;
+import java.util.Map;
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Get500ProductIds {
+    public ArrayList IDS = new ArrayList();
     public ArrayList get500ProductIds(String id) {
         ArrayList arrayList = new ArrayList();
         String url = "https://tiki.vn/api/personalish/v1/blocks/listings?limit=100&categoryId=" + id + "&category="
                 + id;
-        for (int i =1;i<=5;i++)
-        {
+        for (int i = 1; i <= 5; i++) {
             String temp = url + "&page=" + i;
             Connection.Response response = null;
             try {
                 response = Jsoup.connect(temp).ignoreContentType(true).method(Connection.Method.GET).execute();
                 Document document = response.parse();
-                if(!isValid(document.text()))
-                {
+                if (!isValid(document.text())) {
                     return null;
                 }
                 JsonNode node = new ObjectMapper().readTree(document.text());
-
-                for (int j =0;j<100;j++) {
+                for (int j = 0; j < 100; j++) {
                     arrayList.add(node.get("data").get(j).get("id"));
                 }
 

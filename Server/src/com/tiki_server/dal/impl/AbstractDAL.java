@@ -38,7 +38,7 @@ public class AbstractDAL<T> implements GenericDAL<T>{
         try {
             int index;
             for(int i = 0; i < parameters.length; ++i) {
-                index = i + 1; 
+                index = i + 1;
                 Object parameter = parameters[i];
                 if(parameter instanceof Long) {
                         statement.setLong(index, (Long) parameter);
@@ -46,6 +46,8 @@ public class AbstractDAL<T> implements GenericDAL<T>{
                         statement.setString(index, (String) parameter);
                 } else if(parameter instanceof Integer) {
                         statement.setInt(index, (Integer) parameter);
+                }else if(parameter instanceof Double) {
+                    statement.setDouble(index, (Double) parameter);
                 }else if(parameter instanceof Boolean) {
                         statement.setBoolean(index, (Boolean) parameter);
                 } else if(parameter instanceof Date) {
@@ -114,16 +116,16 @@ public class AbstractDAL<T> implements GenericDAL<T>{
             connection = DBConnectionUtil.getConnection();
             connection.setAutoCommit(false);
             statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            //, PreparedStatement.RETURN_GENERATED_KEYS
             setParameters(statement, parameters);
             statement.executeUpdate();
             resultSet = statement.getGeneratedKeys();
-            
+
             if(resultSet.next()) {
                 id = resultSet.getLong(1);
             }
             
             connection.commit();
-            
             return id;
         } catch (SQLException e) {
                 e.printStackTrace();

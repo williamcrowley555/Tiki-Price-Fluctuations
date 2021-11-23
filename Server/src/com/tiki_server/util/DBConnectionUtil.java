@@ -24,7 +24,6 @@ public class DBConnectionUtil {
         try {
             Class.forName ("com.mysql.jdbc.Driver").newInstance();
             connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            System.out.println("connect");
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
