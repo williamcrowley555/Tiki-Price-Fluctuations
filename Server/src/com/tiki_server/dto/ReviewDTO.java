@@ -1,23 +1,45 @@
 package com.tiki_server.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.List;
+import java.util.Map;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReviewDTO {
+    @JsonProperty("id")
     private Long id;
 
+    @JsonProperty("title")
     private String title;
 
+    @JsonProperty("content")
     private String content;
 
+    @JsonIgnore
+    @JsonProperty("status")
     private String status;
 
+    @JsonProperty("comment_count")
     private Long commentCount;
 
+    @JsonProperty("rating")
     private int rating;
 
     private String imageUrl;
 
+    @JsonProperty("product_id")
     private Long productId;
 
     public ReviewDTO() {
+    }
+
+    @JsonProperty("images")
+    public void unpackNested(List<Map<String,Object>> images)
+    {
+        this.imageUrl = (String)images.get(0).get("full_path");
     }
 
     public ReviewDTO(Long id) {

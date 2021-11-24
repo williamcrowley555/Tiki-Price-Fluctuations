@@ -1,22 +1,37 @@
 package com.tiki_server.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.Map;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CommentDTO {
+    @JsonProperty("id")
     private Long id;
 
+//    @JsonProperty("commentator")
     private String commentator;
 
+//    @JsonProperty("fullname")
     private String fullname;
 
+//    @JsonProperty("avatar_url")
     private String avatarUrl;
 
+//    @JsonProperty("content")
     private String content;
 
+//    @JsonProperty("create_at")
     private Long createAt;
 
+//    @JsonProperty("status")
     private Long status;
 
+//    @JsonProperty("is_reported")
     private Boolean isReported;
 
+//    @JsonProperty("review_id")
     private Long reviewId;
 
     public CommentDTO() {

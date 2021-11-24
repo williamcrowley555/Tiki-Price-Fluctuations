@@ -22,19 +22,19 @@ public class ProductDAL extends AbstractDAL<ProductDTO> implements IProductDAL {
 
     @Override
     public Long save(ProductDTO product) {
-        String sql = "INSERT INTO product (id, all_time_quantity_sold, discount, discount_rate, favourite_count, image_url, list_price, name, original_price, price, rating_average, review_count, short_description, sku, url_key, url_path, category_id) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        return insert(sql, product.getId(), product.getAllTimeQuantitySold(), product.getDiscount(), product.getDiscountRate(), product.getFavouriteCount(), product.getImageUrl(), product.getListPrice(), product.getName(), product.getOriginalPrice(), product.getPrice(), product.getRatingAverage(), product.getReviewCount(), product.getShortDescription(), product.getSku(), product.getUrlKey(), product.getUrlPath(), product.getCategoryId());
+        String sql = "INSERT INTO product (id, all_time_quantity_sold, discount, discount_rate, favourite_count, image_url, list_price, name, original_price, price, rating_average, review_count, description,short_description, sku, url_key, url_path, category_id) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        return insert(sql, product.getId(), product.getAllTimeQuantitySold(), product.getDiscount(), product.getDiscountRate(), product.getFavouriteCount(), product.getImageUrl(), product.getListPrice(), product.getName(), product.getOriginalPrice(), product.getPrice(), product.getRatingAverage(), product.getReviewCount(), product.getDescription(),product.getShortDescription(), product.getSku(), product.getUrlKey(), product.getUrlPath(), product.getCategoryId());
     }
 
     @Override
     public void update(ProductDTO product) {
         String sql = "UPDATE product SET all_time_quantity_sold = ?, discount = ?, discount_rate = ?, favourite_count = ?, image_url = ?, "
                 + "list_price = ?, name = ?, original_price = ?, price = ?, "
-                + "rating_average = ?, review_count = ?, short_description = ?, sku = ?, "
+                + "rating_average = ?, review_count = ?, description = ? ,short_description = ?, sku = ?, "
                 + "url_key = ?, url_path = ?, category_id = ? WHERE id = ?";
         update(sql, product.getAllTimeQuantitySold(), product.getDiscount(), product.getDiscountRate(), product.getFavouriteCount(),
                 product.getImageUrl(), product.getListPrice(), product.getName(), product.getOriginalPrice(), product.getPrice(),
-                product.getRatingAverage(), product.getReviewCount(), product.getShortDescription(), product.getSku(), product.getUrlKey(),
+                product.getRatingAverage(), product.getReviewCount(), product.getDescription(), product.getShortDescription(), product.getSku(), product.getUrlKey(),
                 product.getUrlPath(), product.getCategoryId(), product.getId());
     }
 

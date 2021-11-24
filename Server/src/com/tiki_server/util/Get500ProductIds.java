@@ -30,9 +30,13 @@ public class Get500ProductIds {
                 if (!isValid(document.text())) {
                     return null;
                 }
-                JsonNode node = new ObjectMapper().readTree(document.text());
-                for (int j = 0; j < 100; j++) {
-                    arrayList.add(node.get("data").get(j).get("id"));
+                JsonNode node = new ObjectMapper().readTree(document.text()).get("data");
+                if(node.isArray())
+                {
+                    for(JsonNode objNode : node)
+                    {
+                        arrayList.add(objNode.get("id"));
+                    }
                 }
 
             } catch (IOException e) {

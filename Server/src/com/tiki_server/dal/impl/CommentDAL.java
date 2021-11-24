@@ -22,7 +22,7 @@ public class CommentDAL extends AbstractDAL<CommentDTO> implements ICommentDAL {
 
     @Override
     public Long save(CommentDTO comment) {
-        String sql = "INSERT INTO comment(id, avatar_url, commentator, content, create_at, fullname, is_reported, status, review_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO comment(id, avatar_url, commentator, content, create_at, fullname, is_reported, status, review_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
         return insert(sql, comment.getId(), comment.getAvatarUrl(), comment.getCommentator(), comment.getContent(), comment.getCreateAt(), comment.getFullname(), comment.getReported(),
                 comment.getStatus(), comment.getReviewId());
     }

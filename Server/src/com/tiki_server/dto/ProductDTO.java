@@ -34,6 +34,9 @@ public class ProductDTO {
     @JsonProperty("original_price")
     private Long originalPrice;
 
+    @JsonProperty("description")
+    private String description;
+
     @JsonProperty("discount")
     private Long discount;
 
@@ -68,7 +71,7 @@ public class ProductDTO {
         this.imageUrl = (String) product.get(0).get("base_url");
     }
 
-    public ProductDTO(Long id, Long productId, String sku, String name, String urlKey, String urlPath, Long price, Long listPrice, Long originalPrice, Long discount, Long discountRate, Long ratingAverage, Long reviewCount, Long favouriteCount, String shortDescription, String imageUrl, Long allTimeQuantitySold, Long categoryId) {
+    public ProductDTO(Long id, Long productId, String sku, String name, String urlKey, String urlPath, Long price, Long listPrice, Long originalPrice, Long discount, Long discountRate, Long ratingAverage, Long reviewCount, Long favouriteCount, String shortDescription, String imageUrl, String description,Long allTimeQuantitySold, Long categoryId) {
         this.id = id;
         this.sku = sku;
         this.name = name;
@@ -86,6 +89,7 @@ public class ProductDTO {
         this.imageUrl = imageUrl;
         this.allTimeQuantitySold = allTimeQuantitySold;
         this.categoryId = categoryId;
+        this.description = description;
     }
 
     public Long getId() {
@@ -222,6 +226,12 @@ public class ProductDTO {
         this.categoryId = categoryId;
     }
 
+    public String getDescription() { return description; }
+
+    public void setDescription(String description) { this.description = description; }
+
+    public void setFavouriteCount(Long favouriteCount) { this.favouriteCount = favouriteCount; }
+
     @Override
     public String toString() {
         return "ProductDTO{" +
@@ -239,6 +249,7 @@ public class ProductDTO {
                 ", reviewCount=" + reviewCount +
                 ", favouriteCount=" + favouriteCount +
                 ", shortDescription='" + shortDescription + '\'' +
+                ", description='" + description + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", allTimeQuantitySold=" + allTimeQuantitySold +
                 ", categoryId=" + categoryId +
