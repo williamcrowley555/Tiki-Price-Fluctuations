@@ -18,7 +18,6 @@ public class ReviewDTO {
     @JsonProperty("content")
     private String content;
 
-    @JsonIgnore
     @JsonProperty("status")
     private String status;
 
@@ -39,7 +38,12 @@ public class ReviewDTO {
     @JsonProperty("images")
     public void unpackNested(List<Map<String,Object>> images)
     {
-        this.imageUrl = (String)images.get(0).get("full_path");
+        try {
+            this.imageUrl = (String)images.get(0).get("full_path");
+        } catch (Exception e)
+        {
+            this.imageUrl = null;
+        }
     }
 
     public ReviewDTO(Long id) {

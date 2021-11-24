@@ -1,25 +1,49 @@
 package com.tiki_server.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.List;
+import java.util.Map;
+
 public class ConfigurableProductDTO {
+    @JsonProperty("id")
     private Long id;
 
+    @JsonProperty("child_id")
     private Long childId;
 
     private String imageUrl;
 
+    @JsonProperty("inventory_status")
     private String inventoryStatus;
 
+    @JsonProperty("name")
     private String name;
 
+    @JsonProperty("option1")
     private String option1;
 
+    @JsonProperty("price")
     private Long price;
 
+    @JsonProperty("sku")
     private String sku;
 
+    @JsonProperty("thumbnail_url")
     private String thumbnailUrl;
 
     private Long productId;
+
+    @JsonProperty("images")
+    public void unpackNested(List<Map<String,Object>> images)
+    {
+        try {
+            this.imageUrl = (String)images.get(0).get("medium_url");
+        } catch(Exception ex)
+        {
+            this.imageUrl = null;
+        }
+    }
 
     public ConfigurableProductDTO() {
     }

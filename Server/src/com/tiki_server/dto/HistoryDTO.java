@@ -3,6 +3,7 @@ package com.tiki_server.dto;
 import java.time.LocalDate;
 
 public class HistoryDTO {
+
     private Long id;
 
     private LocalDate date;

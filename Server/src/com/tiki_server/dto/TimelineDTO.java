@@ -1,8 +1,12 @@
 package com.tiki_server.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
+import java.util.Map;
 
 public class TimelineDTO {
+
     private Long id;
 
     private Date reviewCreatedDate;
@@ -13,7 +17,17 @@ public class TimelineDTO {
 
     private String explaination;
 
+    @JsonProperty("id")
     private Long reviewId;
+
+    @JsonProperty("timeline")
+    public void unpackNested(Map<String,Object> timeline)
+    {
+        this.reviewCreatedDate = (Date)timeline.get("review_create_date");
+        this.deliveryDate = (Date)timeline.get("delivery_date");
+        this.content = (String)timeline.get("content");
+        this.explaination = (String)timeline.get("explain");
+    }
 
     public TimelineDTO() {
     }
