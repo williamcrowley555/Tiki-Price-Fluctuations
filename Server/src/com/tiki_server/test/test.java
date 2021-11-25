@@ -19,10 +19,10 @@ public class test {
         // categoryID list: 316, 915, 1815, 1883, 44816, 49288, 49588, 53058
         Long categoryId = 316l;
         //createProductDTO(categoryId);
-        ReviewBLL reviewBLL = new ReviewBLL();
-        ReviewDTO review = reviewBLL.findById(561841l);
-        System.out.println(review.getContent());
-        //createReviewDTO(categoryId);
+//        ReviewBLL reviewBLL = new ReviewBLL();
+//        ReviewDTO review = reviewBLL.findById(561841l);
+//        System.out.println(review.getContent());
+        createReviewDTO(categoryId);
         //createCommentDTO(categoryId);
     }
 
@@ -166,6 +166,6 @@ public class test {
 
     public static void checkChangePrice()
     {
-        
+
     }
 }

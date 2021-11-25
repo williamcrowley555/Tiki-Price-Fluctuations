@@ -116,7 +116,6 @@ public class AbstractDAL<T> implements GenericDAL<T>{
             connection = DBConnectionUtil.getConnection();
             connection.setAutoCommit(false);
             statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-            //, PreparedStatement.RETURN_GENERATED_KEYS
             setParameters(statement, parameters);
             statement.executeUpdate();
             resultSet = statement.getGeneratedKeys();
