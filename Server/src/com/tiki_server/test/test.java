@@ -16,6 +16,7 @@ import java.util.List;
 public class test {
 
     public static void main(String[] args) {
+<<<<<<< HEAD
         // categoryID list: 316, 915, 1815, 1883, 44816, 49288, 49588, 53058
         Long categoryId = 316l;
         //createProductDTO(categoryId);
@@ -23,7 +24,18 @@ public class test {
 //        ReviewDTO review = reviewBLL.findById(561841l);
 //        System.out.println(review.getContent());
         createReviewDTO(categoryId);
+=======
+        // categoryID list: 1801, 316, 915, 1815, 1883, 44816, 49288, 49588, 53058
+        Long categoryId = 1801l;
+      //  createProductDTO(categoryId);
+//        ReviewBLL reviewBLL = new ReviewBLL();
+//        ReviewDTO review = reviewBLL.findById(561841l);
+//        System.out.println(review.getContent());
+        //createReviewDTO(categoryId);
+>>>>>>> 0ea21780410edaa83e589632862fd8a682d4e7d5
         //createCommentDTO(categoryId);
+        //createTimelineDTO(categoryId);
+        createConfigurableProductDTO(categoryId);
     }
 
     public static void createProductDTO(Long categoryId) {
@@ -140,9 +152,9 @@ public class test {
         Get500ProductIds g = new Get500ProductIds();
         ArrayList list = new ArrayList();
         list = g.get500ProductIds(ids);
-        if(list.size() < 500)
-            System.out.println(list.size());
-        else {
+//        if(list.size() < 500)
+//            System.out.println(list.size());
+//        else {
             for (int i = 0; i < list.size(); i++) {
                 String url = "https://tiki.vn/api/v2/products/" + String.valueOf(list.get(i));
                 try {
@@ -161,7 +173,7 @@ public class test {
                     System.out.println(e.getMessage());
                 }
             }
-        }
+        //}
     }
 
     public static void checkChangePrice()
