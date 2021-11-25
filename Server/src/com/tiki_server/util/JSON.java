@@ -12,8 +12,8 @@ public class JSON {
 
         try {
             json = Jsoup.connect(url).ignoreContentType(true).execute().body();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException e){
+            return null;
         }
 
         ObjectMapper mapper = new ObjectMapper();

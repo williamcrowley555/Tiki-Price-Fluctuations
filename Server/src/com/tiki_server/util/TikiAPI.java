@@ -38,7 +38,7 @@ public class TikiAPI {
 
             for (ProductDTO product : products) {
                 String json = JSON.get(url + product.getId());
-
+                System.out.println(product.getId());
                 if (json == null || json.isEmpty())
                     System.out.println("Empty JSON: " + json);
                 else {
