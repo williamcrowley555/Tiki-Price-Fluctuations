@@ -54,8 +54,8 @@ public class AbstractDAL<T> implements GenericDAL<T>{
                         Date date = (Date) parameter;
                         statement.setTimestamp(index, new Timestamp(date.getTime()));
                 } else if(parameter instanceof LocalDate) {
-                        statement.setObject(index, (LocalDate) parameter);
-                }else if(parameter instanceof LocalDateTime) {
+                        statement.setObject(index, java.sql.Date.valueOf((LocalDate) parameter));
+                } else if(parameter instanceof LocalDateTime) {
                         statement.setObject(index, (LocalDateTime) parameter);
                 } else if(parameter instanceof byte[]) {
                         statement.setBytes(index, (byte[]) parameter);

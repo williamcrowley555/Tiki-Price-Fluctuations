@@ -20,7 +20,7 @@ public class ProductMapper implements RowMapper<ProductDTO> {
             product.setListPrice(rs.getLong("list_price"));
             product.setOriginalPrice(rs.getLong("original_price"));
             product.setDiscount(rs.getLong("discount"));
-            product.setDiscountRate(rs.getLong("discount_rate"));
+            product.setDiscountRate(rs.getInt("discount_rate"));
             product.setRatingAverage(rs.getFloat("rating_average"));
             product.setReviewCount(rs.getLong("review_count"));
             product.setFavoriteCount(rs.getLong("favourite_count"));

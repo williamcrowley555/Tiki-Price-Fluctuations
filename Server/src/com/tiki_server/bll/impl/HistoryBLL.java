@@ -1,12 +1,13 @@
 package com.tiki_server.bll.impl;
 
+import com.tiki_server.bll.IHistoryBLL;
 import com.tiki_server.dal.IHistoryDAL;
 import com.tiki_server.dal.impl.HistoryDAL;
 import com.tiki_server.dto.HistoryDTO;
 
 import java.util.List;
 
-public class HistoryBLL implements IHistoryDAL {
+public class HistoryBLL implements IHistoryBLL {
     private IHistoryDAL historyDAL;
 
     public HistoryBLL(){

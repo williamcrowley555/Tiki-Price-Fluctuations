@@ -4,19 +4,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tiki_server.bll.impl.*;
 import com.tiki_server.dto.*;
-import com.tiki_server.util.Get500ProductIds;
+import com.tiki_server.action.Get500ProductIds;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class test {
 
     public static void main(String[] args) {
-<<<<<<< HEAD
         // categoryID list: 316, 915, 1815, 1883, 44816, 49288, 49588, 53058
         Long categoryId = 316l;
         //createProductDTO(categoryId);
@@ -24,15 +22,13 @@ public class test {
 //        ReviewDTO review = reviewBLL.findById(561841l);
 //        System.out.println(review.getContent());
         createReviewDTO(categoryId);
-=======
         // categoryID list: 1801, 316, 915, 1815, 1883, 44816, 49288, 49588, 53058
-        Long categoryId = 1801l;
+        categoryId = 1801l;
       //  createProductDTO(categoryId);
 //        ReviewBLL reviewBLL = new ReviewBLL();
 //        ReviewDTO review = reviewBLL.findById(561841l);
 //        System.out.println(review.getContent());
         //createReviewDTO(categoryId);
->>>>>>> 0ea21780410edaa83e589632862fd8a682d4e7d5
         //createCommentDTO(categoryId);
         //createTimelineDTO(categoryId);
         createConfigurableProductDTO(categoryId);

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 
 public class TimelineDTO {
 
@@ -87,6 +88,19 @@ public class TimelineDTO {
 
     public void setReviewId(Long reviewId) {
         this.reviewId = reviewId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TimelineDTO that = (TimelineDTO) o;
+        return Objects.equals(id, that.id) && Objects.equals(reviewCreatedDate, that.reviewCreatedDate) && Objects.equals(deliveryDate, that.deliveryDate) && Objects.equals(content, that.content) && Objects.equals(explaination, that.explaination) && Objects.equals(reviewId, that.reviewId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, reviewCreatedDate, deliveryDate, content, explaination, reviewId);
     }
 
     @Override

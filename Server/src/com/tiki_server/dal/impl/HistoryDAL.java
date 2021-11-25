@@ -22,8 +22,8 @@ public class HistoryDAL extends AbstractDAL<HistoryDTO> implements IHistoryDAL {
 
     @Override
     public Long save(HistoryDTO history) {
-        String sql = "CREATE TABLE history(id, date, discount, discount_rate, list_price, original_price, price, product_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
-        return insert(sql, history.getId(), history.getDate(), history.getDiscount(), history.getDiscountRate(), history.getListPrice(), history.getOriginalPrice(),
+        String sql = "INSERT INTO history(date, discount, discount_rate, list_price, original_price, price, product_id) VALUES(?, ?, ?, ?, ?, ?, ?)";
+        return insert(sql, history.getDate(), history.getDiscount(), history.getDiscountRate(), history.getListPrice(), history.getOriginalPrice(),
                 history.getPrice(),history.getProductId());
     }
 

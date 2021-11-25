@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Map;
+import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CommentDTO {
@@ -119,6 +120,19 @@ public class CommentDTO {
 
     public void setReviewId(Long reviewId) {
         this.reviewId = reviewId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CommentDTO that = (CommentDTO) o;
+        return Objects.equals(id, that.id) && Objects.equals(commentator, that.commentator) && Objects.equals(fullname, that.fullname) && Objects.equals(avatarUrl, that.avatarUrl) && Objects.equals(content, that.content) && Objects.equals(createAt, that.createAt) && Objects.equals(status, that.status) && Objects.equals(isReported, that.isReported) && Objects.equals(reviewId, that.reviewId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, commentator, fullname, avatarUrl, content, createAt, status, isReported, reviewId);
     }
 
     @Override

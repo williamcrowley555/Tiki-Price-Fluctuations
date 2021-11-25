@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProductDTO {
@@ -41,7 +42,7 @@ public class ProductDTO {
     private Long discount;
 
     @JsonProperty("discount_rate")
-    private Long discountRate;
+    private int discountRate;
 
     @JsonProperty("rating_average")
     private double ratingAverage;
@@ -55,23 +56,33 @@ public class ProductDTO {
     @JsonProperty("short_description")
     private String shortDescription;
 
-    @JsonProperty("image_url")
     private String imageUrl;
 
     @JsonProperty("all_time_quantity_sold")
     private Long allTimeQuantitySold;
 
-    private Long categoryId;
+    private Long categoryId = null;
 
     public ProductDTO() {
     }
 
+    @SuppressWarnings("unchecked")
     @JsonProperty("images")
-    private void unpackNested(List<Map<String,Object>> product) {
-        this.imageUrl = (String) product.get(0).get("base_url");
+    private void unpackNestedImages(List<Map<String, Object>> images) {
+        try {
+            this.imageUrl = (String) images.get(0).get("base_url");
+        } catch (Exception e) {
+            this.imageUrl = null;
+        }
     }
 
-    public ProductDTO(Long id, Long productId, String sku, String name, String urlKey, String urlPath, Long price, Long listPrice, Long originalPrice, Long discount, Long discountRate, Long ratingAverage, Long reviewCount, Long favouriteCount, String shortDescription, String imageUrl, String description,Long allTimeQuantitySold, Long categoryId) {
+    @SuppressWarnings("unchecked")
+    @JsonProperty("categories")
+    private void unpackNestedCategories(Map<String, Object> categories) {
+        this.categoryId = Long.valueOf((int) categories.get("id"));
+    }
+
+    public ProductDTO(Long id, Long productId, String sku, String name, String urlKey, String urlPath, Long price, Long listPrice, Long originalPrice, Long discount, int discountRate, Long ratingAverage, Long reviewCount, Long favouriteCount, String shortDescription, String imageUrl, String description,Long allTimeQuantitySold, Long categoryId) {
         this.id = id;
         this.sku = sku;
         this.name = name;
@@ -164,9 +175,9 @@ public class ProductDTO {
         this.discount = discount;
     }
 
-    public Long getDiscountRate() { return discountRate; }
+    public int getDiscountRate() { return discountRate; }
 
-    public void setDiscountRate(Long discountRate) {
+    public void setDiscountRate(int discountRate) {
         this.discountRate = discountRate;
     }
 
@@ -231,6 +242,19 @@ public class ProductDTO {
     public void setDescription(String description) { this.description = description; }
 
     public void setFavouriteCount(Long favouriteCount) { this.favouriteCount = favouriteCount; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductDTO that = (ProductDTO) o;
+        return Double.compare(that.ratingAverage, ratingAverage) == 0 && Objects.equals(id, that.id) && Objects.equals(sku, that.sku) && Objects.equals(name, that.name) && Objects.equals(urlKey, that.urlKey) && Objects.equals(urlPath, that.urlPath) && Objects.equals(price, that.price) && Objects.equals(listPrice, that.listPrice) && Objects.equals(originalPrice, that.originalPrice) && Objects.equals(description, that.description) && Objects.equals(discount, that.discount) && Objects.equals(discountRate, that.discountRate) && Objects.equals(reviewCount, that.reviewCount) && Objects.equals(favouriteCount, that.favouriteCount) && Objects.equals(shortDescription, that.shortDescription) && Objects.equals(imageUrl, that.imageUrl) && Objects.equals(allTimeQuantitySold, that.allTimeQuantitySold) && Objects.equals(categoryId, that.categoryId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, sku, name, urlKey, urlPath, price, listPrice, originalPrice, description, discount, discountRate, ratingAverage, reviewCount, favouriteCount, shortDescription, imageUrl, allTimeQuantitySold, categoryId);
+    }
 
     @Override
     public String toString() {

@@ -1,10 +1,13 @@
 package com.tiki_server.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ConfigurableProductDTO {
     @JsonProperty("id")
     private Long id;
@@ -34,13 +37,12 @@ public class ConfigurableProductDTO {
 
     private Long productId;
 
+    @SuppressWarnings("unchecked")
     @JsonProperty("images")
-    public void unpackNested(List<Map<String,Object>> images)
-    {
+    private void unpackNestedImages(List<Map<String, Object>> images) {
         try {
-            this.imageUrl = (String)images.get(0).get("medium_url");
-        } catch(Exception ex)
-        {
+            this.imageUrl = (String) images.get(0).get("medium_url");
+        } catch (Exception e) {
             this.imageUrl = null;
         }
     }
@@ -139,6 +141,19 @@ public class ConfigurableProductDTO {
 
     public void setProductId(Long productId) {
         this.productId = productId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ConfigurableProductDTO that = (ConfigurableProductDTO) o;
+        return Objects.equals(id, that.id) && Objects.equals(childId, that.childId) && Objects.equals(imageUrl, that.imageUrl) && Objects.equals(inventoryStatus, that.inventoryStatus) && Objects.equals(name, that.name) && Objects.equals(option1, that.option1) && Objects.equals(price, that.price) && Objects.equals(sku, that.sku) && Objects.equals(thumbnailUrl, that.thumbnailUrl) && Objects.equals(productId, that.productId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, childId, imageUrl, inventoryStatus, name, option1, price, sku, thumbnailUrl, productId);
     }
 
     @Override

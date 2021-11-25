@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @Table(name="history")
 public class HistoryEntity implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
