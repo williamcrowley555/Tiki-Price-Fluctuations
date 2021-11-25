@@ -11,28 +11,28 @@ public class CommentDTO {
     @JsonProperty("id")
     private Long id;
 
-//    @JsonProperty("commentator")
+    @JsonProperty("commentator")
     private String commentator;
 
-//    @JsonProperty("fullname")
+    @JsonProperty("fullname")
     private String fullname;
 
-//    @JsonProperty("avatar_url")
+    @JsonProperty("avatar_url")
     private String avatarUrl;
 
-//    @JsonProperty("content")
+    @JsonProperty("content")
     private String content;
 
-//    @JsonProperty("create_at")
+    @JsonProperty("create_at")
     private Long createAt;
 
-//    @JsonProperty("status")
+    @JsonProperty("status")
     private Long status;
 
-//    @JsonProperty("is_reported")
+    @JsonProperty("is_reported")
     private Boolean isReported;
 
-//    @JsonProperty("review_id")
+    @JsonProperty("review_id")
     private Long reviewId;
 
     public CommentDTO() {
