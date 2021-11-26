@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f6e6431d-0827-4dee-81de-d9151148769e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Libraries/gson-2.6.2.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Libraries/jackson-core-2.2.3.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Libraries/jsoup-1.14.3-javadoc.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Libraries/jsoup-1.14.3.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/src/com/tiki_server/libs/com.mysql.jdbc_5.1.5.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/src/com/tiki_server/libs/jackson-core-2.2.3.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Tiki-Price-Fluctuations.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Tiki-Price-Fluctuations.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/src/com/tiki_server/util/Get500ProductIds.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/com/tiki_server/util/Get500ProductIds.java" afterDir="false" />
+    <list default="true" id="f6e6431d-0827-4dee-81de-d9151148769e" name="Changes" comment="Changes">
+      <change beforePath="$PROJECT_DIR$/Server/src/com/tiki_server/util/TikiAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/com/tiki_server/util/TikiAPI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,7 +20,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Server/src/com/tiki_server/libs" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Server" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -57,5 +49,6 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>
