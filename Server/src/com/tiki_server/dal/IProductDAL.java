@@ -8,6 +8,6 @@ public interface IProductDAL {
     List<ProductDTO> findAll();
     ProductDTO findById(Long id);
     Long save(ProductDTO product);
-    void update(ProductDTO product);
+    boolean update(ProductDTO product);
     void delete(Long id);
 }

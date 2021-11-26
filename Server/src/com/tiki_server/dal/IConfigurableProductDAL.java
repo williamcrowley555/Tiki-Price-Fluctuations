@@ -9,6 +9,6 @@ public interface IConfigurableProductDAL {
     ConfigurableProductDTO findById(Long id);
     ConfigurableProductDTO findByIdAndChildId(Long id, Long childId);
     Long save(ConfigurableProductDTO onfigurableProduct);
-    void update(ConfigurableProductDTO onfigurableProduct);
+    boolean update(ConfigurableProductDTO onfigurableProduct);
     void delete(Long id);
 }

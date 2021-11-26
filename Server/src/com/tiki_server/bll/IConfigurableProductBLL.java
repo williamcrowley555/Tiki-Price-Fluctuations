@@ -9,6 +9,6 @@ public interface IConfigurableProductBLL {
     ConfigurableProductDTO findById(Long id);
     ConfigurableProductDTO findByIdAndChildId(Long id, Long childId);
     Long save(ConfigurableProductDTO configurableProduct);
-    void update(ConfigurableProductDTO configurableProduct);
+    boolean update(ConfigurableProductDTO configurableProduct);
     void delete(Long id);
 }

@@ -35,8 +35,8 @@ public class ConfigurableProductBLL implements IConfigurableProductBLL {
     }
 
     @Override
-    public void update(ConfigurableProductDTO configurableProduct) {
-        configurableProductDAL.update(configurableProduct);
+    public boolean update(ConfigurableProductDTO configurableProduct) {
+        return configurableProductDAL.update(configurableProduct);
     }
 
     @Override

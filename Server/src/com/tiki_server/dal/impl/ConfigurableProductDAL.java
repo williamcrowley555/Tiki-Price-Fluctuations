@@ -38,9 +38,9 @@ public class ConfigurableProductDAL extends AbstractDAL<ConfigurableProductDTO> 
     }
 
     @Override
-    public void update(ConfigurableProductDTO onfigurableProduct) {
-        String sql = "UPDATE configurable_product SET child_id = ?, image_url = ?, inventory_status = ?, name = ?, option1 = ?, price = ?, sku = ?, thumbnail_url = ?, product_id = ? WHERE id = ?";
-        update(sql, onfigurableProduct.getChildId(), onfigurableProduct.getImageUrl(), onfigurableProduct.getInventoryStatus(), onfigurableProduct.getName(),
+    public boolean update(ConfigurableProductDTO onfigurableProduct) {
+        String sql = "{CALL usp_configurable_product_update(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+        return callProc(sql, onfigurableProduct.getChildId(), onfigurableProduct.getImageUrl(), onfigurableProduct.getInventoryStatus(), onfigurableProduct.getName(),
                 onfigurableProduct.getOption1(), onfigurableProduct.getPrice(), onfigurableProduct.getSku(), onfigurableProduct.getThumbnailUrl(),
                 onfigurableProduct.getProductId(), onfigurableProduct.getId());
     }

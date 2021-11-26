@@ -30,8 +30,8 @@ public class ProductBLL implements IProductBLL {
     }
 
     @Override
-    public void update(ProductDTO product) {
-        productDAL.update(product);
+    public boolean update(ProductDTO product) {
+        return productDAL.update(product);
     }
 
     @Override
