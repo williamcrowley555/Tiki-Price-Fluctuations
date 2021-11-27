@@ -1,34 +1,41 @@
 package com.tiki_server.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TimelineDTO {
 
     private Long id;
 
+    @JsonProperty("review_created_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Date reviewCreatedDate;
 
+    @JsonProperty("delivery_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Date deliveryDate;
 
+    @JsonProperty("content")
     private String content;
 
+    @JsonProperty("explain")
     private String explaination;
 
-    @JsonProperty("id")
     private Long reviewId;
 
-    @JsonProperty("timeline")
-    public void unpackNested(Map<String,Object> timeline)
-    {
-        this.reviewCreatedDate = (Date)timeline.get("review_create_date");
-        this.deliveryDate = (Date)timeline.get("delivery_date");
-        this.content = (String)timeline.get("content");
-        this.explaination = (String)timeline.get("explain");
-    }
+//    @JsonProperty("review_created_date")
+//    private void setDateReviewCreatedDate(Date reviewCreatedDate) throws ParseException {
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+//        this.reviewCreatedDate = sdf.parse(String.valueOf(reviewCreatedDate));
+//    }
 
     public TimelineDTO() {
     }
