@@ -102,7 +102,8 @@ public class TikiAPI {
                 if (oldCP != null) {
                     if (!oldCP.equals(newcp)) {
                         configurableProductBLL.update(newcp);
-                        cpHistoryBLL.save(new ConfigurableProductHistoryDTO(LocalDate.now(), newcp.getPrice(), newcp.getChildId()));
+                        if (oldCP.getPrice().compareTo(newcp.getPrice()) != 0)
+                            cpHistoryBLL.save(new ConfigurableProductHistoryDTO(LocalDate.now(), newcp.getPrice(), newcp.getChildId()));
                     }
                 } else {
                     configurableProductBLL.save(newcp);
