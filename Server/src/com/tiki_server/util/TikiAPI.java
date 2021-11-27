@@ -19,10 +19,7 @@ public class TikiAPI {
         String url = "https://tiki.vn/api/v2/products/";
 
         IProductBLL productBLL = new ProductBLL();
-        ICategoryBLL categoryBLL = new CategoryBLL();
-        IConfigurableProductBLL configurableProductBLL = new ConfigurableProductBLL();
         IHistoryBLL historyBLL = new HistoryBLL();
-        IConfigurableProductHistoryBLL cpHistory = new ConfigurableProductHistoryBLL();
 
         List<ProductDTO> products = productBLL.findAll();
 
@@ -39,36 +36,13 @@ public class TikiAPI {
 
                     ProductDTO newProduct = mapper.readValue(json, ProductDTO.class);
 
-                    if (categoryBLL.findById(newProduct.getCategoryId()) == null) {
-                        JsonNode categoryNode = rootNode.get("categories");
-                        if (categoryNode != null) {
-                            CategoryDTO newCategory = mapper.readValue(categoryNode.toString(), CategoryDTO.class);
-                            categoryBLL.save(newCategory);
-                        }
-                    }
+//                    Update Category
+                    TikiAPI.updateCategory(rootNode, newProduct);
 
-                    JsonNode cpNode = rootNode.get("configurable_products");
-                    if (cpNode != null) {
-                        List<ConfigurableProductDTO> configurableProducts = mapper.readValue(cpNode.toString(),
-                                mapper.getTypeFactory().constructCollectionType(List.class, ConfigurableProductDTO.class));
+//                    Update Configurable Product & its history
+                    TikiAPI.updateConfigurableProduct(rootNode, newProduct);
 
-                        for (ConfigurableProductDTO newcp : configurableProducts){
-                            newcp.setProductId(newProduct.getId());
-
-                            ConfigurableProductDTO oldCP = configurableProductBLL.findByChildId(newcp.getChildId());
-
-                            if (oldCP != null) {
-                                if (!oldCP.equals(newcp)) {
-                                    configurableProductBLL.update(newcp);
-                                    cpHistory.save(new ConfigurableProductHistoryDTO(LocalDate.now(), newcp.getPrice(), newcp.getChildId()));
-                                }
-                            } else {
-                                configurableProductBLL.save(newcp);
-                                cpHistory.save(new ConfigurableProductHistoryDTO(LocalDate.now(), newcp.getPrice(), newcp.getChildId()));
-                            }
-                        }
-                    }
-
+//                    Update Product & its history
                     ProductDTO oldProduct = productBLL.findById(newProduct.getId());
                     if (!oldProduct.equals(newProduct)) {
                         productBLL.update(newProduct);
@@ -90,6 +64,49 @@ public class TikiAPI {
                             historyBLL.save(history);
                         }
                     }
+
+                }
+            }
+        }
+    }
+
+    public static void updateCategory(ObjectNode rootNode, ProductDTO product) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        ICategoryBLL categoryBLL = new CategoryBLL();
+
+        if (categoryBLL.findById(product.getCategoryId()) == null) {
+            JsonNode categoryNode = rootNode.get("categories");
+            if (categoryNode != null) {
+                CategoryDTO newCategory = mapper.readValue(categoryNode.toString(), CategoryDTO.class);
+                categoryBLL.save(newCategory);
+            }
+        }
+    }
+
+    public static void updateConfigurableProduct(ObjectNode rootNode, ProductDTO product) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode cpNode = rootNode.get("configurable_products");
+
+        IConfigurableProductBLL configurableProductBLL = new ConfigurableProductBLL();
+        IConfigurableProductHistoryBLL cpHistoryBLL = new ConfigurableProductHistoryBLL();
+
+        if (cpNode != null) {
+            List<ConfigurableProductDTO> configurableProducts = mapper.readValue(cpNode.toString(),
+                    mapper.getTypeFactory().constructCollectionType(List.class, ConfigurableProductDTO.class));
+
+            for (ConfigurableProductDTO newcp : configurableProducts){
+                newcp.setProductId(product.getId());
+
+                ConfigurableProductDTO oldCP = configurableProductBLL.findByChildId(newcp.getChildId());
+
+                if (oldCP != null) {
+                    if (!oldCP.equals(newcp)) {
+                        configurableProductBLL.update(newcp);
+                        cpHistoryBLL.save(new ConfigurableProductHistoryDTO(LocalDate.now(), newcp.getPrice(), newcp.getChildId()));
+                    }
+                } else {
+                    configurableProductBLL.save(newcp);
+                    cpHistoryBLL.save(new ConfigurableProductHistoryDTO(LocalDate.now(), newcp.getPrice(), newcp.getChildId()));
                 }
             }
         }
