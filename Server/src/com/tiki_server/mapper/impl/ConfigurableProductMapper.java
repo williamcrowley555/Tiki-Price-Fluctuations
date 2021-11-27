@@ -11,7 +11,6 @@ public class ConfigurableProductMapper implements RowMapper<ConfigurableProductD
     public ConfigurableProductDTO mapRow(ResultSet rs) {
         try {
             ConfigurableProductDTO onfigurableProduct = new ConfigurableProductDTO();
-            onfigurableProduct.setId(rs.getLong("id"));
             onfigurableProduct.setChildId(rs.getLong("child_id"));
             onfigurableProduct.setImageUrl(rs.getString("image_url"));
             onfigurableProduct.setInventoryStatus(rs.getString("inventory_status"));

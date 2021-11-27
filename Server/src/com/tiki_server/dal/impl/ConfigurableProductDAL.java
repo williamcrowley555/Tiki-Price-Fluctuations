@@ -25,7 +25,7 @@ public class ConfigurableProductDAL extends AbstractDAL<ConfigurableProductDTO> 
 
     @Override
     public Long save(ConfigurableProductDTO configurableProduct) {
-        String sql = "INSERT INTO configurable_product (child_id, image_url, inventory_status, name, option1, price, sku, thumbnail_url, product_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO configurable_product (child_id, image_url, inventory_status, name, option1, price, sku, thumbnail_url, product_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
         return insert(sql, configurableProduct.getChildId(), configurableProduct.getImageUrl(), configurableProduct.getInventoryStatus(), configurableProduct.getName(),
                 configurableProduct.getOption1(), configurableProduct.getPrice(), configurableProduct.getSku(), configurableProduct.getThumbnailUrl(),
                 configurableProduct.getProductId());

@@ -138,7 +138,7 @@ public class test {
                     JsonNode comments =  objNode1.get("comments");
                     for(JsonNode objNode2 : comments)
                     {
-                        CommentDTO commentDto = new ObjectMapper().reader(CommentDTO.class).readValue(objNode2);
+                        CommentDTO commentDto = new ObjectMapper().readValue(objNode2.toString(), CommentDTO.class);
                         String regex = "[^\\p{L}\\p{N}\\p{P}\\p{Z}]";
                         Pattern pattern = Pattern.compile(
                                 regex,
@@ -244,9 +244,9 @@ public class test {
                             if (existProduct == null)
                                 System.out.println("Không tồn tại product_id = " + configurableProduct.getChildId() + " để lưu Configurable Product");
                             else {
-                                existConfigurableProduct = configurableProductBLL.findById(configurableProduct.getId());
+                                existConfigurableProduct = configurableProductBLL.findByChildId(configurableProduct.getChildId());
                                 if (existConfigurableProduct != null)
-                                    System.out.println("Configurable Product với id = " + configurableProduct.getId() + "đã tồn tại");
+                                    System.out.println("Configurable Product với id = " + configurableProduct.getChildId() + "đã tồn tại");
                                 else {
                                     configurableProductBLL.save(configurableProduct);
                                     System.out.println("Lưu configurableProduct_id = " + configurableProduct + " thành công");
