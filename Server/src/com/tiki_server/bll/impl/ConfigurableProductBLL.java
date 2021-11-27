@@ -20,13 +20,8 @@ public class ConfigurableProductBLL implements IConfigurableProductBLL {
     }
 
     @Override
-    public ConfigurableProductDTO findById(Long id) {
-        return configurableProductDAL.findById(id);
-    }
-
-    @Override
-    public ConfigurableProductDTO findByIdAndChildId(Long id, Long childId) {
-        return configurableProductDAL.findByIdAndChildId(id, childId);
+    public ConfigurableProductDTO findByChildId(Long childId) {
+        return configurableProductDAL.findByChildId(childId);
     }
 
     @Override

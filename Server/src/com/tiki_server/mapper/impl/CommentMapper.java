@@ -14,12 +14,12 @@ public class CommentMapper implements RowMapper<CommentDTO> {
             comment.setId(rs.getLong("id"));
             comment.setCommentator(rs.getString("commentator"));
             comment.setFullname(rs.getString("fullname"));
-            comment.setAvatarUrl(rs.getString("avatarUrl"));
+            comment.setAvatarUrl(rs.getString("avatar_url"));
             comment.setContent(rs.getString("content"));
-            comment.setCreateAt(rs.getLong("createAt"));
+            comment.setCreateAt(rs.getLong("create_at"));
             comment.setStatus(rs.getLong("status"));
-            comment.setReported(rs.getBoolean("isReported"));
-            comment.setReviewId(rs.getLong("reviewId"));
+            comment.setReported(rs.getBoolean("is_reported"));
+            comment.setReviewId(rs.getLong("review_id"));
 
             return comment;
         } catch(SQLException e) {

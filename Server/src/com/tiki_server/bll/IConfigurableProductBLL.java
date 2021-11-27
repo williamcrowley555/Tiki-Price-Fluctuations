@@ -6,8 +6,7 @@ import java.util.List;
 
 public interface IConfigurableProductBLL {
     List<ConfigurableProductDTO> findAll();
-    ConfigurableProductDTO findById(Long id);
-    ConfigurableProductDTO findByIdAndChildId(Long id, Long childId);
+    ConfigurableProductDTO findByChildId(Long childId);
     Long save(ConfigurableProductDTO configurableProduct);
     boolean update(ConfigurableProductDTO configurableProduct);
     void delete(Long id);

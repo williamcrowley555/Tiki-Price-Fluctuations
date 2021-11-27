@@ -4,7 +4,6 @@ DELIMITER $$
 
 DROP PROCEDURE IF EXISTS `usp_configurable_product_update` $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_configurable_product_update`(
-	IN child_id_in BIGINT,
 	IN image_url_in TEXT,
 	IN inventory_status_in TEXT,
 	IN name_in TEXT,
@@ -13,7 +12,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_configurable_product_update`(
 	IN sku_in TEXT,
 	IN thumbnail_url_in TEXT,
 	IN product_id_in BIGINT,
-	IN id_in BIGINT
+	IN child_id_in BIGINT
 )
 BEGIN
 
@@ -29,9 +28,9 @@ BEGIN
         
 	START TRANSACTION;
         UPDATE configurable_product 
-        SET child_id = child_id_in, image_url = image_url_in, inventory_status = inventory_status_in, name = name_in, 
-			option1 = option1_in, price = price_in, sku = sku_in, thumbnail_url = thumbnail_url_in, product_id = product_id_in 
-        WHERE id = id_in;
+        SET image_url = image_url_in, inventory_status = inventory_status_in, name = name_in, option1 = option1_in, 
+			price = price_in, sku = sku_in, thumbnail_url = thumbnail_url_in, product_id = product_id_in 
+        WHERE child_id = child_id_in;
 	COMMIT;
 
 END $$

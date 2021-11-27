@@ -9,9 +9,6 @@ import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ConfigurableProductDTO {
-    @JsonProperty("id")
-    private Long id;
-
     @JsonProperty("child_id")
     private Long childId;
 
@@ -50,8 +47,7 @@ public class ConfigurableProductDTO {
     public ConfigurableProductDTO() {
     }
 
-    public ConfigurableProductDTO(Long id, Long childId, String imageUrl, String inventoryStatus, String name, String option1, Long price, String sku, String thumbnailUrl, Long productId) {
-        this.id = id;
+    public ConfigurableProductDTO(Long childId, String imageUrl, String inventoryStatus, String name, String option1, Long price, String sku, String thumbnailUrl, Long productId) {
         this.childId = childId;
         this.imageUrl = imageUrl;
         this.inventoryStatus = inventoryStatus;
@@ -61,14 +57,6 @@ public class ConfigurableProductDTO {
         this.sku = sku;
         this.thumbnailUrl = thumbnailUrl;
         this.productId = productId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getChildId() {
@@ -148,19 +136,18 @@ public class ConfigurableProductDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ConfigurableProductDTO that = (ConfigurableProductDTO) o;
-        return Objects.equals(id, that.id) && Objects.equals(childId, that.childId) && Objects.equals(imageUrl, that.imageUrl) && Objects.equals(inventoryStatus, that.inventoryStatus) && Objects.equals(name, that.name) && Objects.equals(option1, that.option1) && Objects.equals(price, that.price) && Objects.equals(sku, that.sku) && Objects.equals(thumbnailUrl, that.thumbnailUrl) && Objects.equals(productId, that.productId);
+        return Objects.equals(childId, that.childId) && Objects.equals(imageUrl, that.imageUrl) && Objects.equals(inventoryStatus, that.inventoryStatus) && Objects.equals(name, that.name) && Objects.equals(option1, that.option1) && Objects.equals(price, that.price) && Objects.equals(sku, that.sku) && Objects.equals(thumbnailUrl, that.thumbnailUrl) && Objects.equals(productId, that.productId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, childId, imageUrl, inventoryStatus, name, option1, price, sku, thumbnailUrl, productId);
+        return Objects.hash(childId, imageUrl, inventoryStatus, name, option1, price, sku, thumbnailUrl, productId);
     }
 
     @Override
     public String toString() {
-        return "OnfigurableProductDTO{" +
-                "id=" + id +
-                ", childId=" + childId +
+        return "ConfigurableProductDTO{" +
+                "childId=" + childId +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", inventoryStatus='" + inventoryStatus + '\'' +
                 ", name='" + name + '\'' +

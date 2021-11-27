@@ -17,44 +17,37 @@ public class ConfigurableProductDAL extends AbstractDAL<ConfigurableProductDTO> 
     }
 
     @Override
-    public ConfigurableProductDTO findById(Long id) {
-        String sql = "SELECT * FROM configurable_product WHERE id = ?";
-        List<ConfigurableProductDTO> configurableProduct = query(sql, new ConfigurableProductMapper(), id);
+    public ConfigurableProductDTO findByChildId(Long childId) {
+        String sql = "SELECT * FROM configurable_product WHERE child_id = ?";
+        List<ConfigurableProductDTO> configurableProduct = query(sql, new ConfigurableProductMapper(), childId);
         return configurableProduct.isEmpty() ? null : configurableProduct.get(0);
     }
 
     @Override
-    public ConfigurableProductDTO findByIdAndChildId(Long id, Long childId) {
-        String sql = "SELECT * FROM configurable_product WHERE id = ? AND child_id = ?";
-        List<ConfigurableProductDTO> configurableProduct = query(sql, new ConfigurableProductMapper(), id, childId);
-        return configurableProduct.isEmpty() ? null : configurableProduct.get(0);
+    public Long save(ConfigurableProductDTO configurableProduct) {
+        String sql = "INSERT INTO configurable_product (child_id, image_url, inventory_status, name, option1, price, sku, thumbnail_url, product_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        return insert(sql, configurableProduct.getChildId(), configurableProduct.getImageUrl(), configurableProduct.getInventoryStatus(), configurableProduct.getName(),
+                configurableProduct.getOption1(), configurableProduct.getPrice(), configurableProduct.getSku(), configurableProduct.getThumbnailUrl(),
+                configurableProduct.getProductId());
     }
 
     @Override
-    public Long save(ConfigurableProductDTO onfigurableProduct) {
-        String sql = "INSERT INTO configurable_product (id, child_id, image_url, inventory_status, name, option1, price, sku, thumbnail_url, product_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        return insert(sql, onfigurableProduct.getId(), onfigurableProduct.getChildId(), onfigurableProduct.getImageUrl(), onfigurableProduct.getInventoryStatus(), onfigurableProduct.getName(),
-                onfigurableProduct.getOption1(), onfigurableProduct.getPrice(), onfigurableProduct.getSku(), onfigurableProduct.getThumbnailUrl(),
-                onfigurableProduct.getProductId());
+    public boolean update(ConfigurableProductDTO configurableProduct) {
+        String sql = "{CALL usp_configurable_product_update(?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+        return callProc(sql, configurableProduct.getImageUrl(), configurableProduct.getInventoryStatus(), configurableProduct.getName(),
+                configurableProduct.getOption1(), configurableProduct.getPrice(), configurableProduct.getSku(), configurableProduct.getThumbnailUrl(),
+                configurableProduct.getProductId(), configurableProduct.getChildId());
     }
 
     @Override
-    public boolean update(ConfigurableProductDTO onfigurableProduct) {
-        String sql = "{CALL usp_configurable_product_update(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
-        return callProc(sql, onfigurableProduct.getChildId(), onfigurableProduct.getImageUrl(), onfigurableProduct.getInventoryStatus(), onfigurableProduct.getName(),
-                onfigurableProduct.getOption1(), onfigurableProduct.getPrice(), onfigurableProduct.getSku(), onfigurableProduct.getThumbnailUrl(),
-                onfigurableProduct.getProductId(), onfigurableProduct.getId());
-    }
-
-    @Override
-    public void delete(Long id) {
-        String sql = "DELETE FROM configurable_product WHERE id = ?";
-        update(sql, id);
+    public void delete(Long childId) {
+        String sql = "DELETE FROM configurable_product WHERE child_id = ?";
+        update(sql, childId);
     }
 
     @Override
     public boolean deleteByIdNotIn(List<Long> ids) {
-        String sql = "{CALL usp_configurable_product_deleteByIdNotIn(?)}";
+        String sql = "{CALL usp_configurable_product_deleteByChildIdNotIn(?)}";
         String idsParam = "";
 
         for (Long id : ids)

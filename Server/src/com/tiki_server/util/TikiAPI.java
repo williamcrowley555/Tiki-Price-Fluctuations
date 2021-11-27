@@ -4,18 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.tiki_server.bll.ICategoryBLL;
-import com.tiki_server.bll.IConfigurableProductBLL;
-import com.tiki_server.bll.IHistoryBLL;
-import com.tiki_server.bll.IProductBLL;
-import com.tiki_server.bll.impl.CategoryBLL;
-import com.tiki_server.bll.impl.ConfigurableProductBLL;
-import com.tiki_server.bll.impl.HistoryBLL;
-import com.tiki_server.bll.impl.ProductBLL;
-import com.tiki_server.dto.CategoryDTO;
-import com.tiki_server.dto.ConfigurableProductDTO;
-import com.tiki_server.dto.HistoryDTO;
-import com.tiki_server.dto.ProductDTO;
+import com.tiki_server.bll.*;
+import com.tiki_server.bll.impl.*;
+import com.tiki_server.dto.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -31,6 +22,7 @@ public class TikiAPI {
         ICategoryBLL categoryBLL = new CategoryBLL();
         IConfigurableProductBLL configurableProductBLL = new ConfigurableProductBLL();
         IHistoryBLL historyBLL = new HistoryBLL();
+        IConfigurableProductHistoryBLL cpHistory = new ConfigurableProductHistoryBLL();
 
         List<ProductDTO> products = productBLL.findAll();
 
@@ -59,22 +51,22 @@ public class TikiAPI {
                     if (cpNode != null) {
                         List<ConfigurableProductDTO> configurableProducts = mapper.readValue(cpNode.toString(),
                                 mapper.getTypeFactory().constructCollectionType(List.class, ConfigurableProductDTO.class));
-                        List<Long> newCPIds = new ArrayList<>();
 
                         for (ConfigurableProductDTO newcp : configurableProducts){
-                            newCPIds.add(newcp.getId());
                             newcp.setProductId(newProduct.getId());
 
-                            ConfigurableProductDTO oldCP = configurableProductBLL.findByIdAndChildId(newcp.getId(), newcp.getChildId());
+                            ConfigurableProductDTO oldCP = configurableProductBLL.findByChildId(newcp.getChildId());
 
-                            if (oldCP != null)
-                                if (!oldCP.equals(newcp))
+                            if (oldCP != null) {
+                                if (!oldCP.equals(newcp)) {
                                     configurableProductBLL.update(newcp);
-                                else
-                                    configurableProductBLL.save(newcp);
+                                    cpHistory.save(new ConfigurableProductHistoryDTO(LocalDate.now(), newcp.getPrice(), newcp.getChildId()));
+                                }
+                            } else {
+                                configurableProductBLL.save(newcp);
+                                cpHistory.save(new ConfigurableProductHistoryDTO(LocalDate.now(), newcp.getPrice(), newcp.getChildId()));
+                            }
                         }
-
-                        configurableProductBLL.deleteByIdNotIn(newCPIds);
                     }
 
                     ProductDTO oldProduct = productBLL.findById(newProduct.getId());
