@@ -10,13 +10,13 @@ public class ConfigurableProductHistoryMapper implements RowMapper<ConfigurableP
     @Override
     public ConfigurableProductHistoryDTO mapRow(ResultSet rs) {
         try {
-            ConfigurableProductHistoryDTO cfHistory = new ConfigurableProductHistoryDTO();
-            cfHistory.setId(rs.getLong("id"));
-            cfHistory.setDate(rs.getDate("date").toLocalDate());
-            cfHistory.setPrice(rs.getLong("price"));
-            cfHistory.setConfigurableProductId(rs.getLong("configurable_product_id"));
+            ConfigurableProductHistoryDTO cpHistory = new ConfigurableProductHistoryDTO();
+            cpHistory.setId(rs.getLong("id"));
+            cpHistory.setDate(rs.getDate("date").toLocalDate());
+            cpHistory.setPrice(rs.getLong("price"));
+            cpHistory.setConfigurableProductChildId(rs.getLong("configurable_product_child_id"));
 
-            return cfHistory;
+            return cpHistory;
         } catch(SQLException e) {
             System.out.println(e.getMessage());
         }

@@ -9,15 +9,15 @@ public class ConfigurableProductHistoryDTO {
 
     private Long price;
 
-    private Long configurableProductId;
+    private Long configurableProductChildId;
 
     public ConfigurableProductHistoryDTO() {
     }
 
-    public ConfigurableProductHistoryDTO(LocalDate date, Long price, Long configurableProductId) {
+    public ConfigurableProductHistoryDTO(LocalDate date, Long price, Long configurableProductChildId) {
         this.date = date;
         this.price = price;
-        this.configurableProductId = configurableProductId;
+        this.configurableProductChildId = configurableProductChildId;
     }
 
     public Long getId() {
@@ -44,21 +44,21 @@ public class ConfigurableProductHistoryDTO {
         this.price = price;
     }
 
-    public Long getConfigurableProductId() {
-        return configurableProductId;
+    public Long getConfigurableProductChildId() {
+        return configurableProductChildId;
     }
 
-    public void setConfigurableProductId(Long configurableProductId) {
-        this.configurableProductId = configurableProductId;
+    public void setConfigurableProductChildId(Long configurableProductChildId) {
+        this.configurableProductChildId = configurableProductChildId;
     }
 
     @Override
     public String toString() {
-        return "ConfigurableProductHistory{" +
+        return "ConfigurableProductHistoryDTO{" +
                 "id=" + id +
                 ", date=" + date +
                 ", price=" + price +
-                ", configurableProductId=" + configurableProductId +
+                ", configurableProductChildId=" + configurableProductChildId +
                 '}';
     }
 }

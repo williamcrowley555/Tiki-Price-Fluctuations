@@ -22,7 +22,7 @@ public class ConfigurableProductHistoryDAL extends AbstractDAL<HistoryDTO> imple
 
     @Override
     public Long save(ConfigurableProductHistoryDTO cpHistory) {
-        String sql = "INSERT INTO configurable_product_history(date, price, configurable_product_id) VALUES(?, ?, ?)";
-        return insert(sql, cpHistory.getDate(), cpHistory.getPrice(), cpHistory.getConfigurableProductId());
+        String sql = "INSERT INTO configurable_product_history(date, price, configurable_product_child_id) VALUES(?, ?, ?)";
+        return insert(sql, cpHistory.getDate(), cpHistory.getPrice(), cpHistory.getConfigurableProductChildId());
     }
 }
