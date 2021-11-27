@@ -6,6 +6,7 @@ import com.tiki_server.dto.HistoryDTO;
 import com.tiki_server.mapper.impl.ConfigurableProductMapper;
 import com.tiki_server.mapper.impl.HistoryMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigurableProductDAL extends AbstractDAL<ConfigurableProductDTO> implements IConfigurableProductDAL {
@@ -49,5 +50,16 @@ public class ConfigurableProductDAL extends AbstractDAL<ConfigurableProductDTO> 
     public void delete(Long id) {
         String sql = "DELETE FROM configurable_product WHERE id = ?";
         update(sql, id);
+    }
+
+    @Override
+    public boolean deleteByIdNotIn(List<Long> ids) {
+        String sql = "{CALL usp_configurable_product_deleteByIdNotIn(?)}";
+        String idsParam = "";
+
+        for (Long id : ids)
+            idsParam += ", " + id;
+
+        return callProc(sql, idsParam.isEmpty() ? idsParam : idsParam.substring(2));
     }
 }

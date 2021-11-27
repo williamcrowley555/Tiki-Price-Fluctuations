@@ -11,4 +11,5 @@ public interface IConfigurableProductBLL {
     Long save(ConfigurableProductDTO configurableProduct);
     boolean update(ConfigurableProductDTO configurableProduct);
     void delete(Long id);
+    boolean deleteByIdNotIn(List<Long> ids);
 }

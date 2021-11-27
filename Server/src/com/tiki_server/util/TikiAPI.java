@@ -19,6 +19,7 @@ import com.tiki_server.dto.ProductDTO;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -58,8 +59,12 @@ public class TikiAPI {
                     if (cpNode != null) {
                         List<ConfigurableProductDTO> configurableProducts = mapper.readValue(cpNode.toString(),
                                 mapper.getTypeFactory().constructCollectionType(List.class, ConfigurableProductDTO.class));
+                        List<Long> newCPIds = new ArrayList<>();
+
                         for (ConfigurableProductDTO newcp : configurableProducts){
+                            newCPIds.add(newcp.getId());
                             newcp.setProductId(newProduct.getId());
+
                             ConfigurableProductDTO oldCP = configurableProductBLL.findByIdAndChildId(newcp.getId(), newcp.getChildId());
 
                             if (oldCP != null)
@@ -68,6 +73,8 @@ public class TikiAPI {
                                 else
                                     configurableProductBLL.save(newcp);
                         }
+
+                        configurableProductBLL.deleteByIdNotIn(newCPIds);
                     }
 
                     ProductDTO oldProduct = productBLL.findById(newProduct.getId());

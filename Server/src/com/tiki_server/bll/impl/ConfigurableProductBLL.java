@@ -43,4 +43,9 @@ public class ConfigurableProductBLL implements IConfigurableProductBLL {
     public void delete(Long id) {
         configurableProductDAL.delete(id);
     }
+
+    @Override
+    public boolean deleteByIdNotIn(List<Long> ids) {
+        return configurableProductDAL.deleteByIdNotIn(ids);
+    }
 }
