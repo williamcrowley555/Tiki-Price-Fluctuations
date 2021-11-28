@@ -29,11 +29,14 @@ public class TikiAPI {
                 String json = JSON.get(url + product.getId());
                 System.out.println(product.getId());
                 if (json == null || json.isEmpty())
-                    System.out.println("Empty JSON: " + json);
+                    System.out.println("Product ID: " + product.getId() + " has empty JSON: " + json);
                 else {
                     ObjectNode rootNode = mapper.readValue(json, ObjectNode.class);
 
                     ProductDTO newProduct = mapper.readValue(json, ProductDTO.class);
+
+//                    Update Brand
+                    TikiAPI.updateBrand(rootNode, newProduct);
 
 //                    Update Category
                     TikiAPI.updateCategory(rootNode, newProduct);
@@ -65,6 +68,19 @@ public class TikiAPI {
                     }
 
                 }
+            }
+        }
+    }
+
+    public static void updateBrand(ObjectNode rootNode, ProductDTO product) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        IBrandBLL brandBLL = new BrandBLL();
+
+        if (brandBLL.findById(product.getBrandId()) == null) {
+            JsonNode brandNode = rootNode.get("brand");
+            if (brandNode != null) {
+                BrandDTO newBrand = mapper.readValue(brandNode.toString(), BrandDTO.class);
+                brandBLL.save(newBrand);
             }
         }
     }

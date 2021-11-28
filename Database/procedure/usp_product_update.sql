@@ -21,6 +21,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_product_update`(
     IN url_key_in TEXT,
     IN url_path_in TEXT,
     IN category_id_in BIGINT,
+    IN brand_id_in BIGINT,
     IN id_in BIGINT
 )
 BEGIN
@@ -41,7 +42,7 @@ BEGIN
 			favourite_count = favourite_count_in, image_url = image_url_in, list_price = list_price_in, name = name_in, 
 			original_price = original_price_in, price = price_in, rating_average = rating_average_in, review_count = review_count_in, 
 			description = description_in, short_description = short_description_in, sku = sku_in, url_key = url_key_in, 
-			url_path = url_path_in, category_id = category_id_in 
+			url_path = url_path_in, category_id = category_id_in, brand_id = brand_id_in
 		WHERE id = id_in;
 	COMMIT;
 

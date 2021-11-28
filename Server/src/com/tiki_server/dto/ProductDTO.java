@@ -63,8 +63,7 @@ public class ProductDTO {
 
     private Long categoryId = null;
 
-    public ProductDTO() {
-    }
+    private Long brandId = null;
 
     @SuppressWarnings("unchecked")
     @JsonProperty("images")
@@ -82,7 +81,16 @@ public class ProductDTO {
         this.categoryId = Long.valueOf((int) categories.get("id"));
     }
 
-    public ProductDTO(Long id, Long productId, String sku, String name, String urlKey, String urlPath, Long price, Long listPrice, Long originalPrice, Long discount, int discountRate, Long ratingAverage, Long reviewCount, Long favouriteCount, String shortDescription, String imageUrl, String description,Long allTimeQuantitySold, Long categoryId) {
+    @SuppressWarnings("unchecked")
+    @JsonProperty("brand")
+    private void unpackNestedBrand(Map<String, Object> brand) {
+        this.brandId = Long.valueOf((int) brand.get("id"));
+    }
+
+    public ProductDTO() {
+    }
+
+    public ProductDTO(Long id, String sku, String name, String urlKey, String urlPath, Long price, Long listPrice, Long originalPrice, String description, Long discount, int discountRate, double ratingAverage, Long reviewCount, Long favouriteCount, String shortDescription, String imageUrl, Long allTimeQuantitySold, Long categoryId, Long brandId) {
         this.id = id;
         this.sku = sku;
         this.name = name;
@@ -91,6 +99,7 @@ public class ProductDTO {
         this.price = price;
         this.listPrice = listPrice;
         this.originalPrice = originalPrice;
+        this.description = description;
         this.discount = discount;
         this.discountRate = discountRate;
         this.ratingAverage = ratingAverage;
@@ -100,7 +109,7 @@ public class ProductDTO {
         this.imageUrl = imageUrl;
         this.allTimeQuantitySold = allTimeQuantitySold;
         this.categoryId = categoryId;
-        this.description = description;
+        this.brandId = brandId;
     }
 
     public Long getId() {
@@ -229,6 +238,12 @@ public class ProductDTO {
         this.allTimeQuantitySold = allTimeQuantitySold;
     }
 
+    public String getDescription() { return description; }
+
+    public void setDescription(String description) { this.description = description; }
+
+    public void setFavouriteCount(Long favouriteCount) { this.favouriteCount = favouriteCount; }
+
     public Long getCategoryId() {
         return categoryId;
     }
@@ -237,23 +252,25 @@ public class ProductDTO {
         this.categoryId = categoryId;
     }
 
-    public String getDescription() { return description; }
+    public Long getBrandId() {
+        return brandId;
+    }
 
-    public void setDescription(String description) { this.description = description; }
-
-    public void setFavouriteCount(Long favouriteCount) { this.favouriteCount = favouriteCount; }
+    public void setBrandId(Long brandId) {
+        this.brandId = brandId;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProductDTO that = (ProductDTO) o;
-        return Double.compare(that.ratingAverage, ratingAverage) == 0 && Objects.equals(id, that.id) && Objects.equals(sku, that.sku) && Objects.equals(name, that.name) && Objects.equals(urlKey, that.urlKey) && Objects.equals(urlPath, that.urlPath) && Objects.equals(price, that.price) && Objects.equals(listPrice, that.listPrice) && Objects.equals(originalPrice, that.originalPrice) && Objects.equals(description, that.description) && Objects.equals(discount, that.discount) && Objects.equals(discountRate, that.discountRate) && Objects.equals(reviewCount, that.reviewCount) && Objects.equals(favouriteCount, that.favouriteCount) && Objects.equals(shortDescription, that.shortDescription) && Objects.equals(imageUrl, that.imageUrl) && Objects.equals(allTimeQuantitySold, that.allTimeQuantitySold) && Objects.equals(categoryId, that.categoryId);
+        return discountRate == that.discountRate && Double.compare(that.ratingAverage, ratingAverage) == 0 && Objects.equals(id, that.id) && Objects.equals(sku, that.sku) && Objects.equals(name, that.name) && Objects.equals(urlKey, that.urlKey) && Objects.equals(urlPath, that.urlPath) && Objects.equals(price, that.price) && Objects.equals(listPrice, that.listPrice) && Objects.equals(originalPrice, that.originalPrice) && Objects.equals(description, that.description) && Objects.equals(discount, that.discount) && Objects.equals(reviewCount, that.reviewCount) && Objects.equals(favouriteCount, that.favouriteCount) && Objects.equals(shortDescription, that.shortDescription) && Objects.equals(imageUrl, that.imageUrl) && Objects.equals(allTimeQuantitySold, that.allTimeQuantitySold) && Objects.equals(categoryId, that.categoryId) && Objects.equals(brandId, that.brandId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, sku, name, urlKey, urlPath, price, listPrice, originalPrice, description, discount, discountRate, ratingAverage, reviewCount, favouriteCount, shortDescription, imageUrl, allTimeQuantitySold, categoryId);
+        return Objects.hash(id, sku, name, urlKey, urlPath, price, listPrice, originalPrice, description, discount, discountRate, ratingAverage, reviewCount, favouriteCount, shortDescription, imageUrl, allTimeQuantitySold, categoryId, brandId);
     }
 
     @Override
@@ -267,16 +284,17 @@ public class ProductDTO {
                 ", price=" + price +
                 ", listPrice=" + listPrice +
                 ", originalPrice=" + originalPrice +
+                ", description='" + description + '\'' +
                 ", discount=" + discount +
                 ", discountRate=" + discountRate +
                 ", ratingAverage=" + ratingAverage +
                 ", reviewCount=" + reviewCount +
                 ", favouriteCount=" + favouriteCount +
                 ", shortDescription='" + shortDescription + '\'' +
-                ", description='" + description + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", allTimeQuantitySold=" + allTimeQuantitySold +
                 ", categoryId=" + categoryId +
+                ", brandId=" + brandId +
                 '}';
     }
 }
