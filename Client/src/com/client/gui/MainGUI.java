@@ -51,6 +51,7 @@ public class MainGUI extends javax.swing.JFrame {
         panelBody.revalidate();
         jTabbedPane1.addTab("Tìm theo URL", null, new panelTimTheoURL(), "Chuyển sang tìm theo URL");
         jTabbedPane1.addTab("Tìm kiếm nâng cao", null, new panelTimNangCao(), "Chuyển sang tìm kiếm nâng cao");
+        jTabbedPane1.setUI(new CustomTabbedPaneUI());
         CustomWindow();
     }
     
@@ -124,9 +125,7 @@ public class MainGUI extends javax.swing.JFrame {
         lblMaximize_Restore = new javax.swing.JLabel();
         lblShow_HideMenu = new javax.swing.JLabel();
         panelBody = new javax.swing.JPanel();
-        pnlSearch = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        pnlResult = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -202,44 +201,25 @@ public class MainGUI extends javax.swing.JFrame {
         getContentPane().add(panelHeader, java.awt.BorderLayout.PAGE_START);
 
         panelBody.setBackground(new java.awt.Color(255, 255, 255));
-        panelBody.setLayout(new java.awt.BorderLayout());
 
-        pnlSearch.setBackground(new java.awt.Color(255, 255, 255));
-        pnlSearch.setPreferredSize(new java.awt.Dimension(853, 150));
+        jTabbedPane1.setBackground(new java.awt.Color(255, 255, 255));
+        jTabbedPane1.setOpaque(true);
+        jTabbedPane1.setPreferredSize(new java.awt.Dimension(100, 600));
 
-        jTabbedPane1.setPreferredSize(new java.awt.Dimension(100, 400));
-
-        javax.swing.GroupLayout pnlSearchLayout = new javax.swing.GroupLayout(pnlSearch);
-        pnlSearch.setLayout(pnlSearchLayout);
-        pnlSearchLayout.setHorizontalGroup(
-            pnlSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout panelBodyLayout = new javax.swing.GroupLayout(panelBody);
+        panelBody.setLayout(panelBodyLayout);
+        panelBodyLayout.setHorizontalGroup(
+            panelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 853, Short.MAX_VALUE)
         );
-        pnlSearchLayout.setVerticalGroup(
-            pnlSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+        panelBodyLayout.setVerticalGroup(
+            panelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 526, Short.MAX_VALUE)
         );
-
-        panelBody.add(pnlSearch, java.awt.BorderLayout.PAGE_START);
-
-        pnlResult.setBackground(new java.awt.Color(255, 255, 255));
-
-        javax.swing.GroupLayout pnlResultLayout = new javax.swing.GroupLayout(pnlResult);
-        pnlResult.setLayout(pnlResultLayout);
-        pnlResultLayout.setHorizontalGroup(
-            pnlResultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 853, Short.MAX_VALUE)
-        );
-        pnlResultLayout.setVerticalGroup(
-            pnlResultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 236, Short.MAX_VALUE)
-        );
-
-        panelBody.add(pnlResult, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(panelBody, java.awt.BorderLayout.CENTER);
 
-        setSize(new java.awt.Dimension(853, 426));
+        setSize(new java.awt.Dimension(853, 566));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -310,7 +290,5 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JLabel lblShow_HideMenu;
     private javax.swing.JPanel panelBody;
     private javax.swing.JPanel panelHeader;
-    private javax.swing.JPanel pnlResult;
-    private javax.swing.JPanel pnlSearch;
     // End of variables declaration//GEN-END:variables
 }
