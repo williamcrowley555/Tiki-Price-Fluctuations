@@ -29,8 +29,8 @@ public class CustomTabbedPaneUI extends BasicTabbedPaneUI {
     @Override
     protected void installDefaults() {
         super.installDefaults();
-        selectColor = new Color(77, 77, 77);
-        deSelectColor = new Color(77, 77, 77);
+        selectColor = new Color(255, 255, 255);
+        deSelectColor = new Color(255, 255, 255);
         tabAreaInsets.right = anchoCarpetas;
     }
 
@@ -47,19 +47,19 @@ public class CustomTabbedPaneUI extends BasicTabbedPaneUI {
                 for (int i = 0; i < lines.length - 1; i++, fila--) {
                     Polygon carp = new Polygon();
                     carp.addPoint(0, lines[i]);
-                    carp.addPoint(tabPane.getWidth() - 2 * fila - 2, lines[i]);
-                    carp.addPoint(tabPane.getWidth() - 2 * fila, lines[i] + 3);
+                    carp.addPoint(tabPane.getWidth() * fila, lines[i]);
+                    carp.addPoint(tabPane.getWidth()  * fila, lines[i] );
                     if (i < lines.length - 2) {
-                        carp.addPoint(tabPane.getWidth() - 2 * fila, lines[i + 1]);
+                        carp.addPoint(tabPane.getWidth() * fila, lines[i + 1]);
                         carp.addPoint(0, lines[i + 1]);
                     } else {
-                        carp.addPoint(tabPane.getWidth() - 2 * fila, lines[i] + rects[selectedIndex].height);
+                        carp.addPoint(tabPane.getWidth()  * fila, lines[i] + rects[selectedIndex].height);
                         carp.addPoint(0, lines[i] + rects[selectedIndex].height);
                     }
                     carp.addPoint(0, lines[i]);
                     g.setColor(hazAlfa(fila));
                     g.fillPolygon(carp);
-                    g.setColor(darkShadow.darker());
+                    g.setColor(Color.WHITE);
                     g.drawPolygon(carp);
                 }
             } else {
@@ -74,7 +74,7 @@ public class CustomTabbedPaneUI extends BasicTabbedPaneUI {
                     carp.addPoint(0, lines[i]);
                     g.setColor(hazAlfa(fila + 2));
                     g.fillPolygon(carp);
-                    g.setColor(darkShadow.darker());
+                    g.setColor(Color.WHITE);
                     g.drawPolygon(carp);
                 }
             }
@@ -106,9 +106,9 @@ public class CustomTabbedPaneUI extends BasicTabbedPaneUI {
                 break;
             case TOP:
             default:
-                xp = new int[]{x, x, x + 3, x + w - inclTab - 6, x + w - inclTab - 2, x + w - inclTab, x + w - inclTab, x};
-                yp = new int[]{y + h, y + 3, y, y, y + 1, y + 3, y + h, y + h};
-                gradientShadow = new GradientPaint(0, 0, new Color(77,77,77), 0, y + h / 2, new Color(0, 0, 0));
+                xp = new int[]{x, x, x , x + w - inclTab , x + w - inclTab, x + w - inclTab, x + w - inclTab, x};
+                yp = new int[]{y + h, y, y, y, y , y , y + h, y + h};
+                gradientShadow = new GradientPaint(0, 0, new Color(255,255,255), 0, y + h / 2, new Color(255, 255, 255));
                 break;
         }
         // ;
@@ -151,7 +151,7 @@ public class CustomTabbedPaneUI extends BasicTabbedPaneUI {
                 g.setColor(Color.BLACK);
                 BasicGraphicsUtils.drawStringUnderlineCharAt(g, title, mnemIndex, textRect.x, textRect.y + metrics.getAscent());
             } else { // tab disabled
-                g.setColor(Color.BLACK);
+                g.setColor(Color.WHITE);
                 BasicGraphicsUtils.drawStringUnderlineCharAt(g, title, mnemIndex, textRect.x, textRect.y + metrics.getAscent());
                 //g.setColor(tabPane.getBackgroundAt(tabIndex).darker());
                 BasicGraphicsUtils.drawStringUnderlineCharAt(g, title, mnemIndex, textRect.x - 1, textRect.y + metrics.getAscent() - 1);
@@ -204,8 +204,11 @@ public class CustomTabbedPaneUI extends BasicTabbedPaneUI {
         }
     }
 
+    
+    
     @Override
     protected void paintTabBorder(Graphics g, int tabPlacement, int tabIndex, int x, int y, int w, int h, boolean isSelected) {
+       
     }
 
     @Override
@@ -221,6 +224,6 @@ public class CustomTabbedPaneUI extends BasicTabbedPaneUI {
         if (fila >= 0) {
             alfa = 50 + (fila > 7 ? 70 : 10 * fila);
         }
-        return new Color(0, 0, 0, alfa);
+        return new Color(255, 255, 255, alfa);
     }
 }

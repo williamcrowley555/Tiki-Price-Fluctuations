@@ -7,6 +7,7 @@ package com.client.gui;
 
 
 
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -26,12 +27,14 @@ import java.awt.geom.RoundRectangle2D;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.border.LineBorder;
 
 /**
  *
  * @author RavenPC
  */
-public class MainGUI extends javax.swing.JFrame {
+public class MainGUI1 extends javax.swing.JFrame {
 
     /**
      * Creates new form Main
@@ -43,19 +46,44 @@ public class MainGUI extends javax.swing.JFrame {
     ImageIcon iconRestoreDown = new ImageIcon(getClass().getResource("/com/client/img/restore_down.png"));
   
    
-    private MainGUI() {
+    private MainGUI1() {
         initComponents();
         invisibleMenuScrollBar(8);
-        //panelBody.add(new ProductGUI());
         panelBody.repaint();
         panelBody.revalidate();
-        jTabbedPane1.addTab("Tìm theo URL", null, new panelTimTheoURL(), "Chuyển sang tìm theo URL");
-        jTabbedPane1.addTab("Tìm kiếm nâng cao", null, new panelTimNangCao(), "Chuyển sang tìm kiếm nâng cao");
-       
+        initCardLayout();
         CustomWindow();
-         jTabbedPane1.setUI(new CustomTabbedPaneUI());
+         
     }
     
+    public void initCardLayout(){
+        pnlTabContent.add("url", new panelTimTheoURL());
+        pnlTabContent.add("advanced", new panelTimNangCao());
+        switchCard("url");
+        setTabSelection(btnUrlTab);
+    }
+    
+    public void switchCard(String name){
+        CardLayout card = (CardLayout) (pnlTabContent.getLayout());
+        card.show(pnlTabContent, name);
+    }
+    
+    public void setTabSelection(JButton button){
+        resetSelection();
+        button.setBackground(new Color(77,77,77));
+        button.setForeground(Color.white);
+        
+    }
+    
+    public void resetSelection(){
+        btnUrlTab.setBorder(new LineBorder(Color.BLACK));
+        btnUrlTab.setBackground(Color.white);
+        btnUrlTab.setForeground(Color.BLACK);
+        
+        btnAdvancedTab.setBorder(new LineBorder(Color.BLACK));
+        btnAdvancedTab.setBackground(Color.white);
+        btnAdvancedTab.setForeground(Color.BLACK);
+    }
     
     
     public void invisibleMenuScrollBar(int speed)
@@ -81,7 +109,7 @@ public class MainGUI extends javax.swing.JFrame {
         Color flatBlack = new Color(77,77,77);//Border
         this.setMinimumSize(new Dimension(800,600));
         //this.setSize(new Dimension(1280,720));
-        this.getRootPane().setBorder(BorderFactory.createMatteBorder(0,2,0,0, flatBlack));   
+        this.getRootPane().setBorder(BorderFactory.createMatteBorder(0,2,2,2, flatBlack));   
         center();
         lblMinimize.setText("\u2014");
         lblExit.setText("X");
@@ -126,7 +154,10 @@ public class MainGUI extends javax.swing.JFrame {
         lblMaximize_Restore = new javax.swing.JLabel();
         lblShow_HideMenu = new javax.swing.JLabel();
         panelBody = new javax.swing.JPanel();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        pnlTabs = new javax.swing.JPanel();
+        btnUrlTab = new javax.swing.JButton();
+        btnAdvancedTab = new javax.swing.JButton();
+        pnlTabContent = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -202,22 +233,44 @@ public class MainGUI extends javax.swing.JFrame {
         getContentPane().add(panelHeader, java.awt.BorderLayout.PAGE_START);
 
         panelBody.setBackground(new java.awt.Color(255, 255, 255));
+        panelBody.setLayout(new java.awt.BorderLayout());
 
-        jTabbedPane1.setBackground(new java.awt.Color(255, 255, 255));
-        jTabbedPane1.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(255, 255, 255)));
-        jTabbedPane1.setOpaque(true);
-        jTabbedPane1.setPreferredSize(new java.awt.Dimension(100, 600));
+        pnlTabs.setBackground(new java.awt.Color(255, 255, 255));
+        pnlTabs.setPreferredSize(new java.awt.Dimension(853, 40));
+        pnlTabs.setRequestFocusEnabled(false);
+        pnlTabs.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        javax.swing.GroupLayout panelBodyLayout = new javax.swing.GroupLayout(panelBody);
-        panelBody.setLayout(panelBodyLayout);
-        panelBodyLayout.setHorizontalGroup(
-            panelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 853, Short.MAX_VALUE)
-        );
-        panelBodyLayout.setVerticalGroup(
-            panelBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 526, Short.MAX_VALUE)
-        );
+        btnUrlTab.setBackground(new java.awt.Color(255, 255, 255));
+        btnUrlTab.setText("Tìm theo URL");
+        btnUrlTab.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnUrlTab.setContentAreaFilled(false);
+        btnUrlTab.setOpaque(true);
+        btnUrlTab.setPreferredSize(new java.awt.Dimension(120, 40));
+        btnUrlTab.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUrlTabActionPerformed(evt);
+            }
+        });
+        pnlTabs.add(btnUrlTab);
+
+        btnAdvancedTab.setBackground(new java.awt.Color(255, 255, 255));
+        btnAdvancedTab.setText("Tìm Nâng cao");
+        btnAdvancedTab.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        btnAdvancedTab.setContentAreaFilled(false);
+        btnAdvancedTab.setOpaque(true);
+        btnAdvancedTab.setPreferredSize(new java.awt.Dimension(120, 40));
+        btnAdvancedTab.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAdvancedTabActionPerformed(evt);
+            }
+        });
+        pnlTabs.add(btnAdvancedTab);
+
+        panelBody.add(pnlTabs, java.awt.BorderLayout.PAGE_START);
+
+        pnlTabContent.setBackground(new java.awt.Color(255, 255, 255));
+        pnlTabContent.setLayout(new java.awt.CardLayout());
+        panelBody.add(pnlTabContent, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(panelBody, java.awt.BorderLayout.CENTER);
 
@@ -246,6 +299,17 @@ public class MainGUI extends javax.swing.JFrame {
 
     }//GEN-LAST:event_lblShow_HideMenuMousePressed
 
+    private void btnUrlTabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUrlTabActionPerformed
+        // TODO add your handling code here:
+        switchCard("url");
+        setTabSelection(btnUrlTab);
+    }//GEN-LAST:event_btnUrlTabActionPerformed
+
+    private void btnAdvancedTabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdvancedTabActionPerformed
+        switchCard("advanced");
+        setTabSelection(btnAdvancedTab);
+    }//GEN-LAST:event_btnAdvancedTabActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -263,14 +327,18 @@ public class MainGUI extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainGUI1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainGUI1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainGUI1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainGUI1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -279,18 +347,21 @@ public class MainGUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainGUI().setVisible(true);
+                new MainGUI1().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JButton btnAdvancedTab;
+    private javax.swing.JButton btnUrlTab;
     private javax.swing.JLabel lblExit;
     private javax.swing.JLabel lblMaximize_Restore;
     private javax.swing.JLabel lblMinimize;
     private javax.swing.JLabel lblShow_HideMenu;
     private javax.swing.JPanel panelBody;
     private javax.swing.JPanel panelHeader;
+    private javax.swing.JPanel pnlTabContent;
+    private javax.swing.JPanel pnlTabs;
     // End of variables declaration//GEN-END:variables
 }
