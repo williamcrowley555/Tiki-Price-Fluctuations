@@ -2,6 +2,7 @@ package com.tiki_server.dal.impl;
 
 import com.tiki_server.dal.IHistoryDAL;
 import com.tiki_server.dto.HistoryDTO;
+import com.tiki_server.mapper.impl.ConfigurableProductHistoryMapper;
 import com.tiki_server.mapper.impl.HistoryMapper;
 
 import java.util.List;
@@ -14,10 +15,16 @@ public class HistoryDAL extends AbstractDAL<HistoryDTO> implements IHistoryDAL {
     }
 
     @Override
+    public List<HistoryDTO> findByProductId(Long productId) {
+        String sql = "{CALL usp_history_getByProductId(?)}";
+        return callQueryProc(sql, new HistoryMapper(), productId);
+    }
+
+    @Override
     public HistoryDTO findById(Long id) {
         String sql = "SELECT * FROM history WHERE id = ?";
-        List<HistoryDTO> history = query(sql, new HistoryMapper(), id);
-        return history.isEmpty() ? null : history.get(0);
+        List<HistoryDTO> histories = query(sql, new HistoryMapper(), id);
+        return histories.isEmpty() ? null : histories.get(0);
     }
 
     @Override
