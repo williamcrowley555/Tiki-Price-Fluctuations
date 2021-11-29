@@ -14,6 +14,18 @@ public class ProductDAL extends AbstractDAL<ProductDTO> implements IProductDAL {
     }
 
     @Override
+    public List<ProductDTO> findByCategoryId(Long categoryId) {
+        String sql = "SELECT * FROM product WHERE category_id = ?";
+        return query(sql, new ProductMapper(), categoryId);
+    }
+
+    @Override
+    public List<ProductDTO> findByBrandId(Long brandId) {
+        String sql = "SELECT * FROM product WHERE brand_id = ?";
+        return query(sql, new ProductMapper(), brandId);
+    }
+
+    @Override
     public ProductDTO findById(Long id) {
         String sql = "SELECT * FROM product WHERE id = ?";
         List<ProductDTO> product = query(sql, new ProductMapper(), id);
@@ -22,17 +34,21 @@ public class ProductDAL extends AbstractDAL<ProductDTO> implements IProductDAL {
 
     @Override
     public Long save(ProductDTO product) {
-        String sql = "INSERT INTO product (id, all_time_quantity_sold, discount, discount_rate, favourite_count, image_url, list_price, name, original_price, price, rating_average, review_count, description,short_description, sku, url_key, url_path, category_id) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        return insert(sql, product.getId(), product.getAllTimeQuantitySold(), product.getDiscount(), product.getDiscountRate(), product.getFavouriteCount(), product.getImageUrl(), product.getListPrice(), product.getName(), product.getOriginalPrice(), product.getPrice(), product.getRatingAverage(), product.getReviewCount(), product.getDescription(),product.getShortDescription(), product.getSku(), product.getUrlKey(), product.getUrlPath(), product.getCategoryId());
+        String sql = "INSERT INTO product (id, all_time_quantity_sold, discount, discount_rate, favourite_count, image_url, list_price, name, original_price, price, rating_average, review_count, description,short_description, sku, url_key, url_path, category_id, brand_id) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        return insert(sql, product.getId(), product.getAllTimeQuantitySold(), product.getDiscount(), product.getDiscountRate(),
+                product.getFavouriteCount(), product.getImageUrl(), product.getListPrice(), product.getName(),
+                product.getOriginalPrice(), product.getPrice(), product.getRatingAverage(), product.getReviewCount(),
+                product.getDescription(),product.getShortDescription(), product.getSku(), product.getUrlKey(),
+                product.getUrlPath(), product.getCategoryId(), product.getBrandId());
     }
 
     @Override
     public boolean update(ProductDTO product) {
-        String sql = "{CALL usp_product_update(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+        String sql = "{CALL usp_product_update(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
         return callProc(sql, product.getAllTimeQuantitySold(), product.getDiscount(), product.getDiscountRate(), product.getFavouriteCount(),
                 product.getImageUrl(), product.getListPrice(), product.getName(), product.getOriginalPrice(), product.getPrice(),
                 product.getRatingAverage(), product.getReviewCount(), product.getDescription(), product.getShortDescription(), product.getSku(), product.getUrlKey(),
-                product.getUrlPath(), product.getCategoryId(), product.getId());
+                product.getUrlPath(), product.getCategoryId(), product.getBrandId(), product.getId());
     }
 
     @Override

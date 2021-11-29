@@ -20,6 +20,16 @@ public class ProductBLL implements IProductBLL {
     }
 
     @Override
+    public List<ProductDTO> findByCategoryId(Long categoryId) {
+        return productDAL.findByCategoryId(categoryId);
+    }
+
+    @Override
+    public List<ProductDTO> findByBrandId(Long brandId) {
+        return productDAL.findByBrandId(brandId);
+    }
+
+    @Override
     public ProductDTO findById(Long id) {
         return productDAL.findById(id);
     }

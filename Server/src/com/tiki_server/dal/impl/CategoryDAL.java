@@ -25,7 +25,7 @@ public class CategoryDAL extends AbstractDAL<CategoryDTO> implements ICategoryDA
 
     @Override
     public Long save(CategoryDTO category) {
-        String sql = "INSERT INTO category (id,name) VALUES(?, ?)";
+        String sql = "INSERT INTO category (id, name) VALUES(?, ?)";
         return insert(sql, category.getId(), category.getName());
     }
 

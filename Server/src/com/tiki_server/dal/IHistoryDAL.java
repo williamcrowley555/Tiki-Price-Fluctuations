@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface IHistoryDAL {
     List<HistoryDTO> findAll();
+    List<HistoryDTO> findByProductId(Long productId);
     HistoryDTO findById(Long id);
     Long save(HistoryDTO history);
     void update(HistoryDTO history);

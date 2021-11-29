@@ -67,6 +67,10 @@ public class ProductEntity implements Serializable {
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
 
+    @ManyToOne
+    @JoinColumn(name = "brand_id")
+    private BrandEntity brand;
+
     public ProductEntity() {
     }
 }

@@ -46,11 +46,14 @@ public class TikiAPI {
                 String json = JSON.get(url + product.getId());
                 System.out.println(product.getId());
                 if (json == null || json.isEmpty())
-                    System.out.println("Empty JSON: " + json);
+                    System.out.println("Product ID: " + product.getId() + " has empty JSON: " + json);
                 else {
                     ObjectNode rootNode = mapper.readValue(json, ObjectNode.class);
 
                     ProductDTO newProduct = mapper.readValue(json, ProductDTO.class);
+
+//                    Update Brand
+                    TikiAPI.updateBrand(rootNode, newProduct);
 
 //                    Update Category
                     TikiAPI.updateCategory(rootNode, newProduct);
@@ -112,6 +115,19 @@ public class TikiAPI {
 //                    Update Comment
                     updateComment(rootNode);
                 }
+            }
+        }
+    }
+
+    public static void updateBrand(ObjectNode rootNode, ProductDTO product) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        IBrandBLL brandBLL = new BrandBLL();
+
+        if (brandBLL.findById(product.getBrandId()) == null) {
+            JsonNode brandNode = rootNode.get("brand");
+            if (brandNode != null) {
+                BrandDTO newBrand = mapper.readValue(brandNode.toString(), BrandDTO.class);
+                brandBLL.save(newBrand);
             }
         }
     }
@@ -201,7 +217,6 @@ public class TikiAPI {
         JsonNode data = rootNode.get("data");
         for(JsonNode dataArray : data) {
             JsonNode comments = dataArray.get("comments");
-            if(!comments.asText().equals(""))
                 for (JsonNode commentArray : comments) {
                     if (commentArray != null) {
                         CommentDTO comment = objectMapper.treeToValue(commentArray, CommentDTO.class);
@@ -242,7 +257,7 @@ public class TikiAPI {
         for(JsonNode dataArray : data) {
             Long reviewId = dataArray.get("id").asLong();
             JsonNode timelines = dataArray.get("timeline");
-            if(timelines != null && !timelines.asText().equals("")) {
+            if(timelines != null) {
                 TimelineDTO timeline = objectMapper.treeToValue(timelines, TimelineDTO.class);
                 timeline.setReviewId(reviewId);
                 String reviewCreatedDate = simpleDateFormat.format(timeline.getReviewCreatedDate());
