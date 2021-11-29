@@ -15,7 +15,7 @@ import java.sql.SQLException;
  */
 public class DBConnectionUtil {
     
-    private static final String URL = "jdbc:mysql://localhost:3306/tiki?characterEncoding=utf-8&useConfigs=maxPerformance";
+    private static final String URL = "jdbc:mysql://localhost:3306/tiki?characterEncoding=utf-8&useConfigs=maxPerformance&allowMultiQueries=true";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "admin123";
     private static Connection connection = null;
