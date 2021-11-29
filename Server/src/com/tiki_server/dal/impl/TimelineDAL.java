@@ -24,6 +24,13 @@ public class TimelineDAL extends AbstractDAL<TimelineDTO> implements ITimelineDA
     }
 
     @Override
+    public TimelineDTO findByReviewId(Long reviewId) {
+        String sql = "SELECT * FROM timeline WHERE review_id = ?";
+        List<TimelineDTO> timeline = query(sql, new TimelineMapper(), reviewId);
+        return timeline.isEmpty() ? null : timeline.get(0);
+    }
+
+    @Override
     public Long save(TimelineDTO timeline) {
         String sql = "INSERT INTO timeline(id, content, delivery_date, explaination, review_created_date, review_id) VALUES(?, ?, ?, ?, ?, ?)";
         return insert(sql, timeline.getId(), timeline.getContent(), timeline.getDeliveryDate(), timeline.getExplaination(), timeline.getReviewCreatedDate(),
@@ -34,6 +41,12 @@ public class TimelineDAL extends AbstractDAL<TimelineDTO> implements ITimelineDA
     public void update(TimelineDTO timeline) {
         String sql = "UPDATE timeline SET content = ?, delivery_date = ?, explaination = ?, review_created_date = ?, review_id = ? WHERE id = ?";
         update(sql, timeline.getContent(), timeline.getDeliveryDate(), timeline.getExplaination(), timeline.getReviewCreatedDate(), timeline.getReviewId(), timeline.getId());
+    }
+
+    @Override
+    public void updateByReviewId(TimelineDTO timeline) {
+        String sql = "UPDATE timeline SET content = ?, delivery_date = ?, explaination = ?, review_created_date = ? WHERE review_id = ?";
+        update(sql, timeline.getContent(), timeline.getDeliveryDate(), timeline.getExplaination(), timeline.getReviewCreatedDate(), timeline.getReviewId());
     }
 
     @Override

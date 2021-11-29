@@ -28,6 +28,9 @@ public class TimelineBLL implements ITimelineBLL {
     }
 
     @Override
+    public TimelineDTO findByReviewId(Long reviewId) { return timelineDAL.findByReviewId(reviewId); }
+
+    @Override
     public Long save(TimelineDTO timeline) {
         return timelineDAL.save(timeline);
     }
@@ -36,6 +39,9 @@ public class TimelineBLL implements ITimelineBLL {
     public void update(TimelineDTO timeline) {
         timelineDAL.update(timeline);
     }
+
+    @Override
+    public void updateByReviewId(TimelineDTO timeline) { timelineDAL.updateByReviewId(timeline); }
 
     @Override
     public void delete(Long id) {

@@ -19,9 +19,9 @@ BEGIN
 		END;
         
 	START TRANSACTION;
-        SELECT cfh.*
-        FROM configurable_product_history AS cfh JOIN configurable_product AS cf ON cfh.configurable_product_id = cf.id
-		WHERE cf.product_id = product_id_in;
+        SELECT cph.*
+        FROM configurable_product_history AS cph JOIN configurable_product AS cp ON cph.configurable_product_child_id = cp.child_id
+		WHERE cp.product_id = product_id_in;
 	COMMIT;
 
 END $$
