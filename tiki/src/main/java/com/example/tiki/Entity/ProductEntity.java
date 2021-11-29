@@ -41,7 +41,7 @@ public class ProductEntity implements Serializable {
     private int discountRate;
 
     @Column(name = "rating_average")
-    private Long ratingAverage;
+    private float ratingAverage;
 
     @Column(name = "review_count")
     private Long reviewCount;

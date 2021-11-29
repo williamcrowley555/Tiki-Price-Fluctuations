@@ -4,7 +4,9 @@ DELIMITER $$
 
 DROP PROCEDURE IF EXISTS `usp_history_getByProductId` $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_history_getByProductId`(
-	IN product_id_in BIGINT
+	IN product_id_in BIGINT,
+    IN month_in SMALLINT,
+    IN year_in SMALLINT
 )
 BEGIN
 
@@ -21,7 +23,7 @@ BEGIN
 	START TRANSACTION;
         SELECT h.*
         FROM history AS h JOIN product AS p ON h.product_id = p.id
-		WHERE h.product_id = product_id_in;
+		WHERE h.product_id = product_id_in AND MONTH(date) = month_in AND YEAR(date) = year_in;
 	COMMIT;
 
 END $$

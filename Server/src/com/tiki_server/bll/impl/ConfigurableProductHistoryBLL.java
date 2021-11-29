@@ -24,12 +24,12 @@ public class ConfigurableProductHistoryBLL implements IConfigurableProductHistor
     }
 
     @Override
-    public List<ConfigurableProductHistoryDTO> findByProductId(Long productId) {
-        return cpHistoryDAL.findByProductId(productId);
+    public List<ConfigurableProductHistoryDTO> findByProductId(Long productId, int month, int year) {
+        return cpHistoryDAL.findByProductId(productId, month, year);
     }
 
     @Override
-    public List<ConfigurableProductHistoryDTO> findByProductPageUrl(String url) {
+    public List<ConfigurableProductHistoryDTO> findByProductPageUrl(String url, int month, int year) {
         String productId = null;
         StringTokenizer stringTokenizer = new StringTokenizer(url, "-?");
 
@@ -42,7 +42,7 @@ public class ConfigurableProductHistoryBLL implements IConfigurableProductHistor
         if (productId != null) {
             productId = StringUtils.substringBetween(productId, "p", ".html");
             if (InputValidatorUtil.isLong(productId).isEmpty())
-                return findByProductId(Long.valueOf(productId));
+                return findByProductId(Long.valueOf(productId), month, year);
         }
 
         return null;

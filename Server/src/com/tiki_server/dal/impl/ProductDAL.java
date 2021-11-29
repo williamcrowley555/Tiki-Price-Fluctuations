@@ -26,6 +26,12 @@ public class ProductDAL extends AbstractDAL<ProductDTO> implements IProductDAL {
     }
 
     @Override
+    public List<ProductDTO> filter(String productName, Long categoryId, Long brandId, float ratingAverage, Long minPrice, Long maxPrice) {
+        String sql = "{CALL usp_product_filter(?, ?, ?, ?, ?, ?)}";
+        return callQueryProc(sql, new ProductMapper(), productName, categoryId, brandId, ratingAverage, minPrice, maxPrice);
+    }
+
+    @Override
     public ProductDTO findById(Long id) {
         String sql = "SELECT * FROM product WHERE id = ?";
         List<ProductDTO> product = query(sql, new ProductMapper(), id);

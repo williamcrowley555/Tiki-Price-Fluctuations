@@ -45,7 +45,7 @@ public class ProductDTO {
     private int discountRate;
 
     @JsonProperty("rating_average")
-    private double ratingAverage;
+    private float ratingAverage;
 
     @JsonProperty("review_count")
     private Long reviewCount;
@@ -90,7 +90,7 @@ public class ProductDTO {
     public ProductDTO() {
     }
 
-    public ProductDTO(Long id, String sku, String name, String urlKey, String urlPath, Long price, Long listPrice, Long originalPrice, String description, Long discount, int discountRate, double ratingAverage, Long reviewCount, Long favouriteCount, String shortDescription, String imageUrl, Long allTimeQuantitySold, Long categoryId, Long brandId) {
+    public ProductDTO(Long id, String sku, String name, String urlKey, String urlPath, Long price, Long listPrice, Long originalPrice, String description, Long discount, int discountRate, float ratingAverage, Long reviewCount, Long favouriteCount, String shortDescription, String imageUrl, Long allTimeQuantitySold, Long categoryId, Long brandId) {
         this.id = id;
         this.sku = sku;
         this.name = name;
@@ -190,11 +190,11 @@ public class ProductDTO {
         this.discountRate = discountRate;
     }
 
-    public double getRatingAverage() {
+    public float getRatingAverage() {
         return ratingAverage;
     }
 
-    public void setRatingAverage(double ratingAverage) {
+    public void setRatingAverage(float ratingAverage) {
         this.ratingAverage = ratingAverage;
     }
 

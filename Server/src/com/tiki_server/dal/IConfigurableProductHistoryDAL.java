@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface IConfigurableProductHistoryDAL {
     List<ConfigurableProductHistoryDTO> findAll();
-    List<ConfigurableProductHistoryDTO> findByProductId(Long productId);
+    List<ConfigurableProductHistoryDTO> findByProductId(Long productId, int month, int year);
     Long save(ConfigurableProductHistoryDTO cpHistory);
 }

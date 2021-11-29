@@ -1,13 +1,12 @@
 package com.tiki_server.bll;
 
 import com.tiki_server.dto.ConfigurableProductHistoryDTO;
-import com.tiki_server.dto.HistoryDTO;
 
 import java.util.List;
 
 public interface IConfigurableProductHistoryBLL {
     List<ConfigurableProductHistoryDTO> findAll();
-    List<ConfigurableProductHistoryDTO> findByProductId(Long productId);
-    List<ConfigurableProductHistoryDTO> findByProductPageUrl(String url);
+    List<ConfigurableProductHistoryDTO> findByProductId(Long productId, int month, int year);
+    List<ConfigurableProductHistoryDTO> findByProductPageUrl(String url, int month, int year);
     Long save(ConfigurableProductHistoryDTO cpHistory);
 }

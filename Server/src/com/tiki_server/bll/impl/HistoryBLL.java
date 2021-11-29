@@ -7,7 +7,6 @@ import com.tiki_server.dto.HistoryDTO;
 import com.tiki_server.util.InputValidatorUtil;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.xml.validation.Validator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -24,12 +23,12 @@ public class HistoryBLL implements IHistoryBLL {
     }
 
     @Override
-    public List<HistoryDTO> findByProductId(Long productId) {
-        return historyDAL.findByProductId(productId);
+    public List<HistoryDTO> findByProductId(Long productId, int month, int year) {
+        return historyDAL.findByProductId(productId, month, year);
     }
 
     @Override
-    public List<HistoryDTO> findByProductPageUrl(String url) {
+    public List<HistoryDTO> findByProductPageUrl(String url, int month, int year) {
         String productId = null;
         StringTokenizer stringTokenizer = new StringTokenizer(url, "-?");
 
@@ -42,7 +41,7 @@ public class HistoryBLL implements IHistoryBLL {
         if (productId != null) {
             productId = StringUtils.substringBetween(productId, "p", ".html");
             if (InputValidatorUtil.isLong(productId).isEmpty())
-                return findByProductId(Long.valueOf(productId));
+                return findByProductId(Long.valueOf(productId), month, year);
         }
 
         return null;

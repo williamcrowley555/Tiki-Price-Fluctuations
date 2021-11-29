@@ -15,9 +15,9 @@ public class HistoryDAL extends AbstractDAL<HistoryDTO> implements IHistoryDAL {
     }
 
     @Override
-    public List<HistoryDTO> findByProductId(Long productId) {
-        String sql = "{CALL usp_history_getByProductId(?)}";
-        return callQueryProc(sql, new HistoryMapper(), productId);
+    public List<HistoryDTO> findByProductId(Long productId, int month, int year) {
+        String sql = "{CALL usp_history_getByProductId(?, ?, ?)}";
+        return callQueryProc(sql, new HistoryMapper(), productId, month, year);
     }
 
     @Override
