@@ -2,9 +2,6 @@ package com.tiki_server.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.tiki_server.bll.IProductBLL;
-import com.tiki_server.bll.impl.ProductBLL;
-import com.tiki_server.dto.ProductDTO;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
