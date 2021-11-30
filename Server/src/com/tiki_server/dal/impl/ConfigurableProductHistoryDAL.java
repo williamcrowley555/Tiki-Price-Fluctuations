@@ -21,6 +21,12 @@ public class ConfigurableProductHistoryDAL extends AbstractDAL<HistoryDTO> imple
     }
 
     @Override
+    public List<ConfigurableProductHistoryDTO> findByProductIdAndConfigurableProductId(Long productId, Long cpChildId, int month, int year) {
+        String sql = "{CALL usp_configurable_product_history_getByProductIdAndCPChildId(?, ?, ?, ?)}";
+        return callQueryProc(sql, new ConfigurableProductHistoryMapper(), productId, cpChildId, month, year);
+    }
+
+    @Override
     public Long save(ConfigurableProductHistoryDTO cpHistory) {
         String sql = "INSERT INTO configurable_product_history(date, price, configurable_product_child_id) VALUES(?, ?, ?)";
         return insert(sql, cpHistory.getDate(), cpHistory.getPrice(), cpHistory.getConfigurableProductChildId());

@@ -29,6 +29,11 @@ public class ConfigurableProductHistoryBLL implements IConfigurableProductHistor
     }
 
     @Override
+    public List<ConfigurableProductHistoryDTO> findByProductIdAndConfigurableProductId(Long productId, Long cpId, int month, int year) {
+        return cpHistoryDAL.findByProductIdAndConfigurableProductId(productId, cpId, month, year);
+    }
+
+    @Override
     public List<ConfigurableProductHistoryDTO> findByProductPageUrl(String url, int month, int year) {
         String productId = null;
         StringTokenizer stringTokenizer = new StringTokenizer(url, "-?");

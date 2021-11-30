@@ -17,6 +17,12 @@ public class ConfigurableProductDAL extends AbstractDAL<ConfigurableProductDTO> 
     }
 
     @Override
+    public List<ConfigurableProductDTO> findByProductId(Long productId) {
+        String sql = "SELECT * FROM configurable_product WHERE product_id = ?";
+        return query(sql, new ConfigurableProductMapper(), productId);
+    }
+
+    @Override
     public ConfigurableProductDTO findByChildId(Long childId) {
         String sql = "SELECT * FROM configurable_product WHERE child_id = ?";
         List<ConfigurableProductDTO> configurableProduct = query(sql, new ConfigurableProductMapper(), childId);
