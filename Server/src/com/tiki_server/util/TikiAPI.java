@@ -283,6 +283,54 @@ public class TikiAPI {
         }
     }
 
+    public static void getReviewFromProductId(Long id) {
+        ReviewBLL reviewBLL = new ReviewBLL();
+        List<ReviewDTO> listReview = reviewBLL.findByProductId(id);
+        if(listReview == null) {
+            System.out.println("Không tìm thấy comment của product_id = " + id);
+            return;
+        }
+        for (ReviewDTO review : listReview) {
+            System.out.println(review);
+        }
+    }
+
+    public static void getCommentFromProductId(Long id) {
+        ReviewBLL reviewBLL = new ReviewBLL();
+        CommentBLL commentBLL = new CommentBLL();
+        List<ReviewDTO> listReview = reviewBLL.findByProductId(id);
+        if(listReview == null) {
+            System.out.println("Không tìm thấy comment của product_id = " + id);
+            return;
+        }
+        for (ReviewDTO review : listReview) {
+            List<CommentDTO> listComment = commentBLL.findByReviewId(review.getId());
+            if(listComment == null)
+                System.out.println("Không tìm thấy comment của product_id = " + id + " có review_id = " + review.getId());
+            else
+                for(CommentDTO comment : listComment) {
+                    System.out.println(comment);
+                }
+        }
+    }
+
+    public static void getTimelineFromProductId(Long id) {
+        ReviewBLL reviewBLL = new ReviewBLL();
+        TimelineBLL timelineBLL = new TimelineBLL();
+        List<ReviewDTO> listReview = reviewBLL.findByProductId(id);
+        if(listReview == null) {
+            System.out.println("Không tìm thấy timeline của product_id = " + id);
+            return;
+        }
+        for (ReviewDTO review : listReview) {
+            TimelineDTO timeline = timelineBLL.findByReviewId(review.getId());
+            if(timeline == null)
+                System.out.println("Không tìm thấy timeline của product_id = " + id + " có review_id = " + review.getId());
+            else
+                System.out.println(timeline);
+        }
+    }
+
     public static void main(String[] args) {
         try {
             updateProducts();

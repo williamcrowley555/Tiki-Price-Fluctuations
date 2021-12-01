@@ -8,6 +8,7 @@ import java.util.List;
 public interface IReviewBLL {
     List<ReviewDTO> findAll();
     ReviewDTO findById(Long id);
+    List<ReviewDTO> findByProductId(Long id);
     Long save(ReviewDTO review);
     void update(ReviewDTO review);
     void delete(Long id);

@@ -23,6 +23,13 @@ public class ReviewDAL extends AbstractDAL<ReviewDTO> implements IReviewDAL {
     }
 
     @Override
+    public List<ReviewDTO> findByProductId(Long id) {
+        String sql = "SELECT * FROM review WHERE product_id = ?";
+        List<ReviewDTO> review = query(sql, new ReviewMapper(), id);
+        return review.isEmpty() ? null : review;
+    }
+
+    @Override
     public Long save(ReviewDTO review) {
         String sql = "SET NAMES utf8mb4; INSERT INTO review(id, comment_count, content, image_url, rating, status, title, product_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
         return insert(sql, review.getId(), review.getCommentCount(), review.getContent(), review.getImageUrl(), review.getRating(), review.getStatus(),

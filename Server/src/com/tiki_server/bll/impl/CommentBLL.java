@@ -26,6 +26,9 @@ public class CommentBLL implements ICommentBLL {
     }
 
     @Override
+    public List<CommentDTO> findByReviewId(Long id) { return commentDAL.findByReviewId(id); }
+
+    @Override
     public Long save(CommentDTO comment) {
         return commentDAL.save(comment);
     }

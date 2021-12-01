@@ -28,6 +28,9 @@ public class ReviewBLL implements IReviewBLL {
     }
 
     @Override
+    public List<ReviewDTO> findByProductId(Long id) { return reviewDAL.findByProductId(id); }
+
+    @Override
     public Long save(ReviewDTO review) {
         return reviewDAL.save(review);
     }
