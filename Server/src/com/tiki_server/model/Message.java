@@ -2,9 +2,14 @@ package com.tiki_server.model;
 
 import com.tiki_server.enums.MessageType;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Map;
 
-public class Message {
+public class Message implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -9069446134464224521L;
+
     private Map<String, Object> content;
     private MessageType messageType;
 

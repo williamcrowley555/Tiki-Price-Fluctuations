@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.tiki_server.bll.*;
 import com.tiki_server.bll.impl.*;
 import com.tiki_server.dto.*;
+import org.jsoup.Jsoup;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -18,15 +19,6 @@ import java.util.regex.Pattern;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TikiAPI {
-//    public static ArrayList<Long> listIdProduct;
-//
-//    static {
-//        try {
-//            listIdProduct = getListIdProduct();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public TikiAPI() throws IOException {
     }
@@ -51,6 +43,8 @@ public class TikiAPI {
                     ObjectNode rootNode = mapper.readValue(json, ObjectNode.class);
 
                     ProductDTO newProduct = mapper.readValue(json, ProductDTO.class);
+                    String descriptionText = Jsoup.parse(newProduct.getDescription()).text();
+                    newProduct.setDescription(descriptionText);
 
 //                    Update Brand
                     TikiAPI.updateBrand(rootNode, newProduct);
@@ -65,6 +59,7 @@ public class TikiAPI {
                     ProductDTO oldProduct = productBLL.findById(newProduct.getId());
                     if (!oldProduct.equals(newProduct)) {
                         productBLL.update(newProduct);
+                        System.out.println("Product " + newProduct.getId() + " has been updated");
 
                         if (oldProduct.getPrice().compareTo(newProduct.getPrice()) != 0
                             || oldProduct.getListPrice().compareTo(newProduct.getListPrice()) != 0

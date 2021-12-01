@@ -1,8 +1,13 @@
 package com.tiki_server.dto;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class ConfigurableProductHistoryDTO {
+public class ConfigurableProductHistoryDTO implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 8846369344235264085L;
+
     private Long id;
 
     private LocalDate date;

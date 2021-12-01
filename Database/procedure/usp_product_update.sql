@@ -13,7 +13,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usp_product_update`(
     IN name_in TEXT,
     IN original_price_in BIGINT,
     IN price_in BIGINT,
-    IN rating_average_in BIGINT,
+    IN rating_average_in FLOAT,
     IN review_count_in BIGINT,
     IN description_in LONGTEXT,
     IN short_description_in TEXT,

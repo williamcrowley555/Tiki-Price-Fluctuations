@@ -3,10 +3,15 @@ package com.tiki_server.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CommentDTO {
+public class CommentDTO implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 121577647651894448L;
+
     @JsonProperty("id")
     private Long id;
 

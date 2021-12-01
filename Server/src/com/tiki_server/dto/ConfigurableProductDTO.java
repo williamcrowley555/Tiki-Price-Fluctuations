@@ -3,12 +3,17 @@ package com.tiki_server.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ConfigurableProductDTO {
+public class ConfigurableProductDTO implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -2880417873226294107L;
+
     @JsonProperty("child_id")
     private Long childId;
 
