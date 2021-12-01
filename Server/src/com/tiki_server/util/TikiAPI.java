@@ -59,7 +59,6 @@ public class TikiAPI {
                     ProductDTO oldProduct = productBLL.findById(newProduct.getId());
                     if (!oldProduct.equals(newProduct)) {
                         productBLL.update(newProduct);
-                        System.out.println("Product " + newProduct.getId() + " has been updated");
 
                         if (oldProduct.getPrice().compareTo(newProduct.getPrice()) != 0
                             || oldProduct.getListPrice().compareTo(newProduct.getListPrice()) != 0
