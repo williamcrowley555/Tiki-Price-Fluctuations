@@ -107,7 +107,7 @@ public class MainGUI1 extends javax.swing.JFrame {
     public void CustomWindow()
     {   
         Color flatBlack = new Color(77,77,77);//Border
-        this.setMinimumSize(new Dimension(800,600));
+        this.setMinimumSize(new Dimension(1280,720));
         //this.setSize(new Dimension(1280,720));
         this.getRootPane().setBorder(BorderFactory.createMatteBorder(0,2,2,2, flatBlack));   
         center();
@@ -161,6 +161,7 @@ public class MainGUI1 extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
+        setPreferredSize(new java.awt.Dimension(1280, 720));
 
         panelHeader.setBackground(new java.awt.Color(38, 38, 38));
         panelHeader.setForeground(new java.awt.Color(255, 255, 255));
