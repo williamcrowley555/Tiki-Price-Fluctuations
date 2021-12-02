@@ -50,8 +50,6 @@ public class ProductDAL extends AbstractDAL<ProductDTO> implements IProductDAL {
 
     @Override
     public boolean update(ProductDTO product) {
-        System.out.println(product.getDescription());
-        System.out.println(product.getRatingAverage());
         String sql = "{CALL usp_product_update(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
         return callProc(sql, product.getAllTimeQuantitySold(), product.getDiscount(), product.getDiscountRate(), product.getFavouriteCount(),
                 product.getImageUrl(), product.getListPrice(), product.getName(), product.getOriginalPrice(), product.getPrice(),

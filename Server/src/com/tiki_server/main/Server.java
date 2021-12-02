@@ -8,18 +8,18 @@ import com.tiki_server.dto.HistoryDTO;
 import com.tiki_server.dto.ProductDTO;
 import com.tiki_server.enums.MessageType;
 import com.tiki_server.model.Message;
-import com.tiki_server.util.InputValidatorUtil;
 
 import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Server {
     private int port = 1234;
-    private int bufsize = 6000;
+    private int bufsize = 100000;
 
     private DatagramSocket socket = null;
     private DatagramPacket dpreceive = null;
@@ -39,31 +39,63 @@ public class Server {
                 Message clientRequest = receiveMessage();
 
                 if (clientRequest != null) {
+                    Map<String, Object> requestContent = null;
                     Message response = null;
+                    Map<String, Object> responseContent = null;
+
+                    IProductBLL productBLL = null;
 
                     switch (clientRequest.getMessageType()) {
                         case GET_PRODUCT:
-                            String productId = (String) clientRequest.getContent().get("productId");
-                            if (InputValidatorUtil.isLong(productId).isEmpty()) {
-                                IProductBLL productBLL = new ProductBLL();
-                                ProductDTO product = productBLL.findById(Long.valueOf(productId));
+                            Long productId = (Long) clientRequest.getContent().get("productId");
+                             productBLL = new ProductBLL();
+                            ProductDTO product = productBLL.findById(productId);
 
-                                Map<String, Object> content = new HashMap<>();
-                                content.put("product", product);
+                            responseContent = new HashMap<>();
+                            responseContent.put("product", product);
 
-                                response = new Message(content, MessageType.PRODUCT_INFO);
+                            response = new Message(responseContent, MessageType.PRODUCT_INFO);
+
+                            sendMessage(response);
+                            break;
+
+                        case FILTER_PRODUCTS:
+                            requestContent = clientRequest.getContent();
+
+                            if (requestContent == null)
+                                response = createErrorMessage("Content can not be null");
+                            else {
+                                String productName = requestContent.containsKey("productName") ? (String) requestContent.get("productName") : null;
+                                Long categoryId = requestContent.containsKey("categoryId") ? (Long) requestContent.get("categoryId") : null;
+                                Long brandId = requestContent.containsKey("brandId") ? (Long) requestContent.get("brandId") : null;
+                                Float ratingAverage = requestContent.containsKey("ratingAverage") ? (Float) requestContent.get("ratingAverage") : null;
+                                Long minPrice = requestContent.containsKey("minPrice") ? (Long) requestContent.get("minPrice") : null;
+                                Long maxPrice = requestContent.containsKey("maxPrice") ? (Long) requestContent.get("maxPrice") : null;
+
+                                productBLL = new ProductBLL();
+                                List<ProductDTO> products = productBLL.filter(productName, categoryId, brandId, ratingAverage, minPrice, maxPrice);
+
+                                responseContent = new HashMap<>();
+
+                                if (products.isEmpty()) {
+                                    responseContent.put("products", null);
+                                    response = new Message(responseContent, MessageType.PRODUCTS);
+                                    sendMessage(response);
+                                } else {
+                                    for (ProductDTO p : products) {
+                                        responseContent.put("products", p);
+                                        response = new Message(responseContent, MessageType.PRODUCTS);
+                                        sendMessage(response);
+                                    }
+                                }
                             }
                             break;
 
                         default:
-                            Map<String, Object> content = new HashMap<>();
-                            content.put("error", "Invalid Message!");
-
-                            response = new Message(content, MessageType.ERROR);
+                            response = createErrorMessage("Invalid Message!");
+                            sendMessage(response);
                             break;
                     }
-
-                    sendMessage(response);
                 }
             }
 
@@ -113,6 +145,13 @@ public class Server {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private Message createErrorMessage(String content) {
+        Map<String, Object> msgContent = new HashMap<>();
+        msgContent.put("error", content);
+
+        return new Message(msgContent, MessageType.ERROR);
     }
 
     public static void main(String[] args) {

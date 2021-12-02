@@ -3,6 +3,7 @@ package com.tiki_server.enums;
 public enum MessageType {
 //    Server Response
     PRODUCT_INFO,
+    PRODUCTS,
     ERROR,
 
 //    Client Request

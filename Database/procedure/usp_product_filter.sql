@@ -31,7 +31,7 @@ BEGIN
 				(brand_id_in IS NULL OR brand_id = brand_id_in) AND
 				(rating_average_in IS NULL OR rating_average >= rating_average_in) AND
 				(min_price_in IS NULL OR price >= min_price_in) AND
-				(max_price_in IS NULL OR price >= max_price_in);
+				(max_price_in IS NULL OR price <= max_price_in);
 	COMMIT;
 
 END $$
