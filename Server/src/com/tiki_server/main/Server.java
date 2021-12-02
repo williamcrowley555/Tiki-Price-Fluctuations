@@ -1,11 +1,8 @@
 package com.tiki_server.main;
 
-import com.tiki_server.bll.IHistoryBLL;
-import com.tiki_server.bll.IProductBLL;
-import com.tiki_server.bll.impl.HistoryBLL;
-import com.tiki_server.bll.impl.ProductBLL;
-import com.tiki_server.dto.HistoryDTO;
-import com.tiki_server.dto.ProductDTO;
+import com.tiki_server.bll.*;
+import com.tiki_server.bll.impl.*;
+import com.tiki_server.dto.*;
 import com.tiki_server.enums.MessageType;
 import com.tiki_server.model.Message;
 
@@ -39,16 +36,21 @@ public class Server {
                 Message clientRequest = receiveMessage();
 
                 if (clientRequest != null) {
-                    Map<String, Object> requestContent = null;
+                    Map<String, Object> requestContent = clientRequest.getContent();;
                     Message response = null;
                     Map<String, Object> responseContent = null;
 
                     IProductBLL productBLL = null;
+                    IConfigurableProductBLL cpBLL = null;
+                    IHistoryBLL historyBLL = null;
+                    IConfigurableProductHistoryBLL cpHistoryBLL = null;
+                    IReviewBLL reviewBLL = null;
 
                     switch (clientRequest.getMessageType()) {
                         case GET_PRODUCT:
-                            Long productId = (Long) clientRequest.getContent().get("productId");
-                             productBLL = new ProductBLL();
+                            Long productId = (Long) requestContent.get("productId");
+
+                            productBLL = new ProductBLL();
                             ProductDTO product = productBLL.findById(productId);
 
                             responseContent = new HashMap<>();
@@ -60,8 +62,6 @@ public class Server {
                             break;
 
                         case FILTER_PRODUCTS:
-                            requestContent = clientRequest.getContent();
-
                             if (requestContent == null)
                                 response = createErrorMessage("Content can not be null");
                             else {
@@ -78,15 +78,127 @@ public class Server {
                                 responseContent = new HashMap<>();
 
                                 if (products.isEmpty()) {
-                                    responseContent.put("products", null);
+                                    responseContent.put("product", null);
                                     response = new Message(responseContent, MessageType.PRODUCTS);
                                     sendMessage(response);
                                 } else {
                                     for (ProductDTO p : products) {
-                                        responseContent.put("products", p);
+                                        responseContent.put("product", p);
                                         response = new Message(responseContent, MessageType.PRODUCTS);
                                         sendMessage(response);
                                     }
+                                }
+                            }
+                            break;
+
+                        case GET_CONFIGURABLE_PRODUCTS:
+                            productId = (Long) requestContent.get("productId");
+
+                            cpBLL = new ConfigurableProductBLL();
+                            List<ConfigurableProductDTO> cps = cpBLL.findByProductId(productId);
+
+                            responseContent = new HashMap<>();
+
+                            if (cps.isEmpty()) {
+                                responseContent.put("configurableProduct", null);
+                                response = new Message(responseContent, MessageType.CONFIGURABLE_PRODUCTS);
+                                sendMessage(response);
+                            } else {
+                                for (ConfigurableProductDTO cp : cps) {
+                                    responseContent.put("configurableProduct", cp);
+                                    response = new Message(responseContent, MessageType.CONFIGURABLE_PRODUCTS);
+                                    sendMessage(response);
+                                }
+                            }
+                            break;
+
+                        case GET_PRODUCT_HISTORIES_BY_URL:
+                            String url = (String) requestContent.get("url");
+                            int month = (int) requestContent.get("month");
+                            int year = (int) requestContent.get("year");
+
+                            historyBLL = new HistoryBLL();
+                            List<HistoryDTO> histories = historyBLL.findByProductPageUrl(url, month, year);
+
+                            responseContent = new HashMap<>();
+
+                            if (histories.isEmpty()) {
+                                responseContent.put("productHistory", null);
+                                response = new Message(responseContent, MessageType.PRODUCT_HISTORIES);
+                                sendMessage(response);
+                            } else {
+                                for (HistoryDTO history : histories) {
+                                    responseContent.put("productHistory", history);
+                                    response = new Message(responseContent, MessageType.PRODUCT_HISTORIES);
+                                    sendMessage(response);
+                                }
+                            }
+                            break;
+
+                        case GET_PRODUCT_HISTORIES_BY_PRODUCT_ID:
+                            productId = (Long) requestContent.get("productId");
+                            month = (int) requestContent.get("month");
+                            year = (int) requestContent.get("year");
+
+                            historyBLL = new HistoryBLL();
+                            histories = historyBLL.findByProductId(productId, month, year);
+
+                            responseContent = new HashMap<>();
+
+                            if (histories.isEmpty()) {
+                                responseContent.put("productHistory", null);
+                                response = new Message(responseContent, MessageType.PRODUCT_HISTORIES);
+                                sendMessage(response);
+                            } else {
+                                for (HistoryDTO history : histories) {
+                                    responseContent.put("productHistory", history);
+                                    response = new Message(responseContent, MessageType.PRODUCT_HISTORIES);
+                                    sendMessage(response);
+                                }
+                            }
+                            break;
+
+                        case GET_CONFIGURABLE_PRODUCT_HISTORIES:
+                            productId = (Long) requestContent.get("productId");
+                            Long cpId = (Long) requestContent.get("cpId");
+                            month = (int) requestContent.get("month");
+                            year = (int) requestContent.get("year");
+
+                            cpHistoryBLL = new ConfigurableProductHistoryBLL();
+                            List<ConfigurableProductHistoryDTO> cpHistories = cpHistoryBLL.findByProductIdAndConfigurableProductId(productId, cpId, month, year);
+
+                            responseContent = new HashMap<>();
+
+                            if (cpHistories.isEmpty()) {
+                                responseContent.put("configurableProductHistory", null);
+                                response = new Message(responseContent, MessageType.CONFIGURABLE_PRODUCT_HISTORIES);
+                                sendMessage(response);
+                            } else {
+                                for (ConfigurableProductHistoryDTO cpHistory : cpHistories) {
+                                    responseContent.put("configurableProductHistory", cpHistory);
+                                    response = new Message(responseContent, MessageType.CONFIGURABLE_PRODUCT_HISTORIES);
+                                    sendMessage(response);
+                                }
+                            }
+                            break;
+
+                        case GET_REVIEWS_BY_PRODUCT_ID:
+                            productId = (Long) requestContent.get("productId");
+
+                            reviewBLL = new ReviewBLL();
+                            List<ReviewDTO> reviews = reviewBLL.findByProductId(productId);
+
+                            responseContent = new HashMap<>();
+
+                            if (reviews.isEmpty()) {
+                                responseContent.put("review", null);
+                                response = new Message(responseContent, MessageType.REVIEWS);
+                                sendMessage(response);
+                            } else {
+                                for (ReviewDTO review : reviews) {
+                                    responseContent.put("review", review);
+                                    response = new Message(responseContent, MessageType.REVIEWS);
+                                    sendMessage(response);
                                 }
                             }
                             break;
@@ -120,7 +232,7 @@ public class Server {
         oo.close();
 
         byte[] byteData = byteOutputStream.toByteArray();
-        System.out.println(byteData.length);
+        System.out.println("Byte Data Length: " + byteData.length);
         dpsend = new DatagramPacket(byteData, byteData.length, dpreceive.getAddress(), dpreceive.getPort());
         socket.send(dpsend);
     }

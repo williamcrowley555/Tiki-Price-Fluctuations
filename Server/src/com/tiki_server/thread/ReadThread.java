@@ -1,6 +1,6 @@
 package com.tiki_server.thread;
 
-import com.tiki_server.dto.ProductDTO;
+import com.tiki_server.dto.*;
 import com.tiki_server.model.Message;
 
 import java.io.*;
@@ -26,17 +26,31 @@ public class ReadThread implements Runnable {
 //            Get response from server
             Message responseMsg = receiveResponse();
 
-            ProductDTO recvProduct = null;
-
             if (responseMsg != null) {
                 switch (responseMsg.getMessageType()) {
                     case PRODUCT_INFO:
-                        recvProduct = (ProductDTO) responseMsg.getContent().get("product");
+                        ProductDTO recvProduct = (ProductDTO) responseMsg.getContent().get("product");
                         System.out.println("Client receive: " + recvProduct);
                         break;
                     case PRODUCTS:
-                        recvProduct = (ProductDTO) responseMsg.getContent().get("products");
+                        recvProduct = (ProductDTO) responseMsg.getContent().get("product");
                         System.out.println("Client receive: " + recvProduct);
+                        break;
+                    case CONFIGURABLE_PRODUCTS:
+                        ConfigurableProductDTO recvCP = (ConfigurableProductDTO) responseMsg.getContent().get("configurableProduct");
+                        System.out.println("Client receive: " + recvCP);
+                        break;
+                    case PRODUCT_HISTORIES:
+                        HistoryDTO recvProductHistory = (HistoryDTO) responseMsg.getContent().get("productHistory");
+                        System.out.println("Client receive: " + recvProductHistory);
+                        break;
+                    case CONFIGURABLE_PRODUCT_HISTORIES:
+                        ConfigurableProductHistoryDTO recvCPHistory = (ConfigurableProductHistoryDTO) responseMsg.getContent().get("configurableProductHistory");
+                        System.out.println("Client receive: " + recvCPHistory);
+                        break;
+                    case REVIEWS:
+                        ReviewDTO recvReview = (ReviewDTO) responseMsg.getContent().get("review");
+                        System.out.println("Client receive: " + recvReview);
                         break;
                     case ERROR:
                         String error = (String) responseMsg.getContent().get("error");
