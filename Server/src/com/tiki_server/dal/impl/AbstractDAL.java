@@ -45,7 +45,9 @@ public class AbstractDAL<T> implements GenericDAL<T>{
                 } else if(parameter instanceof String) {
                         statement.setString(index, (String) parameter);
                 } else if(parameter instanceof Integer) {
-                        statement.setInt(index, (Integer) parameter);
+                    statement.setInt(index, (Integer) parameter);
+                } else if(parameter instanceof Float) {
+                        statement.setFloat(index, (Float) parameter);
                 }else if(parameter instanceof Double) {
                     statement.setDouble(index, (Double) parameter);
                 }else if(parameter instanceof Boolean) {
