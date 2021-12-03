@@ -8,6 +8,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 public class ReadThread implements Runnable {
+    private volatile boolean isRunning = true;
     private final byte[] recvBuf = new byte[100000];
 
     private DatagramSocket socket = null;
@@ -20,9 +21,14 @@ public class ReadThread implements Runnable {
         this.socket = socket;
     }
 
+    public void stop() {
+        this.isRunning = false;
+        this.socket.close();
+    }
+
     @Override
     public void run() {
-        while(true) {
+        while(isRunning) {
 //            Get response from server
             Message responseMsg = receiveResponse();
 

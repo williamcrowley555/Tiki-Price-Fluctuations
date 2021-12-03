@@ -11,6 +11,7 @@ import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Client {
     private String hostname = "localhost";
@@ -19,7 +20,7 @@ public class Client {
 
     private DatagramSocket socket = null;
 
-    Thread readThread;
+    ReadThread readThread;
 
     public Client() {
     }
@@ -34,8 +35,8 @@ public class Client {
             inetAddress = InetAddress.getByName(hostname);	//UnknownHostException
             socket = new DatagramSocket();			//SocketException
 
-            readThread = new Thread(new ReadThread(this.socket));
-            readThread.start();
+            readThread = new ReadThread(this.socket);
+            new Thread(readThread).start();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -43,8 +44,8 @@ public class Client {
     }
 
     public void closeSocket() {
-        this.socket.disconnect();
-        this.socket.close();
+        this.readThread.stop();
+        System.out.println("Close socket " + socket.isClosed());
     }
 
     public void sendMessage(Message message) {
@@ -143,7 +144,6 @@ public class Client {
 
             try {
                 if(input.equals("bye")) {
-                    System.out.println("Client socket closed");
                     stdIn.close();
                     client.closeSocket();
                     break;
