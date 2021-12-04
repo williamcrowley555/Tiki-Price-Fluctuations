@@ -6,50 +6,48 @@ import com.tiki_server.thread.ReadThread;
 import com.tiki_server.thread.WriteThread;
 
 import java.io.*;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
 
 public class Client {
     private String hostname = "localhost";
-    private int destPort = 1234;
-    private InetAddress inetAddress = null;
+    private int port = 5001;
 
-    private DatagramSocket socket = null;
+    private Socket socket;
 
-    ReadThread readThread;
+    private ObjectOutput out;
 
     public Client() {
     }
 
-    public Client(String hostname, int destPort) {
+    public Client(String hostname, int port) {
         this.hostname = hostname;
-        this.destPort = destPort;
+        this.port = port;
     }
 
     public void run() {
         try {
-            inetAddress = InetAddress.getByName(hostname);	//UnknownHostException
-            socket = new DatagramSocket();			//SocketException
+            socket = new Socket(hostname, port);
+            out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 
-            readThread = new ReadThread(this.socket);
-            new Thread(readThread).start();
-
+            Thread readThread = new Thread(new ReadThread(this.socket));
+            readThread.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void closeSocket() {
-        this.readThread.stop();
+    public void closeSocket() throws IOException {
+        Message message = new Message(null, MessageType.USER_DISCONNECT);
+        sendMessage(message);
+//        socket.close();
         System.out.println("Close socket " + socket.isClosed());
     }
 
-    public void sendMessage(Message message) {
-        Thread writeThread = new Thread(new WriteThread(this.destPort, this.inetAddress, this.socket, message));
+    public void sendMessage(Message message) throws IOException {
+        Thread writeThread = new Thread(new WriteThread(this.socket, this.out, message));
         writeThread.start();
     }
 
@@ -122,7 +120,7 @@ public class Client {
     }
 
     public static void main(String[] args) {
-        Client client = new Client();
+        Client client = new Client("localhost", 5001);
         client.run();
 
         String input = "";
