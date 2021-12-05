@@ -1,5 +1,6 @@
 package com.tiki_server.thread;
 
+import com.google.gson.stream.JsonToken;
 import com.tiki_server.bll.*;
 import com.tiki_server.bll.impl.*;
 import com.tiki_server.dto.*;
@@ -202,7 +203,8 @@ public class ClientThread implements Runnable {
 
                         case USER_DISCONNECT:
                             isRunning = false;
-                            clientSocket.close();
+                            response = new Message(null, MessageType.USER_DISCONNECT);
+                            sendMessage(response);
                             break;
 
                         default:
@@ -218,6 +220,7 @@ public class ClientThread implements Runnable {
             try {
                 in.close();
                 out.close();
+                clientSocket.close();
             } catch (IOException exception) {
                 exception.printStackTrace();
             }

@@ -5,6 +5,7 @@ import com.tiki_server.model.Message;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class ReadThread implements Runnable {
     private volatile boolean isRunning = true;
@@ -22,10 +23,11 @@ public class ReadThread implements Runnable {
     public void run() {
         try {
             this.in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
-
+            Message responseMsg;
             while(isRunning) {
 //            Get response from server
-                Message responseMsg = (Message) in.readObject();
+                responseMsg = (Message) in.readObject();
+
                 if (responseMsg != null) {
                     switch (responseMsg.getMessageType()) {
                         case PRODUCT_INFO:
@@ -51,6 +53,10 @@ public class ReadThread implements Runnable {
                         case REVIEWS:
                             ReviewDTO recvReview = (ReviewDTO) responseMsg.getContent().get("review");
                             System.out.println("Client receive: " + recvReview);
+                            break;
+                        case USER_DISCONNECT:
+                            isRunning = false;
+                            in.close();
                             break;
                         case ERROR:
                             String error = (String) responseMsg.getContent().get("error");

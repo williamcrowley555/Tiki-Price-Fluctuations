@@ -37,9 +37,10 @@ public class Server {
                         System.out.println("Waiting for a client ...");
                         socket = server.accept();
                         System.out.println("Client " + server.getInetAddress() + " at port " + server.getLocalPort() + " accepted");
-
                         ClientThread clientThread = new ClientThread(socket);
+
                         pool.execute(clientThread);
+
                     }
                 } catch (SocketException socketException) {
                     socketException.printStackTrace();

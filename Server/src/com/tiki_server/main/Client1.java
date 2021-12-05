@@ -5,13 +5,16 @@ import com.tiki_server.model.Message;
 import com.tiki_server.thread.ReadThread;
 import com.tiki_server.thread.WriteThread;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-public class Client {
+public class Client1 {
     private String hostname = "localhost";
     private int port = 5001;
 
@@ -21,10 +24,10 @@ public class Client {
 
     Thread readThread;
 
-    public Client() {
+    public Client1() {
     }
 
-    public Client(String hostname, int port) {
+    public Client1(String hostname, int port) {
         this.hostname = hostname;
         this.port = port;
     }
@@ -125,7 +128,7 @@ public class Client {
     }
 
     public static void main(String[] args) {
-        Client client = new Client("localhost", 5001);
+        Client1 client = new Client1("localhost", 5001);
         client.run();
 
         String input = "";
