@@ -10,7 +10,6 @@ import java.util.concurrent.Executors;
 public class Server {
     private int port;
 
-    private Socket socket = null;
     private ServerSocket server = null;
 
     private Thread serverThread;
@@ -35,12 +34,11 @@ public class Server {
 
                     while(true) {
                         System.out.println("Waiting for a client ...");
-                        socket = server.accept();
+                        Socket socket = server.accept();
                         System.out.println("Client " + server.getInetAddress() + " at port " + server.getLocalPort() + " accepted");
+
                         ClientThread clientThread = new ClientThread(socket);
-
                         pool.execute(clientThread);
-
                     }
                 } catch (SocketException socketException) {
                     socketException.printStackTrace();
@@ -55,7 +53,6 @@ public class Server {
     public void stop() {
         try {
             serverThread.stop();
-            socket.close();
             server.close();
         } catch (IOException e) {
             e.printStackTrace();

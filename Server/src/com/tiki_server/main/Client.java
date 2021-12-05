@@ -48,7 +48,7 @@ public class Client {
 
         out.close();
         socket.close();
-        System.out.println("Close socket " + socket.isClosed());
+        System.out.println("Close socket: " + socket.isClosed());
     }
 
     public void sendMessage(Message message) throws IOException {

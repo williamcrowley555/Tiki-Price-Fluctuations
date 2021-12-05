@@ -20,20 +20,19 @@ public class ClientThread implements Runnable {
     private ObjectOutput out;
     private ObjectInput in;
 
-    public ClientThread(Socket clientSocket) throws IOException {
+    public ClientThread(Socket clientSocket) {
         this.clientSocket = clientSocket;
-        this.out = new ObjectOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
-        this.in = new ObjectInputStream(new BufferedInputStream(clientSocket.getInputStream()));
     }
 
     @Override
     public void run() {
         Message clientRequest = null;
-
         try {
+            this.in = new ObjectInputStream(new BufferedInputStream(clientSocket.getInputStream()));
+            this.out = new ObjectOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
+
             while (isRunning) {
                 clientRequest = (Message) in.readObject();
-
                 if (clientRequest != null) {
                     Map<String, Object> requestContent = clientRequest.getContent();;
                     Message response = null;
