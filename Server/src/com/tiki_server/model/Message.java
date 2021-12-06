@@ -4,28 +4,27 @@ import com.tiki_server.enums.MessageType;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Map;
 
 public class Message implements Serializable {
     @Serial
     private static final long serialVersionUID = -9069446134464224521L;
 
-    private Map<String, Object> content;
+    private Object content;
     private MessageType messageType;
 
     public Message() {
     }
 
-    public Message(Map<String, Object> content, MessageType messageType) {
+    public Message(Object content, MessageType messageType) {
         this.content = content;
         this.messageType = messageType;
     }
 
-    public Map<String, Object> getContent() {
+    public Object getContent() {
         return content;
     }
 
-    public void setContent(Map<String, Object> content) {
+    public void setContent(Object content) {
         this.content = content;
     }
 

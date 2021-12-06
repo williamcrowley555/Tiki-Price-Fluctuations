@@ -1,6 +1,7 @@
 package com.tiki_server.util;
 
 import javax.crypto.*;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidAlgorithmParameterException;
@@ -9,6 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 public class AESUtil {
+
     public static SecretKey generateAESKey() throws NoSuchAlgorithmException {
         KeyGenerator generator = KeyGenerator.getInstance("AES");
         generator.init(256);
