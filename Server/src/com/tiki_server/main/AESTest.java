@@ -19,11 +19,11 @@ public class AESTest {
         String text = "Hello world";
         System.out.println("Plain text: " + text);
 
-        byte[] encodeText = BytesUtil.decode(text);
+        byte[] decodedText = BytesUtil.decode(text);
 
         // Encrypt
         SecretKey secretKey = AESUtil.generateAESKey();
-        byte[] encryptedContent = AESUtil.encrypt(secretKey, encodeText);
+        byte[] encryptedContent = AESUtil.encrypt(secretKey, decodedText);
 
         // Decrypt
         byte[] ivBytes = Arrays.copyOfRange(encryptedContent, 0, 16);
