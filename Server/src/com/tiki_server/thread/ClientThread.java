@@ -1,17 +1,23 @@
 package com.tiki_server.thread;
 
-import com.google.gson.stream.JsonToken;
 import com.tiki_server.bll.*;
 import com.tiki_server.bll.impl.*;
 import com.tiki_server.dto.*;
 import com.tiki_server.enums.MessageType;
 import com.tiki_server.model.Message;
+import com.tiki_server.util.AESUtil;
+import com.tiki_server.util.BytesUtil;
+import com.tiki_server.util.RSAUtil;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import java.io.*;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.security.*;
+import java.util.*;
 
 public class ClientThread implements Runnable {
     private boolean isRunning = true;
@@ -19,6 +25,10 @@ public class ClientThread implements Runnable {
 
     private ObjectOutput out;
     private ObjectInput in;
+
+    private PrivateKey privateKey;
+    private PublicKey publicKey;
+    private SecretKey secretKey;
 
     public ClientThread(Socket clientSocket) {
         this.clientSocket = clientSocket;
@@ -34,7 +44,9 @@ public class ClientThread implements Runnable {
             while (isRunning) {
                 clientRequest = (Message) in.readObject();
                 if (clientRequest != null) {
-                    Map<String, Object> requestContent = clientRequest.getContent();;
+                    String encryptedRequestContent = (String) clientRequest.getContent();
+                    Map<String, Object> requestContent;
+
                     Message response = null;
                     Map<String, Object> responseContent = null;
 
@@ -45,7 +57,20 @@ public class ClientThread implements Runnable {
                     IReviewBLL reviewBLL = null;
 
                     switch (clientRequest.getMessageType()) {
+                        case GET_PUBLIC_KEY:
+                            sendPublicKey();
+                            break;
+
+                        case SEND_SECRET_KEY:
+                            byte[] msgContentInBytes = RSAUtil.decrypt(privateKey,  Base64.getDecoder().decode(encryptedRequestContent));
+                            requestContent = (Map<String, Object>) BytesUtil.encode(msgContentInBytes);
+
+                            String strSecretKey = (String) requestContent.get("strSecretKey");
+                            secretKey = AESUtil.getAESKey(Base64.getDecoder().decode(strSecretKey));
+                            break;
+
                         case GET_PRODUCT:
+                            requestContent = (Map<String, Object>) decryptMessage(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
                             Long productId = (Long) requestContent.get("productId");
 
                             productBLL = new ProductBLL();
@@ -59,8 +84,12 @@ public class ClientThread implements Runnable {
                             break;
 
                         case FILTER_PRODUCTS:
-                            if (requestContent == null)
+                            requestContent = (Map<String, Object>) decryptMessage(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
+
+                            if (requestContent == null) {
                                 response = createErrorMessage("Content can not be null");
+                                sendMessage(response);
+                            }
                             else {
                                 String productName = requestContent.containsKey("productName") ? (String) requestContent.get("productName") : null;
                                 Long categoryId = requestContent.containsKey("categoryId") ? (Long) requestContent.get("categoryId") : null;
@@ -89,6 +118,8 @@ public class ClientThread implements Runnable {
                             break;
 
                         case GET_CONFIGURABLE_PRODUCTS:
+                            requestContent = (Map<String, Object>) decryptMessage(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
+
                             productId = (Long) requestContent.get("productId");
 
                             cpBLL = new ConfigurableProductBLL();
@@ -110,6 +141,8 @@ public class ClientThread implements Runnable {
                             break;
 
                         case GET_PRODUCT_HISTORIES_BY_URL:
+                            requestContent = (Map<String, Object>) decryptMessage(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
+
                             String url = (String) requestContent.get("url");
                             int month = (int) requestContent.get("month");
                             int year = (int) requestContent.get("year");
@@ -133,6 +166,8 @@ public class ClientThread implements Runnable {
                             break;
 
                         case GET_PRODUCT_HISTORIES_BY_PRODUCT_ID:
+                            requestContent = (Map<String, Object>) decryptMessage(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
+
                             productId = (Long) requestContent.get("productId");
                             month = (int) requestContent.get("month");
                             year = (int) requestContent.get("year");
@@ -156,6 +191,8 @@ public class ClientThread implements Runnable {
                             break;
 
                         case GET_CONFIGURABLE_PRODUCT_HISTORIES:
+                            requestContent = (Map<String, Object>) decryptMessage(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
+
                             productId = (Long) requestContent.get("productId");
                             Long cpId = (Long) requestContent.get("cpId");
                             month = (int) requestContent.get("month");
@@ -180,6 +217,8 @@ public class ClientThread implements Runnable {
                             break;
 
                         case GET_REVIEWS_BY_PRODUCT_ID:
+                            requestContent = (Map<String, Object>) decryptMessage(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
+
                             productId = (Long) requestContent.get("productId");
 
                             reviewBLL = new ReviewBLL();
@@ -226,13 +265,67 @@ public class ClientThread implements Runnable {
         }
     }
 
-    private void sendMessage(Object message) throws IOException {
-        try {
-            out.writeObject(message);
-            out.flush();
-        } catch (IOException exception) {
-            exception.printStackTrace();
+    private void sendPublicKey() throws IOException, NoSuchAlgorithmException {
+//        Generate Key pair to get Public & Private key
+        KeyPair keyPair = RSAUtil.generateKeyPair();
+        privateKey = keyPair.getPrivate();
+        publicKey = keyPair.getPublic();
+        String strPublicKey = Base64.getEncoder().encodeToString(publicKey.getEncoded());
+
+//        Send Public key to Client
+        Map<String, Object> msgContent = new HashMap<>();
+        msgContent.put("strPublicKey", strPublicKey);
+
+        Message msg = new Message(msgContent, MessageType.PUBLIC_KEY);
+        sendMessage(msg);
+    }
+
+    private void sendMessage(Message message) throws IOException {
+        byte[] msgContentInBytes = BytesUtil.decode(message.getContent());
+
+        if (message.getMessageType().equals(MessageType.PUBLIC_KEY)) {
+            String content = Base64.getEncoder().encodeToString(msgContentInBytes);
+
+            message.setContent(content);
+        } else {
+            try {
+                if (this.secretKey != null) {
+                    byte[] encryptedMsgContent = AESUtil.encrypt(this.secretKey, msgContentInBytes);
+                    String content = Base64.getEncoder().encodeToString(encryptedMsgContent);
+
+                    message.setContent(content);
+                } else {
+                    System.err.println("Error: No Secret Key Found");
+                    return;
+                }
+            } catch (NoSuchPaddingException e) {
+                e.printStackTrace();
+            } catch (IllegalBlockSizeException e) {
+                e.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (BadPaddingException e) {
+                e.printStackTrace();
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            } catch (InvalidAlgorithmParameterException e) {
+                e.printStackTrace();
+            }
         }
+
+        out.writeObject(message);
+        out.flush();
+    }
+
+    public Object decryptMessage(SecretKey secretKey, byte[] content) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        byte[] ivBytes = Arrays.copyOfRange(content, 0, 16);
+        byte[] contentInBytes = Arrays.copyOfRange(content, 16, content.length);
+
+        IvParameterSpec ivParams = AESUtil.getIVParams(ivBytes);
+
+        byte[] decryptedContent = AESUtil.decrypt(secretKey, ivParams, contentInBytes);
+
+        return BytesUtil.encode(decryptedContent);
     }
 
     private Message createErrorMessage(String content) {

@@ -1,11 +1,24 @@
 package com.tiki_server.thread;
 
+import com.tiki_server.enums.MessageType;
+import com.tiki_server.main.Client;
 import com.tiki_server.model.Message;
+import com.tiki_server.util.AESUtil;
+import com.tiki_server.util.BytesUtil;
+import com.tiki_server.util.RSAUtil;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.*;
 import java.net.Socket;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 public class WriteThread implements Runnable {
+    private Client client;
     private Socket socket;
 
     private ByteArrayOutputStream byteOutputStream = null;
@@ -13,7 +26,8 @@ public class WriteThread implements Runnable {
 
     private Message message;
 
-    public WriteThread(Socket socket, ObjectOutput out, Message message) throws IOException {
+    public WriteThread(Client client, Socket socket, ObjectOutput out, Message message) throws IOException {
+        this.client = client;
         this.socket = socket;
         this.out = out;
         this.message = message;
@@ -25,16 +39,40 @@ public class WriteThread implements Runnable {
             sendRequest(this.message);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
         }
     }
 
 //    Send request to server
-    public void sendRequest(Object request) throws IOException {
-        try {
-            out.writeObject(message);
-            out.flush();
-        } catch (IOException exception) {
-            exception.printStackTrace();
+    public void sendRequest(Message request) throws IOException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        byte[] reqContentInBytes = BytesUtil.decode(request.getContent());
+
+        if (!request.getMessageType().equals(MessageType.GET_PUBLIC_KEY)) {
+            if (request.getMessageType().equals(MessageType.SEND_SECRET_KEY)) {
+//                Encrypt AES key with Public key
+                byte[] encryptedKey = RSAUtil.encrypt(client.getPublicKey(), reqContentInBytes);
+                String content = Base64.getEncoder().encodeToString(encryptedKey);
+
+                request.setContent(content);
+            } else {
+                byte[] encryptedMessage = AESUtil.encrypt(this.client.getSecretKey(), reqContentInBytes);
+                String content = Base64.getEncoder().encodeToString(encryptedMessage);
+
+                request.setContent(content);
+            }
         }
+        out.writeObject(request);
+        out.flush();
     }
 }

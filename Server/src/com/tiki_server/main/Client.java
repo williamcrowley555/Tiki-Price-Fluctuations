@@ -5,8 +5,10 @@ import com.tiki_server.model.Message;
 import com.tiki_server.thread.ReadThread;
 import com.tiki_server.thread.WriteThread;
 
+import javax.crypto.SecretKey;
 import java.io.*;
 import java.net.Socket;
+import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -19,7 +21,10 @@ public class Client {
 
     private ObjectOutput out;
 
-    Thread readThread;
+    private Thread readThread;
+
+    private PublicKey publicKey;
+    private SecretKey secretKey;
 
     public Client() {
     }
@@ -34,7 +39,7 @@ public class Client {
             socket = new Socket(hostname, port);
             out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 
-            readThread = new Thread(new ReadThread(this.socket));
+            readThread = new Thread(new ReadThread(this, this.socket));
             readThread.start();
         } catch (IOException e) {
             e.printStackTrace();
@@ -52,8 +57,13 @@ public class Client {
     }
 
     public void sendMessage(Message message) throws IOException {
-        Thread writeThread = new Thread(new WriteThread(this.socket, this.out, message));
+        Thread writeThread = new Thread(new WriteThread(this, this.socket, this.out, message));
         writeThread.start();
+    }
+
+    public void sendPublicKeyRequest() throws IOException {
+        Message requestMsg = new Message(null, MessageType.GET_PUBLIC_KEY);
+        sendMessage(requestMsg);
     }
 
     public void getProduct(Long productId) throws IOException {
@@ -124,7 +134,23 @@ public class Client {
         sendMessage(requestMsg);
     }
 
-    public static void main(String[] args) {
+    public SecretKey getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey(SecretKey secretKey) {
+        this.secretKey = secretKey;
+    }
+
+    public PublicKey getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(PublicKey publicKey) {
+        this.publicKey = publicKey;
+    }
+
+    public static void main(String[] args) throws IOException {
         Client client = new Client("localhost", 5001);
         client.run();
 
@@ -142,6 +168,9 @@ public class Client {
         System.out.println("7/ Get reviews with product id = 249953");
 
         while (true) {
+            if (client.getPublicKey() == null)
+                client.sendPublicKeyRequest();
+
             System.out.print("Client input: ");
             input = stdIn.nextLine();
 
