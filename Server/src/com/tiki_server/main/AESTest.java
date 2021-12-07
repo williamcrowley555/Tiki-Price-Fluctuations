@@ -1,8 +1,7 @@
 package com.tiki_server.main;
 
-import com.tiki_server.enums.MessageType;
-import com.tiki_server.model.Message;
 import com.tiki_server.util.AESUtil;
+import com.tiki_server.util.BytesUtil;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -15,20 +14,26 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
 
-public class Test {
+public class AESTest {
     public static void main(String[] args) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         String text = "Hello world";
+        System.out.println("Plain text: " + text);
+
+        byte[] encodeText = BytesUtil.decode(text);
+
+        // Encrypt
         SecretKey secretKey = AESUtil.generateAESKey();
-        byte[] encodedKey = secretKey.getEncoded();
+        byte[] encryptedContent = AESUtil.encrypt(secretKey, encodeText);
 
-        byte[] encryptedContent = AESUtil.encryptFile(secretKey, text.getBytes());
-
+        // Decrypt
         byte[] ivBytes = Arrays.copyOfRange(encryptedContent, 0, 16);
-        encryptedContent = Arrays.copyOfRange(encryptedContent, 16, encryptedContent.length);
+        byte[] contentBytes = Arrays.copyOfRange(encryptedContent, 16, encryptedContent.length);
+
         IvParameterSpec ivParams = AESUtil.getIVParams(ivBytes);
+        System.out.println("IV: " + Base64.getEncoder().encodeToString(ivBytes));
 
-        byte[] decrypted = AESUtil.decryptFile(secretKey, ivParams, encryptedContent);
+        byte[] decrypted = AESUtil.decrypt(secretKey, ivParams, contentBytes);
 
-        System.out.println("Decrypted: " + new String(decrypted));
+        System.out.println("Decrypted: " + BytesUtil.encode(decrypted));
     }
 }

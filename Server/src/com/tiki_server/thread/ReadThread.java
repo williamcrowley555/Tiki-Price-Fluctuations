@@ -8,11 +8,19 @@ import com.tiki_server.util.AESUtil;
 import com.tiki_server.util.BytesUtil;
 import com.tiki_server.util.RSAUtil;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,88 +50,92 @@ public class ReadThread implements Runnable {
                 response = (Message) in.readObject();
 
                 if (response != null) {
-                    String responseContent = (String) response.getContent();
-                    byte[] msgContentInBytes;
+                    String encryptedResponseContent = (String) response.getContent();
+                    Map<String, Object> responseContent;
 
-//                    switch (response.getMessageType()) {
-//                        case PUBLIC_KEY:
-//                            Map<String, Object> content = (Map<String, Object>) BytesUtil.encode(Base64.getDecoder().decode(responseContent));
-//                            String strPublicKey = (String) content.get("strPublicKey");
-//                            PublicKey publicKey = RSAUtil.getPublicKey(Base64.getDecoder().decode(strPublicKey));
-//                            this.client.setPublicKey(publicKey);
-//
-////                            Generate AES key
-//                            SecretKey secretKey = AESUtil.generateAESKey();
-//                            this.client.setSecretKey(secretKey);
-//                            String strSecretKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
-//
-//                            Map<String, Object> msgContent = new HashMap<>();
-//                            msgContent.put("strSecretKey", strSecretKey);
-//
-//                            this.client.sendMessage(new Message(msgContent, MessageType.SEND_SECRET_KEY));
-//                            break;
-//
-//                        case PRODUCT_INFO:
-//                            msgContentInBytes = AESUtil.decrypt(this.client.getSecretKey(), Base64.getDecoder().decode(responseContent));
-//                            content = (Map<String, Object>) BytesUtil.encode(msgContentInBytes);
-//
-//                            ProductDTO recvProduct = (ProductDTO) content.get("product");
-//                            System.out.println("Client receive: " + recvProduct);
-//                            break;
-//                        case PRODUCTS:
-//                            msgContentInBytes = AESUtil.decrypt(this.client.getSecretKey(), Base64.getDecoder().decode(responseContent));
-//                            content = (Map<String, Object>) BytesUtil.encode(msgContentInBytes);
-//
-//                            recvProduct = (ProductDTO) content.get("product");
-//                            System.out.println("Client receive: " + recvProduct);
-//                            break;
-//                        case CONFIGURABLE_PRODUCTS:
-//                            msgContentInBytes = AESUtil.decrypt(this.client.getSecretKey(), Base64.getDecoder().decode(responseContent));
-//                            content = (Map<String, Object>) BytesUtil.encode(msgContentInBytes);
-//
-//                            ConfigurableProductDTO recvCP = (ConfigurableProductDTO) content.get("configurableProduct");
-//                            System.out.println("Client receive: " + recvCP);
-//                            break;
-//                        case PRODUCT_HISTORIES:
-//                            msgContentInBytes = AESUtil.decrypt(this.client.getSecretKey(), Base64.getDecoder().decode(responseContent));
-//                            content = (Map<String, Object>) BytesUtil.encode(msgContentInBytes);
-//
-//                            HistoryDTO recvProductHistory = (HistoryDTO) content.get("productHistory");
-//                            System.out.println("Client receive: " + recvProductHistory);
-//                            break;
-//                        case CONFIGURABLE_PRODUCT_HISTORIES:
-//                            msgContentInBytes = AESUtil.decrypt(this.client.getSecretKey(), Base64.getDecoder().decode(responseContent));
-//                            content = (Map<String, Object>) BytesUtil.encode(msgContentInBytes);
-//
-//                            ConfigurableProductHistoryDTO recvCPHistory = (ConfigurableProductHistoryDTO) content.get("configurableProductHistory");
-//                            System.out.println("Client receive: " + recvCPHistory);
-//                            break;
-//                        case REVIEWS:
-//                            msgContentInBytes = AESUtil.decrypt(this.client.getSecretKey(), Base64.getDecoder().decode(responseContent));
-//                            content = (Map<String, Object>) BytesUtil.encode(msgContentInBytes);
-//
-//                            ReviewDTO recvReview = (ReviewDTO) content.get("review");
-//                            System.out.println("Client receive: " + recvReview);
-//                            break;
-//                        case USER_DISCONNECT:
-//                            isRunning = false;
-//                            in.close();
-//                            break;
-//                        case ERROR:
-//                            msgContentInBytes = AESUtil.decrypt(this.client.getSecretKey(), Base64.getDecoder().decode(responseContent));
-//                            content = (Map<String, Object>) BytesUtil.encode(msgContentInBytes);
-//
-//                            String error = (String) content.get("error");
-//                            System.out.println("Client receive: " + error);
-//                            break;
-//                        default:
-//                            System.out.println("Not supported yet!");
-//                            break;
-//                    }
+                    switch (response.getMessageType()) {
+                        case PUBLIC_KEY:
+                            responseContent = (Map<String, Object>) BytesUtil.encode(Base64.getDecoder().decode(encryptedResponseContent));
+                            String strPublicKey = (String) responseContent.get("strPublicKey");
+                            PublicKey publicKey = RSAUtil.getPublicKey(Base64.getDecoder().decode(strPublicKey));
+                            this.client.setPublicKey(publicKey);
+
+//                            Generate AES key
+                            SecretKey secretKey = AESUtil.generateAESKey();
+                            this.client.setSecretKey(secretKey);
+                            String strSecretKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
+
+                            Map<String, Object> msgContent = new HashMap<>();
+                            msgContent.put("strSecretKey", strSecretKey);
+
+                            this.client.sendMessage(new Message(msgContent, MessageType.SEND_SECRET_KEY));
+                            break;
+
+                        case PRODUCT_INFO:
+                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedResponseContent));
+
+                            ProductDTO recvProduct = (ProductDTO) responseContent.get("product");
+                            System.out.println("Client receive: " + recvProduct);
+                            break;
+                        case PRODUCTS:
+                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedResponseContent));
+
+                            recvProduct = (ProductDTO) responseContent.get("product");
+                            System.out.println("Client receive: " + recvProduct);
+                            break;
+                        case CONFIGURABLE_PRODUCTS:
+                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedResponseContent));
+
+                            ConfigurableProductDTO recvCP = (ConfigurableProductDTO) responseContent.get("configurableProduct");
+                            System.out.println("Client receive: " + recvCP);
+                            break;
+                        case PRODUCT_HISTORIES:
+                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedResponseContent));
+
+                            HistoryDTO recvProductHistory = (HistoryDTO) responseContent.get("productHistory");
+                            System.out.println("Client receive: " + recvProductHistory);
+                            break;
+                        case CONFIGURABLE_PRODUCT_HISTORIES:
+                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedResponseContent));
+
+                            ConfigurableProductHistoryDTO recvCPHistory = (ConfigurableProductHistoryDTO) responseContent.get("configurableProductHistory");
+                            System.out.println("Client receive: " + recvCPHistory);
+                            break;
+                        case REVIEWS:
+                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedResponseContent));
+
+                            ReviewDTO recvReview = (ReviewDTO) responseContent.get("review");
+                            System.out.println("Client receive: " + recvReview);
+                            break;
+                        case USER_DISCONNECT:
+                            isRunning = false;
+                            in.close();
+                            break;
+                        case ERROR:
+                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedResponseContent));
+
+                            String error = (String) responseContent.get("error");
+                            System.out.println("Client receive: " + error);
+                            break;
+                        default:
+                            System.out.println("Not supported yet!");
+                            break;
+                    }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public Object decryptMessage(SecretKey secretKey, byte[] content) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        byte[] ivBytes = Arrays.copyOfRange(content, 0, 16);
+        byte[] contentInBytes = Arrays.copyOfRange(content, 16, content.length);
+
+        IvParameterSpec ivParams = AESUtil.getIVParams(ivBytes);
+
+        byte[] decryptedContent = AESUtil.decrypt(secretKey, ivParams, contentInBytes);
+
+        return BytesUtil.encode(decryptedContent);
     }
 }

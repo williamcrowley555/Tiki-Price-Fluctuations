@@ -61,12 +61,12 @@ public class WriteThread implements Runnable {
         if (!request.getMessageType().equals(MessageType.GET_PUBLIC_KEY)) {
             if (request.getMessageType().equals(MessageType.SEND_SECRET_KEY)) {
 //                Encrypt AES key with Public key
-                byte[] encryptedKey = RSAUtil.encryptKey(client.getPublicKey(), reqContentInBytes);
+                byte[] encryptedKey = RSAUtil.encrypt(client.getPublicKey(), reqContentInBytes);
                 String content = Base64.getEncoder().encodeToString(encryptedKey);
 
                 request.setContent(content);
             } else {
-                byte[] encryptedMessage = AESUtil.encryptFile(this.client.getSecretKey(), reqContentInBytes);
+                byte[] encryptedMessage = AESUtil.encrypt(this.client.getSecretKey(), reqContentInBytes);
                 String content = Base64.getEncoder().encodeToString(encryptedMessage);
 
                 request.setContent(content);

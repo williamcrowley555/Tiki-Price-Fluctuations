@@ -1,7 +1,6 @@
 package com.tiki_server.util;
 
 import javax.crypto.*;
-import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidAlgorithmParameterException;
@@ -24,18 +23,21 @@ public class AESUtil {
         return secretKeySpec;
     }
 
+    public static IvParameterSpec generateIv() {
+        byte[] iv = new byte[16];
+        new SecureRandom().nextBytes(iv);
+        return new IvParameterSpec(iv);
+    }
+
     public static IvParameterSpec getIVParams(byte[] ivBytes){
         IvParameterSpec ivParams = new IvParameterSpec(ivBytes);
         return ivParams;
     }
 
-    public static byte[] encryptFile(SecretKey key, byte[] content) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+    public static byte[] encrypt(SecretKey key, byte[] content) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        IvParameterSpec ivParams = AESUtil.generateIv();
 
-        SecureRandom rnd = new SecureRandom();
-        byte[] iv = new byte[cipher.getBlockSize()];
-        rnd.nextBytes(iv);
-        IvParameterSpec ivParams = new IvParameterSpec(iv);
         cipher.init(Cipher.ENCRYPT_MODE, key, ivParams);
 
         byte[] encryptedContent = cipher.doFinal(content);
@@ -43,7 +45,7 @@ public class AESUtil {
         return FileUtil.combineBytes(ivParams.getIV(), encryptedContent);
     }
 
-    public static byte[] decryptFile(SecretKey key, IvParameterSpec iv, byte[] content) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+    public static byte[] decrypt(SecretKey key, IvParameterSpec iv, byte[] content) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         cipher.init(Cipher.DECRYPT_MODE, key, iv);
 
