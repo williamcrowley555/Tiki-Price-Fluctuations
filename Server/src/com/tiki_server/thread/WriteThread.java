@@ -1,5 +1,6 @@
 package com.tiki_server.thread;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tiki_server.enums.MessageType;
 import com.tiki_server.main.Client;
 import com.tiki_server.model.Message;
@@ -56,7 +57,8 @@ public class WriteThread implements Runnable {
 
 //    Send request to server
     public void sendRequest(Message request) throws IOException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        byte[] reqContentInBytes = BytesUtil.decode(request.getContent());
+        String reqContentInJSON = new ObjectMapper().writeValueAsString(request.getContent());
+        byte[] reqContentInBytes = BytesUtil.decode(reqContentInJSON);
 
         if (!request.getMessageType().equals(MessageType.GET_PUBLIC_KEY)) {
             if (request.getMessageType().equals(MessageType.SEND_SECRET_KEY)) {
@@ -72,7 +74,10 @@ public class WriteThread implements Runnable {
                 request.setContent(content);
             }
         }
-        out.writeObject(request);
+
+        String json = new ObjectMapper().writeValueAsString(request);
+
+        out.writeObject(json);
         out.flush();
     }
 }

@@ -1,5 +1,6 @@
 package com.tiki_server.thread;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tiki_server.dto.*;
 import com.tiki_server.enums.MessageType;
 import com.tiki_server.main.Client;
@@ -40,19 +41,22 @@ public class ReadThread implements Runnable {
     public void run() {
         try {
             this.in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+            String json;
             Message response;
 
             while(isRunning) {
 //            Get response from server
-                response = (Message) in.readObject();
+                json = (String) in.readObject();
+                response = new ObjectMapper().readValue(json, Message.class);
 
                 if (response != null) {
-                    String encryptedResponseContent = (String) response.getContent();
+                    String encryptedContent = (String) response.getContent();
                     Map<String, Object> responseContent;
 
                     switch (response.getMessageType()) {
                         case PUBLIC_KEY:
-                            responseContent = (Map<String, Object>) BytesUtil.encode(Base64.getDecoder().decode(encryptedResponseContent));
+                            String responseContentInJSON = (String) BytesUtil.encode(Base64.getDecoder().decode(encryptedContent));
+                            responseContent = new ObjectMapper().readValue(responseContentInJSON, Map.class);
                             String strPublicKey = (String) responseContent.get("strPublicKey");
                             PublicKey publicKey = RSAUtil.getPublicKey(Base64.getDecoder().decode(strPublicKey));
                             this.client.setPublicKey(publicKey);
@@ -69,14 +73,16 @@ public class ReadThread implements Runnable {
                             break;
 
                         case PRODUCT_INFO:
-                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedResponseContent));
+                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
+
+                            System.out.println(responseContent.get("product"));
 
                             ProductDTO recvProduct = (ProductDTO) responseContent.get("product");
                             System.out.println("Client receive: " + recvProduct);
                             break;
 
                         case PRODUCTS:
-                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedResponseContent));
+                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
 
                             List<ProductDTO> recvProducts = (List<ProductDTO>) responseContent.get("products");
                             System.out.println("Client receive: ");
@@ -84,7 +90,7 @@ public class ReadThread implements Runnable {
                             break;
 
                         case CONFIGURABLE_PRODUCTS:
-                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedResponseContent));
+                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
 
                             List<ConfigurableProductDTO> recvCPs = (List<ConfigurableProductDTO>) responseContent.get("configurableProducts");
                             System.out.println("Client receive: ");
@@ -92,7 +98,7 @@ public class ReadThread implements Runnable {
                             break;
 
                         case PRODUCT_HISTORIES:
-                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedResponseContent));
+                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
 
                             List<HistoryDTO> recvProductHistories = (List<HistoryDTO>) responseContent.get("productHistories");
                             System.out.println("Client receive: ");
@@ -100,7 +106,7 @@ public class ReadThread implements Runnable {
                             break;
 
                         case CONFIGURABLE_PRODUCT_HISTORIES:
-                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedResponseContent));
+                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
 
                             List<ConfigurableProductHistoryDTO> recvCPHistories = (List<ConfigurableProductHistoryDTO>) responseContent.get("configurableProductHistories");
                             System.out.println("Client receive: ");
@@ -108,7 +114,7 @@ public class ReadThread implements Runnable {
                             break;
 
                         case REVIEWS:
-                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedResponseContent));
+                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
 
                             List<ReviewDTO> recvReviews = (List<ReviewDTO>) responseContent.get("reviews");
                             System.out.println("Client receive: ");
@@ -121,7 +127,7 @@ public class ReadThread implements Runnable {
                             break;
 
                         case ERROR:
-                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedResponseContent));
+                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
 
                             String error = (String) responseContent.get("error");
                             System.out.println("Client receive: " + error);
@@ -138,14 +144,15 @@ public class ReadThread implements Runnable {
         }
     }
 
-    public Object decryptMessage(SecretKey secretKey, byte[] content) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+    public Object decryptMessage(SecretKey secretKey, byte[] content) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, IOException {
         byte[] ivBytes = Arrays.copyOfRange(content, 0, 16);
         byte[] contentInBytes = Arrays.copyOfRange(content, 16, content.length);
 
         IvParameterSpec ivParams = AESUtil.getIVParams(ivBytes);
 
         byte[] decryptedContent = AESUtil.decrypt(secretKey, ivParams, contentInBytes);
+        String contentInJSON = (String) BytesUtil.encode(decryptedContent);
 
-        return BytesUtil.encode(decryptedContent);
+        return new ObjectMapper().readValue(contentInJSON, Map.class);
     }
 }

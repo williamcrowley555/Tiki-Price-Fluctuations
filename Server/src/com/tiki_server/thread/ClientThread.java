@@ -1,5 +1,6 @@
 package com.tiki_server.thread;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tiki_server.bll.*;
 import com.tiki_server.bll.impl.*;
 import com.tiki_server.dto.*;
@@ -36,13 +37,17 @@ public class ClientThread implements Runnable {
 
     @Override
     public void run() {
-        Message clientRequest = null;
+        String json;
+        Message clientRequest;
+
         try {
             this.in = new ObjectInputStream(new BufferedInputStream(clientSocket.getInputStream()));
             this.out = new ObjectOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
 
             while (isRunning) {
-                clientRequest = (Message) in.readObject();
+                json = (String) in.readObject();
+                clientRequest = new ObjectMapper().readValue(json, Message.class);
+
                 if (clientRequest != null) {
                     String encryptedRequestContent = (String) clientRequest.getContent();
                     Map<String, Object> requestContent;
@@ -63,7 +68,8 @@ public class ClientThread implements Runnable {
 
                         case SEND_SECRET_KEY:
                             byte[] msgContentInBytes = RSAUtil.decrypt(privateKey,  Base64.getDecoder().decode(encryptedRequestContent));
-                            requestContent = (Map<String, Object>) BytesUtil.encode(msgContentInBytes);
+                            String msgContentInJSON = (String) BytesUtil.encode(msgContentInBytes);
+                            requestContent = new ObjectMapper().readValue(msgContentInJSON, Map.class);
 
                             String strSecretKey = (String) requestContent.get("strSecretKey");
                             secretKey = AESUtil.getAESKey(Base64.getDecoder().decode(strSecretKey));
@@ -71,7 +77,7 @@ public class ClientThread implements Runnable {
 
                         case GET_PRODUCT:
                             requestContent = (Map<String, Object>) decryptMessage(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
-                            Long productId = (Long) requestContent.get("productId");
+                            Long productId = Long.valueOf((int) requestContent.get("productId"));
 
                             productBLL = new ProductBLL();
                             ProductDTO product = productBLL.findById(productId);
@@ -252,7 +258,8 @@ public class ClientThread implements Runnable {
     }
 
     private void sendMessage(Message message) throws IOException {
-        byte[] msgContentInBytes = BytesUtil.decode(message.getContent());
+        String msgContentInJSON = new ObjectMapper().writeValueAsString(message.getContent());
+        byte[] msgContentInBytes = BytesUtil.decode(msgContentInJSON);
 
         if (message.getMessageType().equals(MessageType.PUBLIC_KEY)) {
             String content = Base64.getEncoder().encodeToString(msgContentInBytes);
@@ -284,19 +291,22 @@ public class ClientThread implements Runnable {
             }
         }
 
-        out.writeObject(message);
+        String json = new ObjectMapper().writeValueAsString(message);
+
+        out.writeObject(json);
         out.flush();
     }
 
-    public Object decryptMessage(SecretKey secretKey, byte[] content) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+    public Object decryptMessage(SecretKey secretKey, byte[] content) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, IOException {
         byte[] ivBytes = Arrays.copyOfRange(content, 0, 16);
         byte[] contentInBytes = Arrays.copyOfRange(content, 16, content.length);
 
         IvParameterSpec ivParams = AESUtil.getIVParams(ivBytes);
 
         byte[] decryptedContent = AESUtil.decrypt(secretKey, ivParams, contentInBytes);
+        String contentInJSON = (String) BytesUtil.encode(decryptedContent);
 
-        return BytesUtil.encode(decryptedContent);
+        return new ObjectMapper().readValue(contentInJSON, Map.class);
     }
 
     private Message createErrorMessage(String content) {

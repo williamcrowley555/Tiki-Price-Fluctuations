@@ -59,6 +59,14 @@ public class Client {
     public void sendMessage(Message message) throws IOException {
         Thread writeThread = new Thread(new WriteThread(this, this.socket, this.out, message));
         writeThread.start();
+
+        if (message.getMessageType().equals(MessageType.GET_PUBLIC_KEY)) {
+            try {
+                writeThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void sendPublicKeyRequest() throws IOException {
@@ -154,6 +162,9 @@ public class Client {
         Client client = new Client("localhost", 5001);
         client.run();
 
+        if (client.getPublicKey() == null)
+            client.sendPublicKeyRequest();
+
         String input = "";
         Scanner stdIn;
         stdIn = new Scanner(System.in);
@@ -168,9 +179,6 @@ public class Client {
         System.out.println("7/ Get reviews with product id = 249953");
 
         while (true) {
-            if (client.getPublicKey() == null)
-                client.sendPublicKeyRequest();
-
             System.out.print("Client input: ");
             input = stdIn.nextLine();
 
