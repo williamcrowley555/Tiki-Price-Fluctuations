@@ -20,10 +20,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ReadThread implements Runnable {
     private volatile boolean isRunning = true;
@@ -77,46 +74,59 @@ public class ReadThread implements Runnable {
                             ProductDTO recvProduct = (ProductDTO) responseContent.get("product");
                             System.out.println("Client receive: " + recvProduct);
                             break;
+
                         case PRODUCTS:
                             responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedResponseContent));
 
-                            recvProduct = (ProductDTO) responseContent.get("product");
-                            System.out.println("Client receive: " + recvProduct);
+                            List<ProductDTO> recvProducts = (List<ProductDTO>) responseContent.get("products");
+                            System.out.println("Client receive: ");
+                            recvProducts.forEach(System.out::println);
                             break;
+
                         case CONFIGURABLE_PRODUCTS:
                             responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedResponseContent));
 
-                            ConfigurableProductDTO recvCP = (ConfigurableProductDTO) responseContent.get("configurableProduct");
-                            System.out.println("Client receive: " + recvCP);
+                            List<ConfigurableProductDTO> recvCPs = (List<ConfigurableProductDTO>) responseContent.get("configurableProducts");
+                            System.out.println("Client receive: ");
+                            recvCPs.forEach(System.out::println);
                             break;
+
                         case PRODUCT_HISTORIES:
                             responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedResponseContent));
 
-                            HistoryDTO recvProductHistory = (HistoryDTO) responseContent.get("productHistory");
-                            System.out.println("Client receive: " + recvProductHistory);
+                            List<HistoryDTO> recvProductHistories = (List<HistoryDTO>) responseContent.get("productHistories");
+                            System.out.println("Client receive: ");
+                            recvProductHistories.forEach(System.out::println);
                             break;
+
                         case CONFIGURABLE_PRODUCT_HISTORIES:
                             responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedResponseContent));
 
-                            ConfigurableProductHistoryDTO recvCPHistory = (ConfigurableProductHistoryDTO) responseContent.get("configurableProductHistory");
-                            System.out.println("Client receive: " + recvCPHistory);
+                            List<ConfigurableProductHistoryDTO> recvCPHistories = (List<ConfigurableProductHistoryDTO>) responseContent.get("configurableProductHistories");
+                            System.out.println("Client receive: ");
+                            recvCPHistories.forEach(System.out::println);
                             break;
+
                         case REVIEWS:
                             responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedResponseContent));
 
-                            ReviewDTO recvReview = (ReviewDTO) responseContent.get("review");
-                            System.out.println("Client receive: " + recvReview);
+                            List<ReviewDTO> recvReviews = (List<ReviewDTO>) responseContent.get("reviews");
+                            System.out.println("Client receive: ");
+                            recvReviews.forEach(System.out::println);
                             break;
+
                         case USER_DISCONNECT:
                             isRunning = false;
                             in.close();
                             break;
+
                         case ERROR:
                             responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedResponseContent));
 
                             String error = (String) responseContent.get("error");
                             System.out.println("Client receive: " + error);
                             break;
+
                         default:
                             System.out.println("Not supported yet!");
                             break;

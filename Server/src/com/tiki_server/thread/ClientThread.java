@@ -103,17 +103,12 @@ public class ClientThread implements Runnable {
 
                                 responseContent = new HashMap<>();
 
-                                if (products.isEmpty()) {
-                                    responseContent.put("product", null);
-                                    response = new Message(responseContent, MessageType.PRODUCTS);
-                                    sendMessage(response);
-                                } else {
-                                    for (ProductDTO p : products) {
-                                        responseContent.put("product", p);
-                                        response = new Message(responseContent, MessageType.PRODUCTS);
-                                        sendMessage(response);
-                                    }
-                                }
+                                if (products.isEmpty())
+                                    products = null;
+
+                                responseContent.put("products", products);
+                                response = new Message(responseContent, MessageType.PRODUCTS);
+                                sendMessage(response);
                             }
                             break;
 
@@ -123,21 +118,16 @@ public class ClientThread implements Runnable {
                             productId = (Long) requestContent.get("productId");
 
                             cpBLL = new ConfigurableProductBLL();
-                            List<ConfigurableProductDTO> cps = cpBLL.findByProductId(productId);
+                            List<ConfigurableProductDTO> configurableProducts = cpBLL.findByProductId(productId);
 
                             responseContent = new HashMap<>();
 
-                            if (cps.isEmpty()) {
-                                responseContent.put("configurableProduct", null);
-                                response = new Message(responseContent, MessageType.CONFIGURABLE_PRODUCTS);
-                                sendMessage(response);
-                            } else {
-                                for (ConfigurableProductDTO cp : cps) {
-                                    responseContent.put("configurableProduct", cp);
-                                    response = new Message(responseContent, MessageType.CONFIGURABLE_PRODUCTS);
-                                    sendMessage(response);
-                                }
-                            }
+                            if (configurableProducts.isEmpty())
+                                configurableProducts = null;
+
+                            responseContent.put("configurableProducts", configurableProducts);
+                            response = new Message(responseContent, MessageType.CONFIGURABLE_PRODUCTS);
+                            sendMessage(response);
                             break;
 
                         case GET_PRODUCT_HISTORIES_BY_URL:
@@ -152,17 +142,12 @@ public class ClientThread implements Runnable {
 
                             responseContent = new HashMap<>();
 
-                            if (histories.isEmpty()) {
-                                responseContent.put("productHistory", null);
-                                response = new Message(responseContent, MessageType.PRODUCT_HISTORIES);
-                                sendMessage(response);
-                            } else {
-                                for (HistoryDTO history : histories) {
-                                    responseContent.put("productHistory", history);
-                                    response = new Message(responseContent, MessageType.PRODUCT_HISTORIES);
-                                    sendMessage(response);
-                                }
-                            }
+                            if (histories.isEmpty())
+                                histories = null;
+
+                            responseContent.put("productHistories", histories);
+                            response = new Message(responseContent, MessageType.PRODUCT_HISTORIES);
+                            sendMessage(response);
                             break;
 
                         case GET_PRODUCT_HISTORIES_BY_PRODUCT_ID:
@@ -178,16 +163,12 @@ public class ClientThread implements Runnable {
                             responseContent = new HashMap<>();
 
                             if (histories.isEmpty()) {
-                                responseContent.put("productHistory", null);
-                                response = new Message(responseContent, MessageType.PRODUCT_HISTORIES);
-                                sendMessage(response);
-                            } else {
-                                for (HistoryDTO history : histories) {
-                                    responseContent.put("productHistory", history);
-                                    response = new Message(responseContent, MessageType.PRODUCT_HISTORIES);
-                                    sendMessage(response);
-                                }
+                                histories = null;
                             }
+
+                            responseContent.put("productHistories", histories);
+                            response = new Message(responseContent, MessageType.PRODUCT_HISTORIES);
+                            sendMessage(response);
                             break;
 
                         case GET_CONFIGURABLE_PRODUCT_HISTORIES:
@@ -203,17 +184,12 @@ public class ClientThread implements Runnable {
 
                             responseContent = new HashMap<>();
 
-                            if (cpHistories.isEmpty()) {
-                                responseContent.put("configurableProductHistory", null);
-                                response = new Message(responseContent, MessageType.CONFIGURABLE_PRODUCT_HISTORIES);
-                                sendMessage(response);
-                            } else {
-                                for (ConfigurableProductHistoryDTO cpHistory : cpHistories) {
-                                    responseContent.put("configurableProductHistory", cpHistory);
-                                    response = new Message(responseContent, MessageType.CONFIGURABLE_PRODUCT_HISTORIES);
-                                    sendMessage(response);
-                                }
-                            }
+                            if (cpHistories.isEmpty())
+                                cpHistories = null;
+
+                            responseContent.put("configurableProductHistories", cpHistories);
+                            response = new Message(responseContent, MessageType.CONFIGURABLE_PRODUCT_HISTORIES);
+                            sendMessage(response);
                             break;
 
                         case GET_REVIEWS_BY_PRODUCT_ID:
@@ -226,17 +202,12 @@ public class ClientThread implements Runnable {
 
                             responseContent = new HashMap<>();
 
-                            if (reviews.isEmpty()) {
-                                responseContent.put("review", null);
-                                response = new Message(responseContent, MessageType.REVIEWS);
-                                sendMessage(response);
-                            } else {
-                                for (ReviewDTO review : reviews) {
-                                    responseContent.put("review", review);
-                                    response = new Message(responseContent, MessageType.REVIEWS);
-                                    sendMessage(response);
-                                }
-                            }
+                            if (reviews.isEmpty())
+                                reviews = null;
+
+                            responseContent.put("reviews", reviews);
+                            response = new Message(responseContent, MessageType.REVIEWS);
+                            sendMessage(response);
                             break;
 
                         case USER_DISCONNECT:
