@@ -5,6 +5,7 @@
  */
 package com.client.gui;
 
+import com.client.main.Client;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -46,9 +47,12 @@ public class panelTimNangCao extends javax.swing.JPanel {
     String productName = "Laptop A";
     int month = 11;
     int year = 2021;
-    public panelTimNangCao() {
+    
+    Client main;
+    public panelTimNangCao(Client main) {
        
         initComponents();
+        this.main = main;
         for(int i = 1; i < 31; i ++){
             dates.add(String.valueOf(i));
         }

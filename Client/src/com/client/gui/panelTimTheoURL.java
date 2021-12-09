@@ -7,18 +7,23 @@ package com.client.gui;
 
 import com.client.gui.others.MyComboBoxEditor;
 import com.client.gui.others.MyComboBoxRenderer;
+import com.client.main.Client;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Rectangle;
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.border.MatteBorder;
@@ -60,6 +65,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
      * Creates new form panelTimTheoURL
      */
     public static String searchURL = ""; 
+    Client main;
     ArrayList<String> dates = new ArrayList<String>();
     ArrayList<Integer> prices = new ArrayList<Integer>();
     String productName = "Laptop A";
@@ -67,7 +73,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     int year = 2021;
     ImageIcon checkedRadio = new ImageIcon(getClass().getResource("/com/client/img/checked_radio.png"));
     ImageIcon unCheckedRadio = new ImageIcon(getClass().getResource("/com/client/img/unchecked_radio.png"));
-    public panelTimTheoURL() {
+    public panelTimTheoURL(Client main) {
         initComponents();
         for(int i = 1; i < 31; i ++){
             dates.add(String.valueOf(i));
@@ -75,7 +81,8 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         for (int i = 1; i < 31; i++){
             prices.add(i +100 );
         }
-        
+        this.main = main;
+       
         showLineChart(productName, month, year, dates, prices);
         customRadio();
         customMonthYearChooser();
@@ -490,6 +497,13 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     private void btnTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimKiemActionPerformed
         // TODO add your handling code here:
         searchURL = txtTimTheoURL.getText();
+        
+        try {
+            main.getProduct(Long.parseLong(txtTimTheoURL.getText()));
+        } catch (IOException ex) {
+            Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_btnTimKiemActionPerformed
 
     private void btnXemReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXemReviewActionPerformed
