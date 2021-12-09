@@ -119,6 +119,15 @@ public class ReadThread implements Runnable {
                             System.out.println("Client receive: ");
                             recvReviews.forEach(System.out::println);
                             break;
+                        
+                        case CATEGORIES:
+                            responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
+
+                            List<LinkedHashMap<String, Object>> recvCategories = (List<LinkedHashMap<String, Object>>) responseContent.get("categories");
+                            System.out.println("Client receive: ");
+                            recvCategories.forEach(System.out::println);
+                            //client.getCategories(recvCategories);
+                            break;
 
                         case USER_DISCONNECT:
                             isRunning = false;

@@ -60,6 +60,7 @@ public class ClientThread implements Runnable {
                     IHistoryBLL historyBLL = null;
                     IConfigurableProductHistoryBLL cpHistoryBLL = null;
                     IReviewBLL reviewBLL = null;
+                    ICategoryBLL categoryBLL = null;
 
                     switch (clientRequest.getMessageType()) {
                         case GET_PUBLIC_KEY:
@@ -213,6 +214,24 @@ public class ClientThread implements Runnable {
 
                             responseContent.put("reviews", reviews);
                             response = new Message(responseContent, MessageType.REVIEWS);
+                            sendMessage(response);
+                            break;
+
+                        case GET_CATEGORIES:
+                            responseContent = (Map<String, Object>) decryptContent(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
+
+                            //productId = Long.valueOf((int) requestContent.get("productId"));
+
+                            categoryBLL = new CategoryBLL();
+                            List<CategoryDTO> categories = categoryBLL.findAll();
+
+                            responseContent = new HashMap<>();
+
+                            if (categories.isEmpty())
+                                categories = null;
+
+                            responseContent.put("categories", categories);
+                            response = new Message(responseContent, MessageType.CATEGORIES);
                             sendMessage(response);
                             break;
 

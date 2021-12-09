@@ -12,8 +12,11 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
 import org.jfree.chart.ChartFactory;
@@ -71,6 +74,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         brandList.add("j");
         initBrandCheckbox(brandList);
         showLineChart(productName, month, year, dates, prices);
+        
     }
     
     public void initBrandCheckbox(ArrayList<String> list){
@@ -217,6 +221,11 @@ public class panelTimNangCao extends javax.swing.JPanel {
         lblTitleTenSanPham.setText("Tên sản phẩm:");
 
         comboboxCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboboxCategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboboxCategoryActionPerformed(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setText("Danh mục:");
@@ -304,7 +313,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
                             .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE))))
+                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 111, Short.MAX_VALUE))))
                 .addContainerGap(35, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -329,7 +338,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, Short.MAX_VALUE)
                 .addGap(10, 10, 10))
         );
 
@@ -368,7 +377,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
                     .addComponent(jLabel6)
                     .addComponent(jRadioButton5)
                     .addComponent(jRadioButton3))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -385,7 +394,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
                 .addComponent(jRadioButton5)
                 .addGap(14, 14, 14)
                 .addComponent(jRadioButton4)
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pnlFilter.add(jPanel7, java.awt.BorderLayout.CENTER);
@@ -424,6 +433,15 @@ public class panelTimNangCao extends javax.swing.JPanel {
         // TODO add your handling code here:
         System.out.println(selectedBrands);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void comboboxCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboboxCategoryActionPerformed
+        try {
+            main.getCategory();
+        } catch (IOException ex) {
+            Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_comboboxCategoryActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

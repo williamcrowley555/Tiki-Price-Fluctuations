@@ -102,6 +102,19 @@ public class Client extends javax.swing.JFrame {
         this.pnlURL.showLineChart("abc", 11, 2021, dates, prices);
     }
     
+    public void getCategories(List<LinkedHashMap<String, Object>> categories){
+         ArrayList<String> name = new ArrayList<String>();
+        // ArrayList<Integer> prices = new ArrayList<Integer>();
+        for (LinkedHashMap<String, Object> category : categories) 
+        {   
+           // LinkedHashMap<String, Object> dateObj= (LinkedHashMap<String, Object>) history.get("name");
+            name.add(String.valueOf(category.get("name")));
+            //prices.add((int) history.get("price"));
+        }
+        //this.pnlURL.showLineChart("abc", 11, 2021, dates, prices);
+        System.out.println(name);
+    }
+    
     public void run() {
         try {
             socket = new Socket(hostname, port);
@@ -171,7 +184,13 @@ public class Client extends javax.swing.JFrame {
         Message requestMsg = new Message(request, MessageType.GET_CONFIGURABLE_PRODUCTS);
         sendMessage(requestMsg);
     }
-
+    
+    public void getCategory() throws IOException {
+        Map<String, Object> request = new HashMap<>();
+        Message requestMsg = new Message(request, MessageType.GET_CATEGORIES);
+        sendMessage(requestMsg);
+    }
+    
     public void getProductHistories(String url, int month, int year) throws IOException {
         Map<String, Object> request = new HashMap<>();
         request.put("url", url);
