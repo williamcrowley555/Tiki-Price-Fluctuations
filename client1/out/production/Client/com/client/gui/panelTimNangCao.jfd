@@ -1,0 +1,243 @@
+JFDML JFormDesigner: "7.0.5.0.404" Java: "11.0.11" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+			name: "this"
+			"background": new java.awt.Color( 255, 255, 255, 255 )
+			"border": new javax.swing.border.MatteBorder( 1, 0, 0, 0, sfield java.awt.Color black )
+			"preferredSize": new java.awt.Dimension( 1280, 720 )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+				name: "pnlLeft"
+				"preferredSize": new java.awt.Dimension( 600, 493 )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+					name: "pnlSearchAndFilter"
+					"background": new java.awt.Color( 255, 255, 255, 255 )
+					"preferredSize": new java.awt.Dimension( 400, 300 )
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+						"$horizontalGroup": "par l {seq l {space :::p, comp lblTitleTenSanPham:::p::p, space :::x, comp txtSearch:::p:155:p, space s:::p, comp jLabel4:::p::p, space u:::p, comp comboboxCategory:::p:212:p, space :p:27:p}}"
+						"$verticalGroup": "par l {seq l {space :p:16:p, par b {comp lblTitleTenSanPham::b:p:16:p, comp txtSearch::b:p::p, comp comboboxCategory::b:p::p, comp jLabel4::b:p:16:p}, space :::x}}"
+					} ) {
+						name: "pnlSearch"
+						"background": new java.awt.Color( 255, 255, 255, 255 )
+						"preferredSize": new java.awt.Dimension( 600, 50 )
+						add( new FormComponent( "javax.swing.JLabel" ) {
+							name: "lblTitleTenSanPham"
+							"font": new java.awt.Font( "Tahoma", 0, 14 )
+							"text": "Tên sản phẩm:"
+						} )
+						add( new FormComponent( "javax.swing.JTextField" ) {
+							name: "txtSearch"
+						} )
+						add( new FormComponent( "javax.swing.JComboBox" ) {
+							name: "comboboxCategory"
+							"model": new javax.swing.DefaultComboBoxModel {
+								selectedItem: "Item 1"
+								addElement( "Item 1" )
+								addElement( "Item 2" )
+								addElement( "Item 3" )
+								addElement( "Item 4" )
+							}
+							auxiliary() {
+								"JavaCodeGenerator.typeParameters": "String"
+							}
+						} )
+						add( new FormComponent( "javax.swing.JLabel" ) {
+							name: "jLabel4"
+							"font": new java.awt.Font( "Tahoma", 0, 14 )
+							"text": "Danh mục:"
+						} )
+					}, new FormLayoutConstraints( class java.lang.String ) {
+						"value": "First"
+					} )
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+						name: "pnlFilter"
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
+							name: "pnlCategory"
+							"background": new java.awt.Color( 255, 255, 255, 255 )
+							"preferredSize": new java.awt.Dimension( 200, 240 )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "jLabel5"
+								"font": new java.awt.Font( "Tahoma", 0, 14 )
+								"text": "Thương hiệu:"
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+								"x": 10
+								"y": 6
+								"width": 100
+								"height": 20
+							} )
+						}, new FormLayoutConstraints( class java.lang.String ) {
+							"value": "Before"
+						} )
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+							"$horizontalGroup": "par l {seq l {space :::p, comp jLabel7:::::x}, seq l {space :p:46:p, par l {comp jLabel9:::p::p, par t:l {par l {comp jLabel8::l:p::p, comp jTextField3::l:p:199:p, comp jTextField4::l:p:199:p}, par l:t::p {comp jButton2::t:::x, comp jButton1::t::111:x}}}, space ::35:x}, seq t {space :::x, comp jSeparator1:::p:26:p, space :p:114:p}}"
+							"$verticalGroup": "par l {seq l {space :::p, comp jLabel7:::p::p, space u:::p, comp jLabel8:::p:16:p, space :p:10:p, comp jTextField3:::p::p, space :::p, comp jSeparator1:::p:10:p, space :p:5:p, comp jLabel9:::p:16:p, space :::p, comp jTextField4:::p::p, space u:::p, comp jButton2:::p:30:p, space u:::p, comp jButton1::::26:x, space :p:10:p}}"
+						} ) {
+							name: "jPanel6"
+							"background": new java.awt.Color( 255, 255, 255, 255 )
+							"preferredSize": new java.awt.Dimension( 280, 240 )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "jLabel7"
+								"font": new java.awt.Font( "Tahoma", 0, 14 )
+								"horizontalAlignment": 0
+								"text": "Chọn khoảng giá:"
+							} )
+							add( new FormComponent( "javax.swing.JTextField" ) {
+								name: "jTextField3"
+							} )
+							add( new FormComponent( "javax.swing.JTextField" ) {
+								name: "jTextField4"
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "jLabel8"
+								"text": "Từ:"
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "jLabel9"
+								"text": "Đến:"
+							} )
+							add( new FormComponent( "javax.swing.JSeparator" ) {
+								name: "jSeparator1"
+								"border": new javax.swing.border.LineBorder( sfield java.awt.Color black, 5, false )
+								"preferredSize": new java.awt.Dimension( 50, 4 )
+							} )
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "jButton1"
+								"text": "Xem review"
+							} )
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "jButton2"
+								"text": "Tìm kiếm"
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "jButton2ActionPerformed", true ) )
+							} )
+						}, new FormLayoutConstraints( class java.lang.String ) {
+							"value": "After"
+						} )
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+							"$horizontalGroup": "par l {seq {space :::p, par l {comp jRadioButton2:::p::p, comp jRadioButton1:::p::p, comp jLabel6:::p::p, comp jRadioButton5::l:p::p, comp jRadioButton3::l:p::p, comp jRadioButton4::l:p::p}, space ::48:x}}"
+							"$verticalGroup": "par l {seq l {space :p:12:p, comp jLabel6:::p::p, space u:::p, comp jRadioButton1:::p::p, space :p:14:p, comp jRadioButton2:::p::p, space :p:14:p, comp jRadioButton3:::p::p, space :p:14:p, comp jRadioButton5:::p::p, space u:::p, comp jRadioButton4:::p::p, space ::55:x}}"
+						} ) {
+							name: "jPanel7"
+							"background": new java.awt.Color( 255, 255, 255, 255 )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "jLabel6"
+								"font": new java.awt.Font( "Tahoma", 0, 14 )
+								"text": "Đánh giá:"
+							} )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "jRadioButton1"
+								"$buttonGroup": new FormReference( "buttonGroupStar" )
+								"text": "Từ 5 sao"
+							} )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "jRadioButton2"
+								"$buttonGroup": new FormReference( "buttonGroupStar" )
+								"text": "Từ 4 sao"
+							} )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "jRadioButton3"
+								"$buttonGroup": new FormReference( "buttonGroupStar" )
+								"text": "Từ 3 sao"
+							} )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "jRadioButton4"
+								"$buttonGroup": new FormReference( "buttonGroupStar" )
+								"text": "Từ 1 sao"
+							} )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "jRadioButton5"
+								"$buttonGroup": new FormReference( "buttonGroupStar" )
+								"text": "Từ 2 sao"
+							} )
+						}, new FormLayoutConstraints( class java.lang.String ) {
+							"value": "Center"
+						} )
+					}, new FormLayoutConstraints( class java.lang.String ) {
+						"value": "Center"
+					} )
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "First"
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+					name: "pnlTable"
+					"background": new java.awt.Color( 255, 255, 255, 255 )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "jScrollPane1"
+						add( new FormComponent( "javax.swing.JTable" ) {
+							name: "jTable1"
+							"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector {
+								add( new java.util.Vector {
+									add( null )
+									add( null )
+									add( null )
+									add( null )
+								} )
+								add( new java.util.Vector {
+									add( null )
+									add( null )
+									add( null )
+									add( null )
+								} )
+								add( new java.util.Vector {
+									add( null )
+									add( null )
+									add( null )
+									add( null )
+								} )
+								add( new java.util.Vector {
+									add( null )
+									add( null )
+									add( null )
+									add( null )
+								} )
+							}, new java.util.Vector {
+								add( "Title 1" )
+								add( "Title 2" )
+								add( "Title 3" )
+								add( "Title 4" )
+							}, new java.util.Vector {
+								add( class java.lang.Object )
+								add( class java.lang.Object )
+								add( class java.lang.Object )
+								add( class java.lang.Object )
+							}, new java.util.Vector {
+								add( true )
+								add( true )
+								add( true )
+								add( true )
+							}, new java.util.Vector {
+								add( null )
+								add( null )
+								add( null )
+								add( null )
+							} )
+						} )
+					}, new FormLayoutConstraints( class java.lang.String ) {
+						"value": "Center"
+					} )
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "Center"
+				} )
+			}, new FormLayoutConstraints( class java.lang.String ) {
+				"value": "Before"
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+				name: "pnlChart"
+			}, new FormLayoutConstraints( class java.lang.String ) {
+				"value": "Center"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"size": new java.awt.Dimension( 1280, 720 )
+			"location": new java.awt.Point( 0, 0 )
+		} )
+		add( new FormNonVisual( "javax.swing.ButtonGroup" ) {
+			name: "buttonGroupStar"
+			auxiliary() {
+				"JavaCodeGenerator.variableLocal": false
+			}
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 736 )
+		} )
+	}
+}

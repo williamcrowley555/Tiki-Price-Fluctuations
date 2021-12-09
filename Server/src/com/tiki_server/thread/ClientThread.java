@@ -76,7 +76,7 @@ public class ClientThread implements Runnable {
                             break;
 
                         case GET_PRODUCT:
-                            requestContent = (Map<String, Object>) decryptMessage(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
+                            requestContent = (Map<String, Object>) decryptContent(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
                             Long productId = Long.valueOf((int) requestContent.get("productId"));
 
                             productBLL = new ProductBLL();
@@ -90,7 +90,7 @@ public class ClientThread implements Runnable {
                             break;
 
                         case FILTER_PRODUCTS:
-                            requestContent = (Map<String, Object>) decryptMessage(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
+                            requestContent = (Map<String, Object>) decryptContent(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
 
                             if (requestContent == null) {
                                 response = createErrorMessage("Content can not be null");
@@ -98,11 +98,11 @@ public class ClientThread implements Runnable {
                             }
                             else {
                                 String productName = requestContent.containsKey("productName") ? (String) requestContent.get("productName") : null;
-                                Long categoryId = requestContent.containsKey("categoryId") ? (Long) requestContent.get("categoryId") : null;
-                                Long brandId = requestContent.containsKey("brandId") ? (Long) requestContent.get("brandId") : null;
-                                Float ratingAverage = requestContent.containsKey("ratingAverage") ? (Float) requestContent.get("ratingAverage") : null;
-                                Long minPrice = requestContent.containsKey("minPrice") ? (Long) requestContent.get("minPrice") : null;
-                                Long maxPrice = requestContent.containsKey("maxPrice") ? (Long) requestContent.get("maxPrice") : null;
+                                Long categoryId = requestContent.containsKey("categoryId") ? Long.valueOf((int) requestContent.get("categoryId")) : null;
+                                Long brandId = requestContent.containsKey("brandId") ? Long.valueOf((int) requestContent.get("brandId")) : null;
+                                Float ratingAverage = requestContent.containsKey("ratingAverage") ? ((Double) requestContent.get("ratingAverage")).floatValue() : null;
+                                Long minPrice = requestContent.containsKey("minPrice") ? Long.valueOf((int) requestContent.get("minPrice")): null;
+                                Long maxPrice = requestContent.containsKey("maxPrice") ? Long.valueOf((int) requestContent.get("maxPrice")) : null;
 
                                 productBLL = new ProductBLL();
                                 List<ProductDTO> products = productBLL.filter(productName, categoryId, brandId, ratingAverage, minPrice, maxPrice);
@@ -119,9 +119,9 @@ public class ClientThread implements Runnable {
                             break;
 
                         case GET_CONFIGURABLE_PRODUCTS:
-                            requestContent = (Map<String, Object>) decryptMessage(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
+                            requestContent = (Map<String, Object>) decryptContent(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
 
-                            productId = (Long) requestContent.get("productId");
+                            productId = Long.valueOf((int) requestContent.get("productId"));
 
                             cpBLL = new ConfigurableProductBLL();
                             List<ConfigurableProductDTO> configurableProducts = cpBLL.findByProductId(productId);
@@ -137,7 +137,7 @@ public class ClientThread implements Runnable {
                             break;
 
                         case GET_PRODUCT_HISTORIES_BY_URL:
-                            requestContent = (Map<String, Object>) decryptMessage(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
+                            requestContent = (Map<String, Object>) decryptContent(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
 
                             String url = (String) requestContent.get("url");
                             int month = (int) requestContent.get("month");
@@ -157,9 +157,9 @@ public class ClientThread implements Runnable {
                             break;
 
                         case GET_PRODUCT_HISTORIES_BY_PRODUCT_ID:
-                            requestContent = (Map<String, Object>) decryptMessage(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
+                            requestContent = (Map<String, Object>) decryptContent(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
 
-                            productId = (Long) requestContent.get("productId");
+                            productId = Long.valueOf((int) requestContent.get("productId"));
                             month = (int) requestContent.get("month");
                             year = (int) requestContent.get("year");
 
@@ -178,10 +178,10 @@ public class ClientThread implements Runnable {
                             break;
 
                         case GET_CONFIGURABLE_PRODUCT_HISTORIES:
-                            requestContent = (Map<String, Object>) decryptMessage(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
+                            requestContent = (Map<String, Object>) decryptContent(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
 
-                            productId = (Long) requestContent.get("productId");
-                            Long cpId = (Long) requestContent.get("cpId");
+                            productId = Long.valueOf((int) requestContent.get("productId"));
+                            Long cpId = Long.valueOf((int) requestContent.get("cpId"));
                             month = (int) requestContent.get("month");
                             year = (int) requestContent.get("year");
 
@@ -199,9 +199,9 @@ public class ClientThread implements Runnable {
                             break;
 
                         case GET_REVIEWS_BY_PRODUCT_ID:
-                            requestContent = (Map<String, Object>) decryptMessage(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
+                            requestContent = (Map<String, Object>) decryptContent(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
 
-                            productId = (Long) requestContent.get("productId");
+                            productId = Long.valueOf((int) requestContent.get("productId"));
 
                             reviewBLL = new ReviewBLL();
                             List<ReviewDTO> reviews = reviewBLL.findByProductId(productId);
@@ -297,7 +297,7 @@ public class ClientThread implements Runnable {
         out.flush();
     }
 
-    public Object decryptMessage(SecretKey secretKey, byte[] content) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, IOException {
+    public Object decryptContent(SecretKey secretKey, byte[] content) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, IOException {
         byte[] ivBytes = Arrays.copyOfRange(content, 0, 16);
         byte[] contentInBytes = Arrays.copyOfRange(content, 16, content.length);
 

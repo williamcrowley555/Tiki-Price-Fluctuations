@@ -1,7 +1,6 @@
 package com.tiki_server.thread;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tiki_server.dto.*;
 import com.tiki_server.enums.MessageType;
 import com.tiki_server.main.Client;
 import com.tiki_server.model.Message;
@@ -16,7 +15,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -73,50 +71,49 @@ public class ReadThread implements Runnable {
                             break;
 
                         case PRODUCT_INFO:
-                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
+                            responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
 
-                            System.out.println(responseContent.get("product"));
-
-                            ProductDTO recvProduct = (ProductDTO) responseContent.get("product");
+                            //System.out.println(responseContent.get("product"));
+                            LinkedHashMap<String, Object> recvProduct;
+                            recvProduct = (LinkedHashMap<String, Object>) responseContent.get("product");
                             System.out.println("Client receive: " + recvProduct);
+
                             break;
 
                         case PRODUCTS:
-                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
+                            responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
 
-                            List<ProductDTO> recvProducts = (List<ProductDTO>) responseContent.get("products");
+                            List<LinkedHashMap<String, Object>> recvProducts = (List<LinkedHashMap<String, Object>>) responseContent.get("products");
                             System.out.println("Client receive: ");
                             recvProducts.forEach(System.out::println);
                             break;
 
                         case CONFIGURABLE_PRODUCTS:
-                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
-
-                            List<ConfigurableProductDTO> recvCPs = (List<ConfigurableProductDTO>) responseContent.get("configurableProducts");
+                            responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
+                            List<LinkedHashMap<String, Object>> recvCPs = (List<LinkedHashMap<String, Object>>) responseContent.get("configurableProducts");
                             System.out.println("Client receive: ");
                             recvCPs.forEach(System.out::println);
                             break;
 
                         case PRODUCT_HISTORIES:
-                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
-
-                            List<HistoryDTO> recvProductHistories = (List<HistoryDTO>) responseContent.get("productHistories");
+                            responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
+                            List<LinkedHashMap<String, Object>> recvProductHistories = (List<LinkedHashMap<String, Object>>) responseContent.get("productHistories");
                             System.out.println("Client receive: ");
                             recvProductHistories.forEach(System.out::println);
                             break;
 
                         case CONFIGURABLE_PRODUCT_HISTORIES:
-                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
+                            responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
 
-                            List<ConfigurableProductHistoryDTO> recvCPHistories = (List<ConfigurableProductHistoryDTO>) responseContent.get("configurableProductHistories");
+                            List<LinkedHashMap<String, Object>> recvCPHistories = (List<LinkedHashMap<String, Object>>) responseContent.get("configurableProductHistories");
                             System.out.println("Client receive: ");
                             recvCPHistories.forEach(System.out::println);
                             break;
 
                         case REVIEWS:
-                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
+                            responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
 
-                            List<ReviewDTO> recvReviews = (List<ReviewDTO>) responseContent.get("reviews");
+                            List<LinkedHashMap<String, Object>> recvReviews = (List<LinkedHashMap<String, Object>>) responseContent.get("reviews");
                             System.out.println("Client receive: ");
                             recvReviews.forEach(System.out::println);
                             break;
@@ -127,7 +124,7 @@ public class ReadThread implements Runnable {
                             break;
 
                         case ERROR:
-                            responseContent = (Map<String, Object>) decryptMessage(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
+                            responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
 
                             String error = (String) responseContent.get("error");
                             System.out.println("Client receive: " + error);
@@ -144,7 +141,7 @@ public class ReadThread implements Runnable {
         }
     }
 
-    public Object decryptMessage(SecretKey secretKey, byte[] content) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, IOException {
+    public Object decryptContent(SecretKey secretKey, byte[] content) throws InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, IOException {
         byte[] ivBytes = Arrays.copyOfRange(content, 0, 16);
         byte[] contentInBytes = Arrays.copyOfRange(content, 16, content.length);
 

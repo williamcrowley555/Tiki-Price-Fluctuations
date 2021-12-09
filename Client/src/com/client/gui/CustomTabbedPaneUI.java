@@ -5,12 +5,13 @@
  */
 package com.client.gui;
 
-import java.util.*;
-import java.awt.*;
 import javax.swing.*;
-import javax.swing.plaf.*;
-import javax.swing.plaf.basic.*;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.basic.BasicGraphicsUtils;
+import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import javax.swing.text.View;
+import java.awt.*;
+import java.util.Arrays;
 
 public class CustomTabbedPaneUI extends BasicTabbedPaneUI {
 

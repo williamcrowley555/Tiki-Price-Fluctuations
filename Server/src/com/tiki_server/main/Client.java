@@ -165,6 +165,11 @@ public class Client {
         if (client.getPublicKey() == null)
             client.sendPublicKeyRequest();
 
+        System.out.println("Connecting ...");
+        while (client.getSecretKey() == null) {
+            System.out.print("");
+        }
+
         String input = "";
         Scanner stdIn;
         stdIn = new Scanner(System.in);

@@ -4,16 +4,11 @@
  * and open the template in the editor.
  */
 package com.client.gui.others;
- 
- 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.Font;
- 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+
+
+import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
+import java.awt.*;
  
 public class MyComboBoxEditor extends BasicComboBoxEditor {
     private JLabel label = new JLabel();
