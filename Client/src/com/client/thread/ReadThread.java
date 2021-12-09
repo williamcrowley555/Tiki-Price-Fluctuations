@@ -108,7 +108,8 @@ public class ReadThread implements Runnable {
                             //recvProductHistories.forEach(System.out::println);
                             
                             System.out.println("Client receive: ");
-                           
+                            
+                            if (recvProductHistories != null)
                             client.getProduct(Long.valueOf((int) recvProductHistories.get(0).get("productId")));
                             client.updateLineChartURL(recvProductHistories, "");
                             break;
