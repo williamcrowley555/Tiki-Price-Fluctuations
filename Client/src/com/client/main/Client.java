@@ -34,6 +34,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.security.PublicKey;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -41,6 +42,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.SecretKey;
 import javax.swing.JButton;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 
@@ -88,6 +90,18 @@ public class Client extends javax.swing.JFrame {
          
     }
     
+    public void updateLineChartURL(List<LinkedHashMap<String, Object>> productHistories){
+         ArrayList<String> dates = new ArrayList<String>();
+         ArrayList<Integer> prices = new ArrayList<Integer>();
+        for (LinkedHashMap<String, Object> history : productHistories) 
+        {   
+            LinkedHashMap<String, Object> dateObj= (LinkedHashMap<String, Object>) history.get("date");
+            dates.add(String.valueOf(dateObj.get("dayOfMonth")));
+            prices.add((int) history.get("price"));
+        }
+        this.pnlURL.showLineChart("abc", 11, 2021, dates, prices);
+    }
+    
     public void run() {
         try {
             socket = new Socket(hostname, port);
@@ -99,6 +113,7 @@ public class Client extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
+    
     
     public void closeSocket() throws IOException, InterruptedException {
         Message message = new Message(null, MessageType.USER_DISCONNECT);

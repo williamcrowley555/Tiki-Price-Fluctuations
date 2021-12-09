@@ -78,7 +78,7 @@ public class ReadThread implements Runnable {
                             LinkedHashMap<String, Object> recvProduct;
                             recvProduct = (LinkedHashMap<String, Object>) responseContent.get("product");
                             System.out.println("Client receive: " + recvProduct);
-
+                           
                             break;
 
                         case PRODUCTS:
@@ -101,6 +101,7 @@ public class ReadThread implements Runnable {
                             List<LinkedHashMap<String, Object>> recvProductHistories = (List<LinkedHashMap<String, Object>>) responseContent.get("productHistories");
                             System.out.println("Client receive: ");
                             recvProductHistories.forEach(System.out::println);
+                            client.updateLineChartURL(recvProductHistories);
                             break;
 
                         case CONFIGURABLE_PRODUCT_HISTORIES:

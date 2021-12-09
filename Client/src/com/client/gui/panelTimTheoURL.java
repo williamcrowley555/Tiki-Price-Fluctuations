@@ -159,8 +159,8 @@ public class panelTimTheoURL extends javax.swing.JPanel {
 //        domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
         renderer1.setDefaultItemLabelGenerator(new StandardCategoryItemLabelGenerator("{2}", NumberFormat.getNumberInstance()));
         renderer1.setDefaultPositiveItemLabelPosition(new ItemLabelPosition( 
-             ItemLabelAnchor.CENTER, TextAnchor.BASELINE_LEFT, TextAnchor.BASELINE_LEFT, 
-             - Math.PI / 4)); 
+             ItemLabelAnchor.CENTER, TextAnchor.BASELINE_RIGHT, TextAnchor.BASELINE_RIGHT, 
+             - Math.PI / 8)); 
         
         renderer1.setDefaultItemLabelsVisible(true);
         
@@ -499,7 +499,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         searchURL = txtTimTheoURL.getText();
         
         try {
-            main.getProduct(Long.parseLong(txtTimTheoURL.getText()));
+            main.getProductHistories(searchURL, 11, 2021);
         } catch (IOException ex) {
             Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
         }
