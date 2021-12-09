@@ -42,6 +42,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.SecretKey;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
@@ -90,17 +91,32 @@ public class Client extends javax.swing.JFrame {
          
     }
     
-    public void updateLineChartURL(List<LinkedHashMap<String, Object>> productHistories){
-         ArrayList<String> dates = new ArrayList<String>();
-         ArrayList<Integer> prices = new ArrayList<Integer>();
+    public void updateLineChartURL(List<LinkedHashMap<String, Object>> productHistories, String productName){
+        if (productHistories == null) {
+            JOptionPane.showMessageDialog(this, "Không có dữ liệu lịch sử giá", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
+            return;
+        } 
+
+        ArrayList<String> dates = new ArrayList<String>();
+        ArrayList<Integer> prices = new ArrayList<Integer>();
+        int month = 1;
+        int year = 2000;
         for (LinkedHashMap<String, Object> history : productHistories) 
         {   
             LinkedHashMap<String, Object> dateObj= (LinkedHashMap<String, Object>) history.get("date");
             dates.add(String.valueOf(dateObj.get("dayOfMonth")));
+            month = (int) dateObj.get("monthValue");
+            year = (int)  dateObj.get("year");
             prices.add((int) history.get("price"));
         }
-        this.pnlURL.showLineChart("abc", 11, 2021, dates, prices);
+        this.pnlURL.showLineChart(productName, month, year, dates, prices);
     }
+    
+    public void updateProductInfoURL(String productName, String img){
+       this.pnlURL.updateProductInfo(productName, img);
+    }
+    
+    
     
     public void run() {
         try {
