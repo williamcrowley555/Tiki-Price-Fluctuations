@@ -12,18 +12,24 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.border.MatteBorder;
@@ -172,6 +178,29 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         pnlChart.setVisible(true);
     }
     
+    public void updateProductInfo(String productName, String productImg){
+        
+            int heigth = lblProductPic.getHeight();
+            int width = lblProductPic.getWidth();
+            lblProductPic = new JLabel("<html><img  height='"+ heigth +"' width='"+ width + "' src='" + productImg + "' /></html>");
+            txtTenSP.setText(productName);
+       
+    }
+    
+    public void createImage(String str, JLabel label) {
+        URL url = null;
+        try {
+            url = new URL(str);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            BufferedImage image = ImageIO.read(url);
+            label.setIcon(new ImageIcon(image));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     
     public JComboBox myComboBox(JComboBox box, Color color)
     {   
@@ -249,6 +278,13 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         jRadioButton5 = new javax.swing.JRadioButton();
         jRadioButton6 = new javax.swing.JRadioButton();
         jRadioButton7 = new javax.swing.JRadioButton();
+        pnlLeft = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtTenSP = new javax.swing.JTextArea();
+        jLabel6 = new javax.swing.JLabel();
+        lblProductPic = new javax.swing.JLabel();
         pnlChart = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(255, 255, 255));
@@ -475,8 +511,59 @@ public class panelTimTheoURL extends javax.swing.JPanel {
 
         jPanel7.add(jPanel8, java.awt.BorderLayout.LINE_END);
 
+        pnlLeft.setLayout(new java.awt.BorderLayout());
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setPreferredSize(new java.awt.Dimension(200, 366));
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel5.setText("Tên sp:");
+
+        txtTenSP.setEditable(false);
+        txtTenSP.setColumns(20);
+        txtTenSP.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtTenSP.setLineWrap(true);
+        txtTenSP.setRows(5);
+        jScrollPane1.setViewportView(txtTenSP);
+
+        jLabel6.setText("Hình ảnh:");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblProductPic, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(0, 14, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblProductPic, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(39, Short.MAX_VALUE))
+        );
+
+        pnlLeft.add(jPanel2, java.awt.BorderLayout.LINE_START);
+
         pnlChart.setLayout(new java.awt.BorderLayout());
-        jPanel7.add(pnlChart, java.awt.BorderLayout.CENTER);
+        pnlLeft.add(pnlChart, java.awt.BorderLayout.CENTER);
+
+        jPanel7.add(pnlLeft, java.awt.BorderLayout.CENTER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -499,7 +586,8 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         searchURL = txtTimTheoURL.getText();
         
         try {
-            main.getProductHistories(searchURL, 11, 2021);
+            main.getProductHistories(searchURL, monthChooser.getMonth()+1, yearChooser.getYear());
+            System.out.println(monthChooser.getMonth() + " / " + yearChooser.getYear());
         } catch (IOException ex) {
             Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -535,7 +623,10 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel7;
@@ -547,10 +638,14 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     private javax.swing.JRadioButton jRadioButton5;
     private javax.swing.JRadioButton jRadioButton6;
     private javax.swing.JRadioButton jRadioButton7;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblProductPic;
     private com.toedter.calendar.JMonthChooser monthChooser;
     private javax.swing.JPanel pnlChart;
+    private javax.swing.JPanel pnlLeft;
     private javax.swing.JPanel pnlSearch;
     private javax.swing.ButtonGroup sizeGroup;
+    private javax.swing.JTextArea txtTenSP;
     private javax.swing.JTextField txtTimTheoURL;
     private com.toedter.calendar.JYearChooser yearChooser;
     // End of variables declaration//GEN-END:variables

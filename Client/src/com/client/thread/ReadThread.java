@@ -30,6 +30,7 @@ public class ReadThread implements Runnable {
 
     private ByteArrayInputStream byteInputStream = null;
     private ObjectInput in = null;
+    private String productName;
 
     public ReadThread(Client client, Socket socket) throws IOException {
         this.socket = socket;
@@ -77,13 +78,15 @@ public class ReadThread implements Runnable {
                             //System.out.println(responseContent.get("product"));
                             LinkedHashMap<String, Object> recvProduct;
                             recvProduct = (LinkedHashMap<String, Object>) responseContent.get("product");
+                            client.updateProductInfoURL((String) recvProduct.get("name"), (String) recvProduct.get("imageUrl") );
+                            this.productName = (String) recvProduct.get("name");
                             System.out.println("Client receive: " + recvProduct);
                            
                             break;
 
                         case PRODUCTS:
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
-
+                            
                             List<LinkedHashMap<String, Object>> recvProducts = (List<LinkedHashMap<String, Object>>) responseContent.get("products");
                             System.out.println("Client receive: ");
                             recvProducts.forEach(System.out::println);
@@ -97,11 +100,17 @@ public class ReadThread implements Runnable {
                             break;
 
                         case PRODUCT_HISTORIES:
+                           
+
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
                             List<LinkedHashMap<String, Object>> recvProductHistories = (List<LinkedHashMap<String, Object>>) responseContent.get("productHistories");
+                           
+                            //recvProductHistories.forEach(System.out::println);
+                            
                             System.out.println("Client receive: ");
-                            recvProductHistories.forEach(System.out::println);
-                            client.updateLineChartURL(recvProductHistories);
+                           
+                            client.getProduct(Long.valueOf((int) recvProductHistories.get(0).get("productId")));
+                            client.updateLineChartURL(recvProductHistories, "");
                             break;
 
                         case CONFIGURABLE_PRODUCT_HISTORIES:
