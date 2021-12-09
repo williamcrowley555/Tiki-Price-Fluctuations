@@ -112,14 +112,17 @@ public class Client extends javax.swing.JFrame {
         this.pnlURL.showLineChart(productName, month, year, dates, prices);
     }
     
-//    public void updateComboboxCategory(List<LinkedHashMap<String, Object>> categories){
-//         ArrayList<String> name = new ArrayList<String>();
-//        for (LinkedHashMap<String, Object> category : categories) 
-//        {   
-//            name.add(String.valueOf(category.get("name")));
-//        }
-//        System.out.println(name);
-//    }
+    public void updateComboboxCategory(List<LinkedHashMap<String, Object>> categories){
+         ArrayList<String> name = new ArrayList<String>();
+         ArrayList<Integer> idCate = new ArrayList<Integer>();
+        for (LinkedHashMap<String, Object> category : categories) 
+        {   
+            name.add(String.valueOf(category.get("name")));
+            idCate.add((Integer) (category.get("id")));
+        }
+       // System.out.println(name);
+        this.pnlAdvanced.listNameCategory(name,idCate);
+    }
     
     public void updateProductInfoURL(String productName, String img){
        this.pnlURL.updateProductInfo(productName, img);
@@ -514,6 +517,11 @@ public class Client extends javax.swing.JFrame {
     private void btnAdvancedTabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdvancedTabActionPerformed
         switchCard("advanced");
         setTabSelection(btnAdvancedTab);
+        try {
+            this.getCategory();
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnAdvancedTabActionPerformed
 
     /**

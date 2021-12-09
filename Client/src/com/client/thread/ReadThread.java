@@ -134,8 +134,8 @@ public class ReadThread implements Runnable {
 
                             List<LinkedHashMap<String, Object>> recvCategories = (List<LinkedHashMap<String, Object>>) responseContent.get("categories");
                             System.out.println("Client receive: ");
-                            recvCategories.forEach(System.out::println);
-                            //client.getCategories(recvCategories);
+                           // recvCategories.forEach(System.out::println);
+                            client.updateComboboxCategory(recvCategories);
                             break;
 
                         case USER_DISCONNECT:

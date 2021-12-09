@@ -5,6 +5,8 @@
  */
 package com.client.gui;
 
+import com.client.gui.others.MyComboBoxEditor;
+import com.client.gui.others.MyComboBoxRenderer;
 import com.client.main.Client;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
@@ -15,10 +17,19 @@ import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
+import javax.swing.border.MatteBorder;
+import javax.swing.plaf.basic.BasicArrowButton;
+import javax.swing.plaf.basic.BasicComboBoxUI;
+import javax.swing.plaf.basic.BasicComboPopup;
+import javax.swing.plaf.basic.ComboPopup;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -50,7 +61,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
     String productName = "Laptop A";
     int month = 11;
     int year = 2021;
-    
+    ArrayList<String> name = new ArrayList<String>();
     Client main;
     public panelTimNangCao(Client main) {
        
@@ -74,9 +85,56 @@ public class panelTimNangCao extends javax.swing.JPanel {
         brandList.add("j");
         initBrandCheckbox(brandList);
         showLineChart(productName, month, year, dates, prices);
+        comboboxCategory = myComboBox(comboboxCategory, new Color(14,142,233));
+    }
+   
+   
+            
+    public void listNameCategory(ArrayList<String> name, ArrayList<Integer> idCate) {
+        String[] tourItems = new String[name.size()];
+        for(int i = 0 ; i < name.size(); i++) {
+            tourItems[i] = idCate.get(i) + " - " + name.get(i);
+            //System.out.println(tourItems[i]);
+        }
+         setComboBox(comboboxCategory, tourItems);
         
     }
     
+     public void setComboBox(JComboBox<String> comboBox, String[] listItems) {
+        comboBox.setModel(new DefaultComboBoxModel<>(listItems));
+    } 
+     
+    public JComboBox myComboBox(JComboBox box, Color color)
+    {   
+        box.setRenderer(new MyComboBoxRenderer());
+        box.setEditor(new MyComboBoxEditor());
+        
+        box.setUI(new BasicComboBoxUI() 
+        {
+            @Override
+            protected ComboPopup createPopup() 
+            {
+                BasicComboPopup basicComboPopup = new BasicComboPopup(comboBox);
+                basicComboPopup.setBorder(new MatteBorder(2,2,2,2,color));
+                return basicComboPopup;
+            }
+            
+            @Override 
+            protected JButton createArrowButton() 
+            {
+                Color matteGrey = new Color(223,230,233);
+                Color flatGreen = new Color(26, 188, 156);
+        
+                BasicArrowButton custom = new BasicArrowButton(
+                BasicArrowButton.SOUTH, null, null, Color.WHITE, null);
+                custom.setBorder(new MatteBorder(0,0,0,0,flatGreen));
+                return custom;
+            }
+        }); 
+
+       return box;
+    } 
+     
     public void initBrandCheckbox(ArrayList<String> list){
         int y = 15;     
         for (String category : list){
@@ -435,11 +493,14 @@ public class panelTimNangCao extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void comboboxCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboboxCategoryActionPerformed
-        try {
-            main.getCategory();
-        } catch (IOException ex) {
-            Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            main.getCategory();
+//        } catch (IOException ex) {
+//            Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+
+         String selectedCategory = comboboxCategory.getSelectedItem().toString();  
+         System.out.println(selectedCategory);
         
     }//GEN-LAST:event_comboboxCategoryActionPerformed
 
