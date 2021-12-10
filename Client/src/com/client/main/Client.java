@@ -198,7 +198,7 @@ public class Client extends javax.swing.JFrame {
         sendMessage(requestMsg);
     }
     
-    public void getCategory() throws IOException {
+    public void getCategories() throws IOException {
         Map<String, Object> request = new HashMap<>();
         Message requestMsg = new Message(request, MessageType.GET_CATEGORIES);
         sendMessage(requestMsg);
@@ -518,7 +518,7 @@ public class Client extends javax.swing.JFrame {
         switchCard("advanced");
         setTabSelection(btnAdvancedTab);
         try {
-            this.getCategory();
+            this.getCategories();
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
