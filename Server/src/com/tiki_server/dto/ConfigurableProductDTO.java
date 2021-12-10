@@ -28,6 +28,12 @@ public class ConfigurableProductDTO implements Serializable {
     @JsonProperty("option1")
     private String option1;
 
+    @JsonProperty("option2")
+    private String option2;
+
+    @JsonProperty("option3")
+    private String option3;
+
     @JsonProperty("price")
     private Long price;
 
@@ -52,12 +58,14 @@ public class ConfigurableProductDTO implements Serializable {
     public ConfigurableProductDTO() {
     }
 
-    public ConfigurableProductDTO(Long childId, String imageUrl, String inventoryStatus, String name, String option1, Long price, String sku, String thumbnailUrl, Long productId) {
+    public ConfigurableProductDTO(Long childId, String imageUrl, String inventoryStatus, String name, String option1, String option2, String option3, Long price, String sku, String thumbnailUrl, Long productId) {
         this.childId = childId;
         this.imageUrl = imageUrl;
         this.inventoryStatus = inventoryStatus;
         this.name = name;
         this.option1 = option1;
+        this.option2 = option2;
+        this.option3 = option3;
         this.price = price;
         this.sku = sku;
         this.thumbnailUrl = thumbnailUrl;
@@ -104,6 +112,22 @@ public class ConfigurableProductDTO implements Serializable {
         this.option1 = option1;
     }
 
+    public String getOption2() {
+        return option2;
+    }
+
+    public void setOption2(String option2) {
+        this.option2 = option2;
+    }
+
+    public String getOption3() {
+        return option3;
+    }
+
+    public void setOption3(String option3) {
+        this.option3 = option3;
+    }
+
     public Long getPrice() {
         return price;
     }
@@ -141,12 +165,12 @@ public class ConfigurableProductDTO implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ConfigurableProductDTO that = (ConfigurableProductDTO) o;
-        return Objects.equals(childId, that.childId) && Objects.equals(imageUrl, that.imageUrl) && Objects.equals(inventoryStatus, that.inventoryStatus) && Objects.equals(name, that.name) && Objects.equals(option1, that.option1) && Objects.equals(price, that.price) && Objects.equals(sku, that.sku) && Objects.equals(thumbnailUrl, that.thumbnailUrl) && Objects.equals(productId, that.productId);
+        return Objects.equals(childId, that.childId) && Objects.equals(imageUrl, that.imageUrl) && Objects.equals(inventoryStatus, that.inventoryStatus) && Objects.equals(name, that.name) && Objects.equals(option1, that.option1) && Objects.equals(option2, that.option2) && Objects.equals(option3, that.option3) && Objects.equals(price, that.price) && Objects.equals(sku, that.sku) && Objects.equals(thumbnailUrl, that.thumbnailUrl) && Objects.equals(productId, that.productId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(childId, imageUrl, inventoryStatus, name, option1, price, sku, thumbnailUrl, productId);
+        return Objects.hash(childId, imageUrl, inventoryStatus, name, option1, option2, option3, price, sku, thumbnailUrl, productId);
     }
 
     @Override
@@ -157,6 +181,8 @@ public class ConfigurableProductDTO implements Serializable {
                 ", inventoryStatus='" + inventoryStatus + '\'' +
                 ", name='" + name + '\'' +
                 ", option1='" + option1 + '\'' +
+                ", option2='" + option2 + '\'' +
+                ", option3='" + option3 + '\'' +
                 ", price=" + price +
                 ", sku='" + sku + '\'' +
                 ", thumbnailUrl='" + thumbnailUrl + '\'' +

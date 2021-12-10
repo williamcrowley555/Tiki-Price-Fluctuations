@@ -71,6 +71,10 @@ public class ProductEntity implements Serializable {
     @JoinColumn(name = "brand_id")
     private BrandEntity brand;
 
+    @OneToOne(mappedBy = "product")
+    @PrimaryKeyJoinColumn
+    private ConfigurableOptionEntity configurableOption;
+
     public ProductEntity() {
     }
 }
