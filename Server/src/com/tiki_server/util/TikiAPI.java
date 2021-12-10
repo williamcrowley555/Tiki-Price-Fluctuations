@@ -148,7 +148,6 @@ public class TikiAPI {
 
         ConfigurableOptionDTO oldCO = configurableOptionBLL.findByProductId(product.getId());
         ConfigurableOptionDTO newCO = mapper.readValue(rootNode.toString(), ConfigurableOptionDTO.class);
-        System.out.println(newCO);
 
         if (oldCO != null) {
             if (!oldCO.equals(newCO))

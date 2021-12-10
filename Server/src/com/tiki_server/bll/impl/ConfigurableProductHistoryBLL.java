@@ -1,8 +1,10 @@
 package com.tiki_server.bll.impl;
 
+import com.tiki_server.bll.IConfigurableProductBLL;
 import com.tiki_server.bll.IConfigurableProductHistoryBLL;
 import com.tiki_server.dal.IConfigurableProductHistoryDAL;
 import com.tiki_server.dal.impl.ConfigurableProductHistoryDAL;
+import com.tiki_server.dto.ConfigurableProductDTO;
 import com.tiki_server.dto.ConfigurableProductHistoryDTO;
 import com.tiki_server.util.InputValidatorUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -13,9 +15,11 @@ import java.util.StringTokenizer;
 public class ConfigurableProductHistoryBLL implements IConfigurableProductHistoryBLL {
 
     private IConfigurableProductHistoryDAL cpHistoryDAL;
+    private IConfigurableProductBLL cpBLL;
 
     public ConfigurableProductHistoryBLL() {
         this.cpHistoryDAL = new ConfigurableProductHistoryDAL();
+        this.cpBLL = new ConfigurableProductBLL();
     }
 
     @Override
@@ -31,6 +35,16 @@ public class ConfigurableProductHistoryBLL implements IConfigurableProductHistor
     @Override
     public List<ConfigurableProductHistoryDTO> findByProductIdAndConfigurableProductId(Long productId, Long cpId, int month, int year) {
         return cpHistoryDAL.findByProductIdAndConfigurableProductId(productId, cpId, month, year);
+    }
+
+    @Override
+    public List<ConfigurableProductHistoryDTO> findByProductIdAndConfigurableOptions(Long productId, String option1, String option2, String option3, int month, int year) {
+        ConfigurableProductDTO cp = cpBLL.findByProductIdAndOptions(productId, option1, option2, option3);
+
+        if (cp == null)
+            return null;
+        else
+            return findByProductIdAndConfigurableProductId(productId, cp.getChildId(), month, year);
     }
 
     @Override

@@ -30,6 +30,11 @@ public class ConfigurableProductBLL implements IConfigurableProductBLL {
     }
 
     @Override
+    public ConfigurableProductDTO findByProductIdAndOptions(Long productId, String option1, String option2, String option3) {
+        return configurableProductDAL.findByProductIdAndOptions(productId, option1, option2, option3);
+    }
+
+    @Override
     public Long save(ConfigurableProductDTO configurableProduct) {
         return configurableProductDAL.save(configurableProduct);
     }
