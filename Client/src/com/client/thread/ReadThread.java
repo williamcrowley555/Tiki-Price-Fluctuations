@@ -139,6 +139,15 @@ public class ReadThread implements Runnable {
                             client.updateComboboxCategory(recvCategories);
                             break;
 
+//                        case ADVANCE_CATEGORIES:
+//                            responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
+//
+//                            List<LinkedHashMap<String, Object>> recvCategories = (List<LinkedHashMap<String, Object>>) responseContent.get("advance_category");
+//                            System.out.println("Client receive: ");
+//                           // recvCategories.forEach(System.out::println);
+//                            client.updateComboboxCategory(recvCategories);
+//                            break;
+                            
                         case USER_DISCONNECT:
                             isRunning = false;
                             in.close();

@@ -204,6 +204,13 @@ public class Client extends javax.swing.JFrame {
         sendMessage(requestMsg);
     }
     
+    public void sendJson(String json) throws IOException {
+        Map<String, Object> request = new HashMap<>();
+        request.put("json", json);
+        Message requestMsg = new Message(request, MessageType.GET_ADVANCE_CATEGORIES);
+        sendMessage(requestMsg);
+    }
+    
     public void getProductHistories(String url, int month, int year) throws IOException {
         Map<String, Object> request = new HashMap<>();
         request.put("url", url);
