@@ -113,8 +113,8 @@ public class Client extends javax.swing.JFrame {
     }
     
     public void updateComboboxCategory(List<LinkedHashMap<String, Object>> categories){
-         ArrayList<String> name = new ArrayList<String>();
-         ArrayList<Integer> idCate = new ArrayList<Integer>();
+        ArrayList<String> name = new ArrayList<String>();
+        ArrayList<Integer> idCate = new ArrayList<Integer>();
         for (LinkedHashMap<String, Object> category : categories) 
         {   
             name.add(String.valueOf(category.get("name")));

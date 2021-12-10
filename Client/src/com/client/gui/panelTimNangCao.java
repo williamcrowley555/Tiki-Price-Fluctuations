@@ -8,6 +8,7 @@ package com.client.gui;
 import com.client.gui.others.MyComboBoxEditor;
 import com.client.gui.others.MyComboBoxRenderer;
 import com.client.main.Client;
+import com.client.util.InputValidatorUtil;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -54,10 +55,12 @@ public class panelTimNangCao extends javax.swing.JPanel {
      * Creates new form panelTimNangCao
      */
     String searchData;
+    String json;
     ArrayList<String> brandList = new ArrayList<>();
     ArrayList<String> selectedBrands = new ArrayList<>();
     ArrayList<String> dates = new ArrayList<String>();
     ArrayList<Integer> prices = new ArrayList<Integer>();
+    InputValidatorUtil validator = new InputValidatorUtil();
     String productName = "Laptop A";
     int month = 11;
     int year = 2021;
@@ -88,7 +91,20 @@ public class panelTimNangCao extends javax.swing.JPanel {
         comboboxCategory = myComboBox(comboboxCategory, new Color(14,142,233));
     }
    
-   
+    public String selectedButtonGroupStar()
+    {
+        if(jRadioButton1.isSelected())
+            return "5";
+        if(jRadioButton2.isSelected())
+            return "4";
+        if(jRadioButton3.isSelected())
+            return "3";
+        if(jRadioButton4.isSelected())
+            return "2";
+        if(jRadioButton5.isSelected())
+            return "1";
+        return "0";
+    }
             
     public void listNameCategory(ArrayList<String> name, ArrayList<Integer> idCate) {
         String[] tourItems = new String[name.size()];
@@ -136,7 +152,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
     } 
      
     public void initBrandCheckbox(ArrayList<String> list){
-        int y = 15;     
+        int y = 15; // 15 chu cai dau tien cua brands 
         for (String category : list){
             JCheckBox checkBox = new JCheckBox(category);
             checkBox.setBounds(10, y, 200, 40);
@@ -234,7 +250,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         pnlSearch = new javax.swing.JPanel();
         lblTitleTenSanPham = new javax.swing.JLabel();
         txtSearch = new javax.swing.JTextField();
-        comboboxCategory = new javax.swing.JComboBox<>();
+        comboboxCategory = new javax.swing.JComboBox<String>();
         jLabel4 = new javax.swing.JLabel();
         pnlFilter = new javax.swing.JPanel();
         pnlCategory = new javax.swing.JPanel();
@@ -278,7 +294,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         lblTitleTenSanPham.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lblTitleTenSanPham.setText("Tên sản phẩm:");
 
-        comboboxCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboboxCategory.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         comboboxCategory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboboxCategoryActionPerformed(evt);
@@ -347,6 +363,11 @@ public class panelTimNangCao extends javax.swing.JPanel {
         jButton1.setText("Xem review");
 
         jButton2.setText("Tìm kiếm");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -371,7 +392,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
                             .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 111, Short.MAX_VALUE))))
+                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE))))
                 .addContainerGap(35, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -396,7 +417,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
                 .addGap(10, 10, 10))
         );
 
@@ -489,7 +510,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        System.out.println(selectedBrands);
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void comboboxCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboboxCategoryActionPerformed
@@ -503,6 +524,67 @@ public class panelTimNangCao extends javax.swing.JPanel {
          System.out.println(selectedCategory);
         
     }//GEN-LAST:event_comboboxCategoryActionPerformed
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+        String productName = txtSearch.getText();
+        productName = "\"product_name\":\"" + productName + "\"";
+        if(productName.equals(""))
+        {
+            System.out.println("Hiện thông báo lỗi: Tên sản phẩm không được bỏ trống");
+            return;
+        }
+        String valid = null;
+        String rating = selectedButtonGroupStar();
+        if(rating.equals("0"))
+        {
+            System.out.println("Hiện thông báo lỗi: Bạn chưa chọn đánh giá");
+            return;
+        }
+        String fromMoney = jTextField3.getText();
+        valid = validator.isValidMoney(fromMoney);
+        if(!valid.equals(""))
+        {
+            System.out.println("Hiện thông báo lỗi: Giá từ" + valid);
+            return;
+        }
+        String toMoney = jTextField4.getText();
+        valid = validator.isValidMoney(toMoney);
+        if(!valid.equals(""))
+        {
+            System.out.println("Hiện thông báo lỗi: Giá đến" + valid);
+            return;
+        }
+        Long money = Long.parseLong(toMoney) - Long.parseLong(fromMoney);
+        if(money < 0)
+        {
+            System.out.println("Hiện thông báo lỗi: Giá từ phải nhỏ hơn Giá đến");
+            return;
+        }
+        String brands = ",\"brands\":\"";
+        if(selectedBrands.size() == 0)
+            brands += "a-b-c-e-f-g-h-i-j\"";
+        else if(selectedBrands.size() == 1)
+            brands += selectedBrands.get(0) + "\"";
+        else
+        {
+            for(int i=0;i<selectedBrands.size();i++)
+            {
+                if(i==selectedBrands.size()-1)
+                    brands+= selectedBrands.get(i) + "\"";
+                else
+                    brands+= selectedBrands.get(i) + "-";
+            }
+        }
+        String category = comboboxCategory.getSelectedItem().toString();
+        category = ",\"category\":\"" +category +"\"";
+        fromMoney = ",\"from_money\":\""+fromMoney+"\"";
+        toMoney = ",\"to_money\":\""+toMoney+"\"";
+        rating = ",\"rating\":\""+rating+"\"";
+        json = "{" + productName + category + brands + rating + fromMoney + toMoney + "}";
+        
+        
+        System.out.println(json);
+    }//GEN-LAST:event_jButton2MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
