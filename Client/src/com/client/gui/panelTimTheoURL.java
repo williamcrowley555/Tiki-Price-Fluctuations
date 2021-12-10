@@ -65,8 +65,9 @@ import org.jfree.data.xy.XYSeriesCollection;
  *
  * @author Hi
  */
-public class panelTimTheoURL extends javax.swing.JPanel {
 
+public class panelTimTheoURL extends javax.swing.JPanel {
+    private reviewGUI popUp = null;
     /**
      * Creates new form panelTimTheoURL
      */
@@ -90,7 +91,6 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         this.main = main;
        
         showLineChart(productName, month, year, dates, prices);
-        customRadio();
         customMonthYearChooser();
         
     }
@@ -103,19 +103,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         hideSpinnerArrow((javax.swing.JSpinner) yearChooser.getSpinner());
     }
     
-    public void customRadio(){
-        List<JRadioButton> radioButtons = Arrays.asList( jRadioButton1, jRadioButton2, jRadioButton3,
-                                                         jRadioButton4, jRadioButton5, jRadioButton6,
-                                                         jRadioButton7
-        
-        );
-         
-        for (JRadioButton button : radioButtons)
-        {
-            button.setIcon(unCheckedRadio);
-            button.setSelectedIcon(checkedRadio);
-        }
-    }
+    
     
     public void customChart( JFreeChart linechart){
         StandardChartTheme theme = new StandardChartTheme(linechart.toString());
@@ -179,11 +167,17 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     }
     
     public void updateProductInfo(String productName, String productImg){
-        
-            int heigth = lblProductPic.getHeight();
-            int width = lblProductPic.getWidth();
-            lblProductPic = new JLabel("<html><img  height='"+ heigth +"' width='"+ width + "' src='" + productImg + "' /></html>");
+        try {
             txtTenSP.setText(productName);
+            String path =productImg;
+            System.out.println("Get Image from " + path);
+            URL url = new URL(path);
+            BufferedImage image = ImageIO.read(url);
+            JLabel label = new JLabel(new ImageIcon(image));
+            
+        } catch (IOException ex) {
+            System.err.println("Image Source Not Found");
+        }
        
     }
     
@@ -268,16 +262,6 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         monthChooser = new com.toedter.calendar.JMonthChooser();
         yearChooser = new com.toedter.calendar.JYearChooser();
         jPanel7 = new javax.swing.JPanel();
-        jPanel8 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jLabel2 = new javax.swing.JLabel();
-        jRadioButton4 = new javax.swing.JRadioButton();
-        jRadioButton5 = new javax.swing.JRadioButton();
-        jRadioButton6 = new javax.swing.JRadioButton();
-        jRadioButton7 = new javax.swing.JRadioButton();
         pnlLeft = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
@@ -411,110 +395,10 @@ public class panelTimTheoURL extends javax.swing.JPanel {
 
         jPanel7.setLayout(new java.awt.BorderLayout());
 
-        jPanel8.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel8.setPreferredSize(new java.awt.Dimension(150, 366));
-
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setText("MÀU:");
-
-        colorGroup.add(jRadioButton1);
-        jRadioButton1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jRadioButton1.setText("Đỏ");
-
-        colorGroup.add(jRadioButton2);
-        jRadioButton2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jRadioButton2.setText("Xanh");
-
-        colorGroup.add(jRadioButton3);
-        jRadioButton3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jRadioButton3.setText("Vàng");
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel2.setText("KÍCH THƯỚC:");
-
-        sizeGroup.add(jRadioButton4);
-        jRadioButton4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jRadioButton4.setText("L");
-
-        sizeGroup.add(jRadioButton5);
-        jRadioButton5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jRadioButton5.setText("M");
-        jRadioButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton5ActionPerformed(evt);
-            }
-        });
-
-        sizeGroup.add(jRadioButton6);
-        jRadioButton6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jRadioButton6.setText("S");
-
-        sizeGroup.add(jRadioButton7);
-        jRadioButton7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jRadioButton7.setText("XL");
-        jRadioButton7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton7ActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jRadioButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jRadioButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jRadioButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jRadioButton7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jRadioButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel1)
-                            .addComponent(jRadioButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE))
-                        .addGap(0, 0, 0)
-                        .addComponent(jRadioButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButton1)
-                    .addComponent(jRadioButton2))
-                .addGap(29, 29, 29)
-                .addComponent(jRadioButton3)
-                .addGap(38, 38, 38)
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButton4)
-                    .addComponent(jRadioButton5))
-                .addGap(29, 29, 29)
-                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButton6)
-                    .addComponent(jRadioButton7))
-                .addContainerGap(68, Short.MAX_VALUE))
-        );
-
-        jPanel7.add(jPanel8, java.awt.BorderLayout.LINE_END);
-
         pnlLeft.setLayout(new java.awt.BorderLayout());
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setPreferredSize(new java.awt.Dimension(200, 366));
+        jPanel2.setPreferredSize(new java.awt.Dimension(400, 366));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel5.setText("Tên sp:");
@@ -538,10 +422,10 @@ public class panelTimTheoURL extends javax.swing.JPanel {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblProductPic, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(0, 14, Short.MAX_VALUE)))
+                        .addGap(0, 334, Short.MAX_VALUE))
+                    .addComponent(lblProductPic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -554,8 +438,8 @@ public class panelTimTheoURL extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblProductPic, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addComponent(lblProductPic, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pnlLeft.add(jPanel2, java.awt.BorderLayout.LINE_START);
@@ -595,16 +479,20 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     }//GEN-LAST:event_btnTimKiemActionPerformed
 
     private void btnXemReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXemReviewActionPerformed
-        // TODO add your handling code here:
+        Float rating = 5F;
+        if (this.popUp == null) {
+            this.popUp = new reviewGUI(rating);
+        } else {
+            this.popUp.toFront();
+            this.popUp.center();
+        }
+        popUp.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                popUp = null;
+            }
+        });
     }//GEN-LAST:event_btnXemReviewActionPerformed
-
-    private void jRadioButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton5ActionPerformed
-
-    private void jRadioButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton7ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton7ActionPerformed
 
     private void txtTimTheoURLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTimTheoURLActionPerformed
         // TODO add your handling code here:
@@ -619,8 +507,6 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     private javax.swing.JButton btnTimKiem;
     private javax.swing.JButton btnXemReview;
     private javax.swing.ButtonGroup colorGroup;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -630,14 +516,6 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
-    private javax.swing.JRadioButton jRadioButton5;
-    private javax.swing.JRadioButton jRadioButton6;
-    private javax.swing.JRadioButton jRadioButton7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblProductPic;
     private com.toedter.calendar.JMonthChooser monthChooser;
