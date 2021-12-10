@@ -8,6 +8,8 @@ package com.client.gui;
 import com.client.gui.others.MyComboBoxEditor;
 import com.client.gui.others.MyComboBoxRenderer;
 import com.client.main.Client;
+import com.client.thread.ReadThread;
+import com.client.thread.WriteThread;
 import com.client.util.InputValidatorUtil;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
@@ -582,6 +584,11 @@ public class panelTimNangCao extends javax.swing.JPanel {
         rating = ",\"rating\":\""+rating+"\"";
         json = "{" + productName + category + brands + rating + fromMoney + toMoney + "}";
         
+        try {
+            main.sendJson(json);
+        } catch (IOException ex) {
+            Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         System.out.println(json);
     }//GEN-LAST:event_jButton2MouseClicked

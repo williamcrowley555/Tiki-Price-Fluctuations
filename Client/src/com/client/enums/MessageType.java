@@ -10,6 +10,7 @@ public enum MessageType {
     CONFIGURABLE_PRODUCT_HISTORIES,
     REVIEWS,
     CATEGORIES,
+    ADVANCE_CATEGORIES,
     ERROR,
 
 //    Client Request
@@ -23,6 +24,7 @@ public enum MessageType {
     GET_CONFIGURABLE_PRODUCT_HISTORIES,
     GET_REVIEWS_BY_PRODUCT_ID,
     GET_CATEGORIES,
+    GET_ADVANCE_CATEGORIES,
 
 //    Connection state
     USER_DISCONNECT

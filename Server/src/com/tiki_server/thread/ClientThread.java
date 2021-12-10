@@ -1,6 +1,7 @@
 package com.tiki_server.thread;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.tiki_server.bll.*;
 import com.tiki_server.bll.impl.*;
 import com.tiki_server.dto.*;
@@ -218,9 +219,7 @@ public class ClientThread implements Runnable {
                             break;
 
                         case GET_CATEGORIES:
-                            responseContent = (Map<String, Object>) decryptContent(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
-
-                            //productId = Long.valueOf((int) requestContent.get("productId"));
+                            requestContent = (Map<String, Object>) decryptContent(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
 
                             categoryBLL = new CategoryBLL();
                             List<CategoryDTO> categories = categoryBLL.findAll();
@@ -233,6 +232,25 @@ public class ClientThread implements Runnable {
                             responseContent.put("categories", categories);
                             response = new Message(responseContent, MessageType.CATEGORIES);
                             sendMessage(response);
+                            break;
+
+                        case GET_ADVANCE_CATEGORIES:
+                            requestContent = (Map<String, Object>) decryptContent(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
+                            String jsonAdvance = requestContent.get("json").toString();
+                            ObjectMapper mapper = new ObjectMapper();
+                            ObjectNode rootNode = mapper.readValue(jsonAdvance, ObjectNode.class);
+                            String productName = rootNode.get("product_name").asText();
+//                            String category = rootNode.get("category").asText();
+//                            String brands = rootNode.get("brands").asText();
+//                            String rating = rootNode.get("rating").asText();
+//                            String fromMoney = rootNode.get("from_money").asText();
+//                            String toMoney = rootNode.get("to_money").asText();
+
+                            //responseContent = new HashMap<>();
+
+                            //responseContent.put("advance_category", categories);
+                           // response = new Message(responseContent, MessageType.ADVANCE_CATEGORIES);
+                           // sendMessage(response);
                             break;
 
                         case USER_DISCONNECT:
