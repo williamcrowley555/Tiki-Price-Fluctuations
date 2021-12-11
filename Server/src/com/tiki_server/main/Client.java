@@ -123,10 +123,12 @@ public class Client {
         sendMessage(requestMsg);
     }
 
-    public void getConfigurableProductHistories(Long productId, Long cpId, int month, int year) throws IOException {
+    public void getConfigurableProductHistories(Long productId, String option1, String option2, String option3, int month, int year) throws IOException {
         Map<String, Object> request = new HashMap<>();
         request.put("productId", productId);
-        request.put("cpId", cpId);
+        request.put("option1", option1);
+        request.put("option2", option2);
+        request.put("option3", option3);
         request.put("month", month);
         request.put("year", year);
 
@@ -180,7 +182,7 @@ public class Client {
         System.out.println("3/ Get configurable products with product id = 249953");
         System.out.println("4/ Get product histories by URL in 11/2021");
         System.out.println("5/ Get product histories with product id = 249953 in 11/2021");
-        System.out.println("6/ Get configurable product histories with product id = 249953 & cpId = 511074 in 11/2021");
+        System.out.println("6/ Get configurable product histories with product id = 249953 & option1 = 'Xám' in 11/2021");
         System.out.println("7/ Get reviews with product id = 249953");
 
         while (true) {
@@ -217,10 +219,12 @@ public class Client {
                     client.getProductHistories(productId, month, year);
                 } else if (input.equals("6")) {
                     Long productId = 249953L;
-                    Long cpId = 511074L;
+                    String option1 = "Xám";
+                    String option2 = null;
+                    String option3 = null;
                     int month = 11;
                     int year = 2021;
-                    client.getConfigurableProductHistories(productId, cpId, month, year);
+                    client.getConfigurableProductHistories(productId, option1, option2, option3, month, year);
                 } else if (input.equals("7")) {
                     Long productId = 249953L;
                     client.getReviews(productId);

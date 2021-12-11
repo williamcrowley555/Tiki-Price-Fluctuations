@@ -16,6 +16,8 @@ public class ConfigurableProductMapper implements RowMapper<ConfigurableProductD
             onfigurableProduct.setInventoryStatus(rs.getString("inventory_status"));
             onfigurableProduct.setName(rs.getString("name"));
             onfigurableProduct.setOption1(rs.getString("option1"));
+            onfigurableProduct.setOption2(rs.getString("option2"));
+            onfigurableProduct.setOption3(rs.getString("option3"));
             onfigurableProduct.setPrice(rs.getLong("price"));
             onfigurableProduct.setSku(rs.getString("sku"));
             onfigurableProduct.setThumbnailUrl(rs.getString("thumbnail_url"));

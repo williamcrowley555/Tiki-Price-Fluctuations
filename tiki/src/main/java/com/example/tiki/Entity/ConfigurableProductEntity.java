@@ -24,8 +24,14 @@ public class ConfigurableProductEntity implements Serializable {
     @Nationalized
     private String name;
 
-    @Column(name = "option1")
+    @Column(name = "option1", columnDefinition = "TEXT")
     private String option1;
+
+    @Column(name = "option2", columnDefinition = "TEXT")
+    private String option2;
+
+    @Column(name = "option3", columnDefinition = "TEXT")
+    private String option3;
 
     @Column(name = "price")
     private Long price;

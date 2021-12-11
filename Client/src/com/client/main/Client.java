@@ -257,10 +257,12 @@ public class Client extends javax.swing.JFrame {
         sendMessage(requestMsg);
     }
 
-    public void getConfigurableProductHistories(Long productId, Long cpId, int month, int year) throws IOException {
+    public void getConfigurableProductHistories(Long productId, String option1, String option2, String option3, int month, int year) throws IOException {
         Map<String, Object> request = new HashMap<>();
         request.put("productId", productId);
-        request.put("cpId", cpId);
+        request.put("option1", option1);
+        request.put("option2", option2);
+        request.put("option3", option3);
         request.put("month", month);
         request.put("year", year);
 
@@ -714,10 +716,12 @@ public class Client extends javax.swing.JFrame {
 //                        clientGUI.getProductHistories(productId, month, year);
 //                    } else if (input.equals("6")) {
 //                        Long productId = 249953L;
-//                        Long cpId = 511074L;
+//                        String option1 = "Xám";
+//                        String option2 = null;
+//                        String option3 = null;
 //                        int month = 11;
 //                        int year = 2021;
-//                        clientGUI.getConfigurableProductHistories(productId, cpId, month, year);
+//                        clientGUI.getConfigurableProductHistories(productId, option1, option2, option3, month, year);
 //                    } else if (input.equals("7")) {
 //                        Long productId = 249953L;
 //                        clientGUI.getReviews(productId);

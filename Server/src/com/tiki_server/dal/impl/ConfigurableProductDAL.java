@@ -30,19 +30,28 @@ public class ConfigurableProductDAL extends AbstractDAL<ConfigurableProductDTO> 
     }
 
     @Override
+    public ConfigurableProductDTO findByProductIdAndOptions(Long productId, String option1, String option2, String option3) {
+        String sql = "SELECT * FROM configurable_product WHERE product_id = ? AND option1 " + (option1 == null ? "IS" : "=") +
+                        " ? AND option2 " + (option2 == null ? "IS" : "=") + " ? AND option3 " + (option3 == null ? "IS" : "=") + " ?";
+
+        List<ConfigurableProductDTO> configurableProduct = query(sql, new ConfigurableProductMapper(), productId, option1, option2, option3);
+        return configurableProduct.isEmpty() ? null : configurableProduct.get(0);
+    }
+
+    @Override
     public Long save(ConfigurableProductDTO configurableProduct) {
-        String sql = "INSERT INTO configurable_product (child_id, image_url, inventory_status, name, option1, price, sku, thumbnail_url, product_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO configurable_product (child_id, image_url, inventory_status, name, option1, option2, option3, price, sku, thumbnail_url, product_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         return insert(sql, configurableProduct.getChildId(), configurableProduct.getImageUrl(), configurableProduct.getInventoryStatus(), configurableProduct.getName(),
-                configurableProduct.getOption1(), configurableProduct.getPrice(), configurableProduct.getSku(), configurableProduct.getThumbnailUrl(),
-                configurableProduct.getProductId());
+                configurableProduct.getOption1(), configurableProduct.getOption2(), configurableProduct.getOption3(), configurableProduct.getPrice(), configurableProduct.getSku(),
+                configurableProduct.getThumbnailUrl(), configurableProduct.getProductId());
     }
 
     @Override
     public boolean update(ConfigurableProductDTO configurableProduct) {
-        String sql = "{CALL usp_configurable_product_update(?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+        String sql = "{CALL usp_configurable_product_update(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
         return callProc(sql, configurableProduct.getImageUrl(), configurableProduct.getInventoryStatus(), configurableProduct.getName(),
-                configurableProduct.getOption1(), configurableProduct.getPrice(), configurableProduct.getSku(), configurableProduct.getThumbnailUrl(),
-                configurableProduct.getProductId(), configurableProduct.getChildId());
+                configurableProduct.getOption1(), configurableProduct.getOption2(), configurableProduct.getOption3(), configurableProduct.getPrice(),
+                configurableProduct.getSku(), configurableProduct.getThumbnailUrl(), configurableProduct.getProductId(), configurableProduct.getChildId());
     }
 
     @Override

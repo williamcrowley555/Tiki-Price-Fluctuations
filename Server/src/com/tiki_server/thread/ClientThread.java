@@ -110,7 +110,7 @@ public class ClientThread implements Runnable {
 
                                 responseContent = new HashMap<>();
 
-                                if (products.isEmpty())
+                                if (products != null && products.isEmpty())
                                     products = null;
 
                                 responseContent.put("products", products);
@@ -129,7 +129,7 @@ public class ClientThread implements Runnable {
 
                             responseContent = new HashMap<>();
 
-                            if (configurableProducts.isEmpty())
+                            if (configurableProducts != null && configurableProducts.isEmpty())
                                 configurableProducts = null;
 
                             responseContent.put("configurableProducts", configurableProducts);
@@ -149,7 +149,7 @@ public class ClientThread implements Runnable {
 
                             responseContent = new HashMap<>();
 
-                            if (histories.isEmpty())
+                            if (histories != null && histories.isEmpty())
                                 histories = null;
 
                             responseContent.put("productHistories", histories);
@@ -170,7 +170,7 @@ public class ClientThread implements Runnable {
 
                             responseContent = new HashMap<>();
 
-                            if (histories.isEmpty()) {
+                            if (histories != null && histories.isEmpty()) {
                                 histories = null;
                             }
 
@@ -183,16 +183,18 @@ public class ClientThread implements Runnable {
                             requestContent = (Map<String, Object>) decryptContent(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
 
                             productId = Long.valueOf((int) requestContent.get("productId"));
-                            Long cpId = Long.valueOf((int) requestContent.get("cpId"));
+                            String option1 = requestContent.get("option1") == null ? null : requestContent.get("option1").toString();
+                            String option2 = requestContent.get("option2") == null ? null : requestContent.get("option2").toString();
+                            String option3 = requestContent.get("option3") == null ? null : requestContent.get("option3").toString();
                             month = (int) requestContent.get("month");
                             year = (int) requestContent.get("year");
 
                             cpHistoryBLL = new ConfigurableProductHistoryBLL();
-                            List<ConfigurableProductHistoryDTO> cpHistories = cpHistoryBLL.findByProductIdAndConfigurableProductId(productId, cpId, month, year);
+                            List<ConfigurableProductHistoryDTO> cpHistories = cpHistoryBLL.findByProductIdAndConfigurableOptions(productId, option1, option2, option3, month, year);
 
                             responseContent = new HashMap<>();
 
-                            if (cpHistories.isEmpty())
+                            if (cpHistories != null && cpHistories.isEmpty())
                                 cpHistories = null;
 
                             responseContent.put("configurableProductHistories", cpHistories);
@@ -210,7 +212,7 @@ public class ClientThread implements Runnable {
 
                             responseContent = new HashMap<>();
 
-                            if (reviews.isEmpty())
+                            if (reviews != null && reviews.isEmpty())
                                 reviews = null;
 
                             responseContent.put("reviews", reviews);
@@ -226,7 +228,7 @@ public class ClientThread implements Runnable {
 
                             responseContent = new HashMap<>();
 
-                            if (categories.isEmpty())
+                            if (categories != null && categories.isEmpty())
                                 categories = null;
 
                             responseContent.put("categories", categories);

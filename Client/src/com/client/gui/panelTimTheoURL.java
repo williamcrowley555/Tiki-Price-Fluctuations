@@ -21,6 +21,7 @@ import java.net.URL;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -480,8 +481,18 @@ public class panelTimTheoURL extends javax.swing.JPanel {
 
     private void btnXemReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXemReviewActionPerformed
         Float rating = 5F;
+        ArrayList<LinkedHashMap<String, Object>> reviewList = new ArrayList<LinkedHashMap<String, Object>>();
+        
+       LinkedHashMap<String, Object> review1 = new LinkedHashMap<String, Object>();
+       review1.put("Title", "Sản phẩm tệ");
+       review1.put("Rating", 1.0F);
+       review1.put("Content", "Mới mua mà hư rồi");
+       review1.put("Timeused", "Đã dùng 1 ngày");
+       review1.put("ReviewDate", "12/12/2021");
+        reviewList.add(review1);
+        
         if (this.popUp == null) {
-            this.popUp = new reviewGUI(rating);
+            this.popUp = new reviewGUI(rating, reviewList);
         } else {
             this.popUp.toFront();
             this.popUp.center();

@@ -52,6 +52,9 @@ public class TikiAPI {
 //                    Update Category
                     TikiAPI.updateCategory(rootNode, newProduct);
 
+//                    Update Configurable Option
+                    updateConfigurableOption(rootNode, newProduct);
+
 //                    Update Configurable Product & its history
                     TikiAPI.updateConfigurableProduct(rootNode, newProduct);
 
@@ -136,6 +139,21 @@ public class TikiAPI {
                 CategoryDTO newCategory = mapper.readValue(categoryNode.toString(), CategoryDTO.class);
                 categoryBLL.save(newCategory);
             }
+        }
+    }
+
+    public static void updateConfigurableOption(ObjectNode rootNode, ProductDTO product) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        IConfigurableOptionBLL configurableOptionBLL = new ConfigurableOptionBLL();
+
+        ConfigurableOptionDTO oldCO = configurableOptionBLL.findByProductId(product.getId());
+        ConfigurableOptionDTO newCO = mapper.readValue(rootNode.toString(), ConfigurableOptionDTO.class);
+
+        if (oldCO != null) {
+            if (!oldCO.equals(newCO))
+                configurableOptionBLL.update(newCO);
+        } else {
+            configurableOptionBLL.save(newCO);
         }
     }
 
