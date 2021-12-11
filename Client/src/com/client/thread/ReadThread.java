@@ -2,6 +2,7 @@ package com.client.thread;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.client.enums.MessageType;
+import com.client.gui.panelTimNangCao;
 import com.client.main.Client;
 import com.client.model.Message;
 import com.client.util.AESUtil;
@@ -31,6 +32,7 @@ public class ReadThread implements Runnable {
     private ByteArrayInputStream byteInputStream = null;
     private ObjectInput in = null;
     private String productName;
+    public panelTimNangCao panelAdvance = new panelTimNangCao(client);
 
     public ReadThread(Client client, Socket socket) throws IOException {
         this.socket = socket;
@@ -113,6 +115,17 @@ public class ReadThread implements Runnable {
                             client.getProduct(Long.valueOf((int) recvProductHistories.get(0).get("productId")));
                             client.updateLineChartURL(recvProductHistories, "");
                             break;
+                            
+                        case PRODUCT_HISTORIES_BY_ID:
+                            responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
+                            List<LinkedHashMap<String, Object>> recvProductHistoriesById = (List<LinkedHashMap<String, Object>>) responseContent.get("productHistories");
+                            
+                            System.out.println("Client receive: ");
+                            
+                            //if (recvProductHistoriesById != null)
+                            //client.getProduct(Long.valueOf((int) recvProductHistoriesById.get(0).get("productId")));
+                            client.updateLineChartAdvance(recvProductHistoriesById, "");
+                            break;
 
                         case CONFIGURABLE_PRODUCT_HISTORIES:
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
@@ -158,6 +171,12 @@ public class ReadThread implements Runnable {
 
                             String error = (String) responseContent.get("error");
                             System.out.println("Client receive: " + error);
+                            break;
+                            
+                        case ADVANCE_PRODUCTS:
+                            responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
+                            List<List<LinkedHashMap<String, Object>>> listAdvanceProducts = (List<List<LinkedHashMap<String, Object>>>) responseContent.get("list_advance_products");
+                            client.setTable(listAdvanceProducts);
                             break;
 
                         default:

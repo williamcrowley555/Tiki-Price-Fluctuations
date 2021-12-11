@@ -69,7 +69,7 @@ public class ClientThread implements Runnable {
                             break;
 
                         case SEND_SECRET_KEY:
-                            byte[] msgContentInBytes = RSAUtil.decrypt(privateKey,  Base64.getDecoder().decode(encryptedRequestContent));
+                            byte[] msgContentInBytes = RSAUtil.decrypt(privateKey, Base64.getDecoder().decode(encryptedRequestContent));
                             String msgContentInJSON = (String) BytesUtil.encode(msgContentInBytes);
                             requestContent = new ObjectMapper().readValue(msgContentInJSON, Map.class);
 
@@ -97,13 +97,12 @@ public class ClientThread implements Runnable {
                             if (requestContent == null) {
                                 response = createErrorMessage("Content can not be null");
                                 sendMessage(response);
-                            }
-                            else {
+                            } else {
                                 String productName = requestContent.containsKey("productName") ? (String) requestContent.get("productName") : null;
                                 Long categoryId = requestContent.containsKey("categoryId") ? Long.valueOf((int) requestContent.get("categoryId")) : null;
                                 Long brandId = requestContent.containsKey("brandId") ? Long.valueOf((int) requestContent.get("brandId")) : null;
                                 Float ratingAverage = requestContent.containsKey("ratingAverage") ? ((Double) requestContent.get("ratingAverage")).floatValue() : null;
-                                Long minPrice = requestContent.containsKey("minPrice") ? Long.valueOf((int) requestContent.get("minPrice")): null;
+                                Long minPrice = requestContent.containsKey("minPrice") ? Long.valueOf((int) requestContent.get("minPrice")) : null;
                                 Long maxPrice = requestContent.containsKey("maxPrice") ? Long.valueOf((int) requestContent.get("maxPrice")) : null;
 
                                 productBLL = new ProductBLL();
@@ -161,6 +160,7 @@ public class ClientThread implements Runnable {
                         case GET_PRODUCT_HISTORIES_BY_PRODUCT_ID:
                             requestContent = (Map<String, Object>) decryptContent(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
 
+                            System.out.println("hello");
                             productId = Long.valueOf((int) requestContent.get("productId"));
                             month = (int) requestContent.get("month");
                             year = (int) requestContent.get("year");
@@ -175,7 +175,7 @@ public class ClientThread implements Runnable {
                             }
 
                             responseContent.put("productHistories", histories);
-                            response = new Message(responseContent, MessageType.PRODUCT_HISTORIES);
+                            response = new Message(responseContent, MessageType.PRODUCT_HISTORIES_BY_ID);
                             sendMessage(response);
                             break;
 
@@ -234,23 +234,42 @@ public class ClientThread implements Runnable {
                             sendMessage(response);
                             break;
 
-                        case GET_ADVANCE_CATEGORIES:
-                            requestContent = (Map<String, Object>) decryptContent(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
-                            String jsonAdvance = requestContent.get("json").toString();
+                        case GET_ADVANCE_PRODUCTS:
                             ObjectMapper mapper = new ObjectMapper();
+                            productBLL = new ProductBLL();
+                            requestContent = (Map<String, Object>) decryptContent(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
+
+                            String jsonAdvance = requestContent.get("json").toString();
                             ObjectNode rootNode = mapper.readValue(jsonAdvance, ObjectNode.class);
+
+                            String[] categoryIdAndName = rootNode.get("category").asText().split("-");
+                            categoryIdAndName[0] = categoryIdAndName[0].trim();
+                            Long categoryId = Long.parseLong(categoryIdAndName[0]);
+
                             String productName = rootNode.get("product_name").asText();
-//                            String category = rootNode.get("category").asText();
-//                            String brands = rootNode.get("brands").asText();
-//                            String rating = rootNode.get("rating").asText();
-//                            String fromMoney = rootNode.get("from_money").asText();
-//                            String toMoney = rootNode.get("to_money").asText();
+                            String listbrands = rootNode.get("brands").asText();
+                            Long minPrice = rootNode.get("from_money").asLong();
+                            Long maxPrice = rootNode.get("to_money").asLong();
+                            double ratingAverage = rootNode.get("rating").asDouble();
 
-                            //responseContent = new HashMap<>();
+                            StringTokenizer tokenizer = new StringTokenizer(listbrands, "-");
+                            List<String> brandNames = new ArrayList<>();
+                            while (tokenizer.hasMoreTokens())
+                                brandNames.add(tokenizer.nextToken());
 
-                            //responseContent.put("advance_category", categories);
-                           // response = new Message(responseContent, MessageType.ADVANCE_CATEGORIES);
-                           // sendMessage(response);
+                            List<List<ProductDTO>> listAdvanceProduct = null;
+                            for (String brand : brandNames) {
+                                brand = brand.toUpperCase();
+                                List<ProductDTO> productAdvance = productBLL.findAdvance(productName, brand, categoryId, ratingAverage, minPrice, maxPrice);
+                                listAdvanceProduct = new ArrayList<>();
+                                if (productAdvance != null)
+                                    listAdvanceProduct.add(productAdvance);
+                            }
+
+                            responseContent = new HashMap<>();
+                            responseContent.put("list_advance_products", listAdvanceProduct);
+                            response = new Message(responseContent, MessageType.ADVANCE_PRODUCTS);
+                            sendMessage(response);
                             break;
 
                         case USER_DISCONNECT:

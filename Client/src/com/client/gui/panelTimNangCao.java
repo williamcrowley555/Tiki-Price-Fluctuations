@@ -20,7 +20,9 @@ import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -28,11 +30,14 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
+import javax.swing.JTable;
 import javax.swing.border.MatteBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.plaf.basic.BasicComboPopup;
 import javax.swing.plaf.basic.ComboPopup;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -115,12 +120,36 @@ public class panelTimNangCao extends javax.swing.JPanel {
             //System.out.println(tourItems[i]);
         }
          setComboBox(comboboxCategory, tourItems);
-        
     }
     
-     public void setComboBox(JComboBox<String> comboBox, String[] listItems) {
+    public void setComboBox(JComboBox<String> comboBox, String[] listItems) {
         comboBox.setModel(new DefaultComboBoxModel<>(listItems));
-    } 
+    }
+    
+    public void setTable(List<List<LinkedHashMap<String, Object>>> listAdvanceProducts)
+    {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Id");
+        model.addColumn("Tên");
+        model.addColumn("Số lượng đã bán");
+        model.addColumn("Giá");
+        List<Integer> id = new ArrayList<>();
+        List<String> name = new ArrayList<>();
+        for(List<LinkedHashMap<String, Object>> advanceProduct : listAdvanceProducts)
+        {
+            for(LinkedHashMap<String, Object> product : advanceProduct)
+            {
+                Vector row = new Vector();
+                row.add(product.get("id"));
+                row.add(product.get("name"));
+                row.add(product.get("all_time_quantity_sold"));
+                row.add(product.get("price"));
+                model.addRow(row);
+            }
+        }
+        
+        advanceProductTable.setModel(model);
+    }
      
     public JComboBox myComboBox(JComboBox box, Color color)
     {   
@@ -275,7 +304,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         jRadioButton5 = new javax.swing.JRadioButton();
         pnlTable = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        advanceProductTable = new javax.swing.JTable();
         pnlChart = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(255, 255, 255));
@@ -487,7 +516,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         pnlTable.setBackground(new java.awt.Color(255, 255, 255));
         pnlTable.setLayout(new java.awt.BorderLayout());
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        advanceProductTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -498,7 +527,12 @@ public class panelTimNangCao extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        advanceProductTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                advanceProductTableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(advanceProductTable);
 
         pnlTable.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
@@ -585,7 +619,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         json = "{" + productName + category + brands + rating + fromMoney + toMoney + "}";
         
         try {
-            main.sendJson(json);
+            main.sendRequestAdvanceProducts(json);
         } catch (IOException ex) {
             Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -593,8 +627,20 @@ public class panelTimNangCao extends javax.swing.JPanel {
         System.out.println(json);
     }//GEN-LAST:event_jButton2MouseClicked
 
+    private void advanceProductTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_advanceProductTableMouseClicked
+        // TODO add your handling code here:
+        int row = advanceProductTable.getSelectedRow();
+        Long id = Long.parseLong(advanceProductTable.getModel().getValueAt(row, 0).toString());
+        try {
+            main.getProductHistoriesById(id, month, year);
+        } catch (IOException ex) {
+            Logger.getLogger(panelTimNangCao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_advanceProductTableMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable advanceProductTable;
     private javax.swing.ButtonGroup buttonGroupStar;
     private javax.swing.JComboBox<String> comboboxCategory;
     private javax.swing.JButton jButton1;
@@ -614,7 +660,6 @@ public class panelTimNangCao extends javax.swing.JPanel {
     private javax.swing.JRadioButton jRadioButton5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JLabel lblTitleTenSanPham;

@@ -3,7 +3,10 @@ package com.tiki_server.test;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.tiki_server.bll.IProductBLL;
 import com.tiki_server.bll.impl.*;
+import com.tiki_server.dal.IProductDAL;
+import com.tiki_server.dal.impl.ProductDAL;
 import com.tiki_server.dto.*;
 import com.tiki_server.action.Get500ProductIds;
 import org.jsoup.Connection;
@@ -13,21 +16,35 @@ import org.jsoup.nodes.Document;
 import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class test {
 
     public static void main(String[] args) throws IOException {
+        List<ProductDTO> listProductAdvance = new ArrayList<>();
+        IProductBLL productBLL = new ProductBLL();
+        String productName = "a";
+        String brandName = "C";
+        Long categoryId = 1815l;
+        System.out.println(categoryId);
+        double ratingAverage = 5;
+        Long minPrice = 1000l;
+        Long maxPrice = 1000000000l;
+
+        listProductAdvance = productBLL.findAdvance(productName,brandName,categoryId,ratingAverage,minPrice,maxPrice);
+        System.out.println(listProductAdvance.size());
+
         // categoryID list: 316, 915, 1815, 1801, 1883, 44816, 49288, 49588, 53058
-        long[] categoryIdList = new long[]{316l, 915l, 1815l, 1801l, 1883l, 44816l, 49288l, 49588l, 53058l};
-        for(int i=0;i<9;i++) {
+//        long[] categoryIdList = new long[]{316l, 915l, 1815l, 1801l, 1883l, 44816l, 49288l, 49588l, 53058l};
+//        for(int i=0;i<9;i++) {
 //            createProductDTO(categoryIdList[i]);
 //            createReviewDTO(categoryIdList[i]);
 //            createCommentDTO(categoryIdList[i];
-            createTimelineDatabase(categoryIdList[i]);
+//            createTimelineDatabase(categoryIdList[i]);
 //           createConfigurableProductDatabase(categoryIdList[i]);
-        }
+//        }
     }
 
     public static void createProductDTO(Long categoryId) {

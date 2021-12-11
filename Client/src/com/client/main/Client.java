@@ -112,6 +112,27 @@ public class Client extends javax.swing.JFrame {
         this.pnlURL.showLineChart(productName, month, year, dates, prices);
     }
     
+    public void updateLineChartAdvance(List<LinkedHashMap<String, Object>> productHistories, String productName){
+        if (productHistories == null) {
+            JOptionPane.showMessageDialog(this, "Không có dữ liệu lịch sử giá", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
+            return;
+        } 
+
+        ArrayList<String> dates = new ArrayList<String>();
+        ArrayList<Integer> prices = new ArrayList<Integer>();
+        int month = 1;
+        int year = 2000;
+        for (LinkedHashMap<String, Object> history : productHistories) 
+        {   
+            LinkedHashMap<String, Object> dateObj= (LinkedHashMap<String, Object>) history.get("date");
+            dates.add(String.valueOf(dateObj.get("dayOfMonth")));
+            month = (int) dateObj.get("monthValue");
+            year = (int)  dateObj.get("year");
+            prices.add((int) history.get("price"));
+        }
+        this.pnlAdvanced.showLineChart(productName, month, year, dates, prices);
+    }
+    
     public void updateComboboxCategory(List<LinkedHashMap<String, Object>> categories){
         ArrayList<String> name = new ArrayList<String>();
         ArrayList<Integer> idCate = new ArrayList<Integer>();
@@ -168,6 +189,11 @@ public class Client extends javax.swing.JFrame {
         Message requestMsg = new Message(null, MessageType.GET_PUBLIC_KEY);
         sendMessage(requestMsg);
     }
+    
+    public void setTable(List<List<LinkedHashMap<String, Object>>> listAdvanceProducts)
+    {
+        pnlAdvanced.setTable(listAdvanceProducts);
+    }
 
     public void getProduct(Long productId) throws IOException {
         Map<String, Object> request = new HashMap<>();
@@ -204,10 +230,10 @@ public class Client extends javax.swing.JFrame {
         sendMessage(requestMsg);
     }
     
-    public void sendJson(String json) throws IOException {
+    public void sendRequestAdvanceProducts(String json) throws IOException {
         Map<String, Object> request = new HashMap<>();
         request.put("json", json);
-        Message requestMsg = new Message(request, MessageType.GET_ADVANCE_CATEGORIES);
+        Message requestMsg = new Message(request, MessageType.GET_ADVANCE_PRODUCTS);
         sendMessage(requestMsg);
     }
     
@@ -221,7 +247,7 @@ public class Client extends javax.swing.JFrame {
         sendMessage(requestMsg);
     }
 
-    public void getProductHistories(Long productId, int month, int year) throws IOException {
+    public void getProductHistoriesById(Long productId, int month, int year) throws IOException {
         Map<String, Object> request = new HashMap<>();
         request.put("productId", productId);
         request.put("month", month);
@@ -529,6 +555,7 @@ public class Client extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }//GEN-LAST:event_btnAdvancedTabActionPerformed
 
     /**
