@@ -9,6 +9,8 @@ package com.client.gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -29,7 +31,6 @@ import javax.swing.JOptionPane;
  */
 public class reviewGUI extends javax.swing.JFrame {
     private String action;
-  
     
     public reviewGUI() {
         initComponents();
@@ -37,18 +38,22 @@ public class reviewGUI extends javax.swing.JFrame {
         CustomWindow();
         this.setVisible(true);
     }
-    
-    public reviewGUI(Float averageRating) {
+    public reviewGUI(Float averageRating,  ArrayList<LinkedHashMap<String, Object>> reviewList) {
+        
         initComponents();
-        for (int i = 0; i < 5; i++)
-        {
-            reviewComponent review = new reviewComponent("Sản phẩm OK", 4.0F, "Sản phẩm dùng khá tốt", "Đã dùng 3 ngày", "10/12/2021");
-            reviewComponent review1 = new reviewComponent("Sản phẩm tệ", 1.0F, "Sản phẩm không tốt", "Đã dùng 1 ngày", "12/12/2021");
-            reviews.add(review);
-            reviews.add(review1);
+        for (LinkedHashMap<String, Object> review : reviewList)
+        {   
+            reviewComponent reviewComp = new reviewComponent(
+                    (String) review.get("Title"), 
+                    (Float) review.get("Rating"), 
+                    (String) review.get("Content"), 
+                    (String) review.get("Timeused"), 
+                    (String) review.get("ReviewDate")
+            );
+            reviews.add(reviewComp);
             reviews.revalidate();
         }
-       
+        lblReviewsCount.setText("Sản phẩm có: " + reviewList.size() + " đánh giá");
         this.action = action;
         CustomWindow();
         this.setVisible(true);
@@ -90,6 +95,7 @@ public class reviewGUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        lblReviewsCount = new javax.swing.JLabel();
         pnlReviews = new javax.swing.JPanel();
         reviewScrollPane = new javax.swing.JScrollPane();
         reviews = new javax.swing.JPanel();
@@ -158,15 +164,21 @@ public class reviewGUI extends javax.swing.JFrame {
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("5");
 
+        lblReviewsCount.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lblReviewsCount.setText("review count");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(51, 51, 51)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(51, 51, 51)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblReviewsCount, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2)
                 .addGap(161, 161, 161))
@@ -179,7 +191,9 @@ public class reviewGUI extends javax.swing.JFrame {
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblReviewsCount, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         pnlBody.add(jPanel1, java.awt.BorderLayout.PAGE_START);
@@ -200,7 +214,7 @@ public class reviewGUI extends javax.swing.JFrame {
         );
         pnlReviewsLayout.setVerticalGroup(
             pnlReviewsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(reviewScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
+            .addComponent(reviewScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
         );
 
         pnlBody.add(pnlReviews, java.awt.BorderLayout.CENTER);
@@ -341,6 +355,7 @@ public class reviewGUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblExit;
     private javax.swing.JLabel lblMinimize;
+    private javax.swing.JLabel lblReviewsCount;
     private javax.swing.JPanel panelHeader;
     private javax.swing.JPanel pnlBody;
     private javax.swing.JPanel pnlReviews;
