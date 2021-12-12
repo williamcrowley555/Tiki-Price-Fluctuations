@@ -86,6 +86,7 @@ public class Client extends javax.swing.JFrame {
         
         panelBody.repaint();
         panelBody.revalidate();
+       
         initCardLayout();
         CustomWindow();
          
@@ -230,9 +231,22 @@ public class Client extends javax.swing.JFrame {
         sendMessage(requestMsg);
     }
     
-    public void sendRequestAdvanceProducts(String json) throws IOException {
+    public void sendRequestAdvanceProducts(String productName, String category, String brands, String rating, String fromMoney, String toMoney) throws IOException {
         Map<String, Object> request = new HashMap<>();
-        request.put("json", json);
+        request.put("productName", productName);
+        request.put("category", category);
+        request.put("brands", brands);
+        if(rating.equals("0"))
+        {
+            JOptionPane.showMessageDialog(this, "Không có check", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
+            return;
+        }
+        else
+            request.put("ratingAverage", rating);
+        if(!fromMoney.equals(""))
+            request.put("fromMoney", fromMoney);
+        if(!toMoney.equals(""))
+            request.put("toMoney", toMoney);
         Message requestMsg = new Message(request, MessageType.GET_ADVANCE_PRODUCTS);
         sendMessage(requestMsg);
     }

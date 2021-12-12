@@ -8,7 +8,7 @@ public interface IProductBLL {
     List<ProductDTO> findAll();
     List<ProductDTO> findByCategoryId(Long categoryId);
     List<ProductDTO> findByBrandId(Long brandId);
-    List<ProductDTO> findAdvance(String productName, String brandName, Long categoryId,double ratingAverage, Long minPrice, Long maxPrice);
+    List<ProductDTO> findAdvance(String productName, String brandName, Long categoryId, double ratingAverage, Long minPrice, Long maxPrice);
     List<ProductDTO> filter(String productName, Long categoryId, Long brandId, float ratingAverage, Long minPrice, Long maxPrice);
     ProductDTO findById(Long id);
     Long save(ProductDTO product);

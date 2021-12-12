@@ -14,17 +14,21 @@ import com.client.util.InputValidatorUtil;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ButtonModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -36,6 +40,7 @@ import javax.swing.plaf.basic.BasicArrowButton;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.plaf.basic.BasicComboPopup;
 import javax.swing.plaf.basic.ComboPopup;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import org.jfree.chart.ChartFactory;
@@ -97,6 +102,8 @@ public class panelTimNangCao extends javax.swing.JPanel {
         showLineChart(productName, month, year, dates, prices);
         comboboxCategory = myComboBox(comboboxCategory, new Color(14,142,233));
     }
+    
+    // in ra cai code t doc thu
    
     public String selectedButtonGroupStar()
     {
@@ -126,6 +133,20 @@ public class panelTimNangCao extends javax.swing.JPanel {
         comboBox.setModel(new DefaultComboBoxModel<>(listItems));
     }
     
+     public void headerColor(int r, int b, int g, JTable table)
+    {
+        Color color = new Color(r,b,g);
+        DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer();
+        headerRenderer.setBackground(color);
+        headerRenderer.setForeground(color.WHITE);
+        
+
+        for (int i = 0; i < table.getModel().getColumnCount(); i++) {
+        table.getColumnModel().getColumn(i).setHeaderRenderer(headerRenderer);
+        }       
+         
+    }
+    
     public void setTable(List<List<LinkedHashMap<String, Object>>> listAdvanceProducts)
     {
         DefaultTableModel model = new DefaultTableModel();
@@ -147,7 +168,6 @@ public class panelTimNangCao extends javax.swing.JPanel {
                 model.addRow(row);
             }
         }
-        
         advanceProductTable.setModel(model);
     }
      
@@ -196,8 +216,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
                     selectedBrands.add(checkBox.getText());
                 } else {
                     selectedBrands.remove(checkBox.getText());
-                }
-                 
+                }                 
             }
             });
             pnlCategory.add(checkBox);
@@ -326,6 +345,11 @@ public class panelTimNangCao extends javax.swing.JPanel {
         lblTitleTenSanPham.setText("Tên sản phẩm:");
 
         comboboxCategory.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboboxCategory.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                comboboxCategoryMouseClicked(evt);
+            }
+        });
         comboboxCategory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboboxCategoryActionPerformed(evt);
@@ -460,6 +484,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         jLabel6.setText("Đánh giá:");
 
         buttonGroupStar.add(jRadioButton1);
+        jRadioButton1.setSelected(true);
         jRadioButton1.setText("Từ 5 sao");
 
         buttonGroupStar.add(jRadioButton2);
@@ -563,7 +588,6 @@ public class panelTimNangCao extends javax.swing.JPanel {
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
         String productName = txtSearch.getText();
-        productName = "\"product_name\":\"" + productName + "\"";
         if(productName.equals(""))
         {
             System.out.println("Hiện thông báo lỗi: Tên sản phẩm không được bỏ trống");
@@ -571,64 +595,64 @@ public class panelTimNangCao extends javax.swing.JPanel {
         }
         String valid = null;
         String rating = selectedButtonGroupStar();
-        if(rating.equals("0"))
-        {
-            System.out.println("Hiện thông báo lỗi: Bạn chưa chọn đánh giá");
-            return;
-        }
+//        if(rating.equals("0"))
+//        {
+//            System.out.println("Hiện thông báo lỗi: Bạn chưa chọn đánh giá");
+//            return;
+//        }
         String fromMoney = jTextField3.getText();
         valid = validator.isValidMoney(fromMoney);
-        if(!valid.equals(""))
+        if(valid.equals("Số tiền không hợp lệ") || valid.equals("Số tiền phải lớn hơn 0"))
         {
             System.out.println("Hiện thông báo lỗi: Giá từ" + valid);
             return;
         }
+        if(valid.equals(" không được để trống"))
+            fromMoney = "";
         String toMoney = jTextField4.getText();
         valid = validator.isValidMoney(toMoney);
-        if(!valid.equals(""))
+        if(valid.equals("Số tiền không hợp lệ") || valid.equals("Số tiền phải lớn hơn 0"))
         {
             System.out.println("Hiện thông báo lỗi: Giá đến" + valid);
             return;
         }
-        Long money = Long.parseLong(toMoney) - Long.parseLong(fromMoney);
-        if(money < 0)
+        if(valid.equals(" không được để trống"))
+            toMoney = "";
+        Long money = 0l;
+        if(!fromMoney.equals("") && !toMoney.equals(""))
         {
-            System.out.println("Hiện thông báo lỗi: Giá từ phải nhỏ hơn Giá đến");
-            return;
+            money = Long.parseLong(toMoney) - Long.parseLong(fromMoney);
+            if(money < 0)
+            {
+                System.out.println("Hiện thông báo lỗi: Giá từ phải nhỏ hơn Giá đến");
+                return;
+            }
         }
-        String brands = ",\"brands\":\"";
+        String brands = "";
         if(selectedBrands.size() == 0)
-            brands += "a-b-c-e-f-g-h-i-j\"";
+            brands += "a-b-c-d-e-f-g-h-i-j-k-l-m-n-o-p-q-r-s-t-u-v-w-x-y-z\"";
         else if(selectedBrands.size() == 1)
-            brands += selectedBrands.get(0) + "\"";
+            brands += selectedBrands.get(0);
         else
         {
             for(int i=0;i<selectedBrands.size();i++)
             {
                 if(i==selectedBrands.size()-1)
-                    brands+= selectedBrands.get(i) + "\"";
+                    brands+= selectedBrands.get(i);
                 else
                     brands+= selectedBrands.get(i) + "-";
             }
         }
         String category = comboboxCategory.getSelectedItem().toString();
-        category = ",\"category\":\"" +category +"\"";
-        fromMoney = ",\"from_money\":\""+fromMoney+"\"";
-        toMoney = ",\"to_money\":\""+toMoney+"\"";
-        rating = ",\"rating\":\""+rating+"\"";
-        json = "{" + productName + category + brands + rating + fromMoney + toMoney + "}";
-        
         try {
-            main.sendRequestAdvanceProducts(json);
+            main.sendRequestAdvanceProducts(productName, category, brands, rating, fromMoney, toMoney);
         } catch (IOException ex) {
             Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        System.out.println(json);
     }//GEN-LAST:event_jButton2MouseClicked
 
     private void advanceProductTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_advanceProductTableMouseClicked
-        // TODO add your handling code here:
+
         int row = advanceProductTable.getSelectedRow();
         Long id = Long.parseLong(advanceProductTable.getModel().getValueAt(row, 0).toString());
         try {
@@ -637,6 +661,11 @@ public class panelTimNangCao extends javax.swing.JPanel {
             Logger.getLogger(panelTimNangCao.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_advanceProductTableMouseClicked
+
+    private void comboboxCategoryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboboxCategoryMouseClicked
+        // TODO add your handling code here:
+        System.out.println(selectedBrands);
+    }//GEN-LAST:event_comboboxCategoryMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
