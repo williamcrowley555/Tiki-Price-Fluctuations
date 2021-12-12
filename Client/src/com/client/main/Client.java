@@ -91,6 +91,14 @@ public class Client extends javax.swing.JFrame {
          
     }
     
+    public void setReviewsList(ArrayList<LinkedHashMap<String, Object>> reviewsList){
+        this.pnlURL.setReviewsList(reviewsList);
+    }
+    
+    public void setCurrentProduct(LinkedHashMap<String, Object> product){
+        this.pnlURL.setCurrentProduct(product);
+    }
+    
     public void updateLineChartURL(List<LinkedHashMap<String, Object>> productHistories, String productName){
         if (productHistories == null) {
             JOptionPane.showMessageDialog(this, "Không có dữ liệu lịch sử giá", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 

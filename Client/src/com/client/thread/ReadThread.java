@@ -83,7 +83,8 @@ public class ReadThread implements Runnable {
                             client.updateProductInfoURL((String) recvProduct.get("name"), (String) recvProduct.get("imageUrl") );
                             this.productName = (String) recvProduct.get("name");
                             System.out.println("Client receive: " + recvProduct);
-                           
+                            client.setCurrentProduct(recvProduct);
+                            client.getReviews(Long.valueOf((int)recvProduct.get("id")));
                             break;
 
                         case PRODUCTS:
@@ -141,6 +142,7 @@ public class ReadThread implements Runnable {
                             List<LinkedHashMap<String, Object>> recvReviews = (List<LinkedHashMap<String, Object>>) responseContent.get("reviews");
                             System.out.println("Client receive: ");
                             recvReviews.forEach(System.out::println);
+                            client.setReviewsList((ArrayList<LinkedHashMap<String, Object>>) recvReviews);
                             break;
                         
                         case CATEGORIES:

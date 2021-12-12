@@ -31,6 +31,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.border.MatteBorder;
@@ -79,7 +80,8 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     String productName = "Laptop A";
     int month = 11;
     int year = 2021;
-    ImageIcon checkedRadio = new ImageIcon(getClass().getResource("/com/client/img/checked_radio.png"));
+    LinkedHashMap<String, Object> currentproduct;
+    ArrayList<LinkedHashMap<String, Object>> reviewsList;
     ImageIcon unCheckedRadio = new ImageIcon(getClass().getResource("/com/client/img/unchecked_radio.png"));
     public panelTimTheoURL(Client main) {
         initComponents();
@@ -94,6 +96,14 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         showLineChart(productName, month, year, dates, prices);
         customMonthYearChooser();
         
+    }
+    
+    public void setCurrentProduct(LinkedHashMap<String, Object> product){
+        this.currentproduct = product;
+    }
+    
+    public void setReviewsList(ArrayList<LinkedHashMap<String, Object>> reviewsList){
+        this.reviewsList = reviewsList;
     }
     
     public void customMonthYearChooser(){
@@ -168,18 +178,31 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     }
     
     public void updateProductInfo(String productName, String productImg){
-        try {
-            txtTenSP.setText(productName);
-            String path =productImg;
-            System.out.println("Get Image from " + path);
-            URL url = new URL(path);
-            BufferedImage image = ImageIO.read(url);
-            JLabel label = new JLabel(new ImageIcon(image));
-            
-        } catch (IOException ex) {
-            System.err.println("Image Source Not Found");
-        }
        
+            txtTenSP.setText(productName);
+            String path = productImg;
+            URL url = null;
+            Image image = null;
+            try {
+                url = new URL(path);
+                image = ImageIO.read(url);
+            } catch (MalformedURLException ex) {
+                System.out.println("Malformed URL");
+            } catch (IOException iox) {
+                System.out.println("Can not load file");
+            }
+            
+            //Resize img to fit jpanel
+            Image scaledImage = image.getScaledInstance(
+                    pnlPic.getWidth(),
+                    pnlPic.getHeight(),
+                    Image.SCALE_SMOOTH
+            );
+            
+            JLabel label = new JLabel(new ImageIcon(scaledImage));
+            pnlPic.add(label, BorderLayout.CENTER);
+            pnlPic.revalidate();
+            pnlPic.setVisible(true);
     }
     
     public void createImage(String str, JLabel label) {
@@ -269,7 +292,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         txtTenSP = new javax.swing.JTextArea();
         jLabel6 = new javax.swing.JLabel();
-        lblProductPic = new javax.swing.JLabel();
+        pnlPic = new javax.swing.JPanel();
         pnlChart = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(255, 255, 255));
@@ -413,6 +436,11 @@ public class panelTimTheoURL extends javax.swing.JPanel {
 
         jLabel6.setText("Hình ảnh:");
 
+        pnlPic.setBackground(new java.awt.Color(255, 255, 255));
+        pnlPic.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        pnlPic.setPreferredSize(new java.awt.Dimension(300, 199));
+        pnlPic.setLayout(new java.awt.BorderLayout());
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -420,27 +448,27 @@ public class panelTimTheoURL extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(pnlPic, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(0, 334, Short.MAX_VALUE))
-                    .addComponent(lblProductPic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(32, 32, 32)
+                .addContainerGap()
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblProductPic, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlPic, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pnlLeft.add(jPanel2, java.awt.BorderLayout.LINE_START);
@@ -462,7 +490,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(pnlSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -473,36 +501,38 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         try {
             main.getProductHistories(searchURL, monthChooser.getMonth()+1, yearChooser.getYear());
             System.out.println(monthChooser.getMonth() + " / " + yearChooser.getYear());
+            
         } catch (IOException ex) {
             Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        
+       
     }//GEN-LAST:event_btnTimKiemActionPerformed
 
     private void btnXemReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXemReviewActionPerformed
-        Float rating = 5F;
-        ArrayList<LinkedHashMap<String, Object>> reviewList = new ArrayList<LinkedHashMap<String, Object>>();
-        
-       LinkedHashMap<String, Object> review1 = new LinkedHashMap<String, Object>();
-       review1.put("Title", "Sản phẩm tệ");
-       review1.put("Rating", 1.0F);
-       review1.put("Content", "Mới mua mà hư rồi");
-       review1.put("Timeused", "Đã dùng 1 ngày");
-       review1.put("ReviewDate", "12/12/2021");
-        reviewList.add(review1);
-        
-        if (this.popUp == null) {
-            this.popUp = new reviewGUI(rating, reviewList);
-        } else {
-            this.popUp.toFront();
-            this.popUp.center();
+        if(this.currentproduct == null) JOptionPane.showMessageDialog(this, "Bạn chưa tìm kiếm sản phẩm", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
+        else{
+            
+            if (this.reviewsList != null && this.reviewsList.size() > 0)
+            {   
+                Float rating = Float.valueOf(((Double) this.currentproduct.get("rating_average")).floatValue());
+                if (this.popUp == null) {
+                    this.popUp = new reviewGUI(rating, this.reviewsList);
+                } else {
+                    this.popUp.toFront();
+                    this.popUp.center();
+                }
+                popUp.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                        popUp = null;
+                    }
+                });
+            } else  JOptionPane.showMessageDialog(this, "Bạn chưa tìm kiếm sản phẩm hoặc sản phẩm không có review", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
         }
-        popUp.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                popUp = null;
-            }
-        });
+        
+        
     }//GEN-LAST:event_btnXemReviewActionPerformed
 
     private void txtTimTheoURLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTimTheoURLActionPerformed
@@ -528,10 +558,10 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lblProductPic;
     private com.toedter.calendar.JMonthChooser monthChooser;
     private javax.swing.JPanel pnlChart;
     private javax.swing.JPanel pnlLeft;
+    private javax.swing.JPanel pnlPic;
     private javax.swing.JPanel pnlSearch;
     private javax.swing.ButtonGroup sizeGroup;
     private javax.swing.JTextArea txtTenSP;
