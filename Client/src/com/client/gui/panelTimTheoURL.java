@@ -82,6 +82,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     int year = 2021;
     LinkedHashMap<String, Object> currentproduct;
     ArrayList<LinkedHashMap<String, Object>> reviewsList;
+    ArrayList<LinkedHashMap<String, Object>> timelinesList;
     ImageIcon unCheckedRadio = new ImageIcon(getClass().getResource("/com/client/img/unchecked_radio.png"));
     public panelTimTheoURL(Client main) {
         initComponents();
@@ -104,6 +105,10 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     
     public void setReviewsList(ArrayList<LinkedHashMap<String, Object>> reviewsList){
         this.reviewsList = reviewsList;
+    }
+    
+    public void setTimelinesList(ArrayList<LinkedHashMap<String, Object>> timelinesList){
+        this.timelinesList = timelinesList;
     }
     
     public void customMonthYearChooser(){
@@ -495,30 +500,24 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimKiemActionPerformed
-        // TODO add your handling code here:
+
         searchURL = txtTimTheoURL.getText();
-        
+
         try {
             main.getProductHistories(searchURL, monthChooser.getMonth()+1, yearChooser.getYear());
-            System.out.println(monthChooser.getMonth() + " / " + yearChooser.getYear());
-            
         } catch (IOException ex) {
             Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-       
     }//GEN-LAST:event_btnTimKiemActionPerformed
 
     private void btnXemReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXemReviewActionPerformed
         if(this.currentproduct == null) JOptionPane.showMessageDialog(this, "Bạn chưa tìm kiếm sản phẩm", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
         else{
-            
-            if (this.reviewsList != null && this.reviewsList.size() > 0)
+            if ((this.reviewsList != null && this.reviewsList.size() > 0))
             {   
                 Float rating = Float.valueOf(((Double) this.currentproduct.get("rating_average")).floatValue());
                 if (this.popUp == null) {
-                    this.popUp = new reviewGUI(rating, this.reviewsList);
+                    this.popUp = new reviewGUI(rating, this.reviewsList, this.timelinesList);
                 } else {
                     this.popUp.toFront();
                     this.popUp.center();

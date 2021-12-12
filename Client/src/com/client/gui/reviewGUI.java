@@ -39,21 +39,45 @@ public class reviewGUI extends javax.swing.JFrame {
         CustomWindow();
         this.setVisible(true);
     }
-    public reviewGUI(Float averageRating,  ArrayList<LinkedHashMap<String, Object>> reviewList) {
+    public reviewGUI(Float averageRating,  ArrayList<LinkedHashMap<String, Object>> reviewList, ArrayList<LinkedHashMap<String, Object>> timelineList) {
         
         initComponents();
         for (LinkedHashMap<String, Object> review : reviewList)
         {   
-            reviewComponent reviewComp = new reviewComponent(
+            if (review != null)
+            {
+                for(LinkedHashMap<String, Object> timeline : timelineList){
+                    if (timeline != null && review.get("id").equals(timeline.get("reviewId")))
+                    {
+                        review.put("review_created_date", timeline.get("review_created_date"));
+                        review.put("date_used", timeline.get("content"));
+                    }
+                }
+                
+                reviewComponent reviewComp = new reviewComponent(
                     (String) review.get("title"), 
                      Float.valueOf((int) review.get("rating")), 
                     (String) review.get("content"), 
-                    "abc",
-                    "def"
-            );
-            reviews.add(reviewComp);
-            reviews.revalidate();
+                    (String) review.get("date_used"),
+                    (String) review.get("review_created_date") 
+                );
+                reviews.add(reviewComp);
+                reviews.revalidate();
+            }
         }
+//        for (LinkedHashMap<String, Object> review : reviewList)
+//        {   
+//            reviewComponent reviewComp = new reviewComponent(
+//                    (String) review.get("title"), 
+//                     Float.valueOf((int) review.get("rating")), 
+//                    (String) review.get("content"), 
+//                    "abc",
+//                    "def"
+//            );
+//            reviews.add(reviewComp);
+//            reviews.revalidate();
+//        }
+
         lblReviewsCount.setText("Sản phẩm có: " + reviewList.size() + " đánh giá");
         lblAverageRating.setText(averageRating.toString());
         this.action = action;
@@ -62,6 +86,8 @@ public class reviewGUI extends javax.swing.JFrame {
         reviewScrollPane.getVerticalScrollBar().setUnitIncrement(16); //scroll speed
         this.setVisible(true);
         
+        
+       
     }
     
  
