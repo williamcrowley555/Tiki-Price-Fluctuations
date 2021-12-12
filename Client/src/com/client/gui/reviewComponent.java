@@ -5,29 +5,55 @@
  */
 package com.client.gui;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
+
 /**
  *
  * @author Hi
  */
 public class reviewComponent extends javax.swing.JPanel {
-
+    String title;
+    float rating;
+    String content;
+    String timeUsed;
+    String reviewDate;
     /**
      * Creates new form reviewComponent
      */
+    
     public reviewComponent(String title, float rating, String content, String timeUsed, String reviewDate) {
+        
         initComponents();
-        lblTitle.setText(title);
-        lblRating.setText(String.valueOf(rating));
-        lblContent.setText(content);
-        lblTimeUsed.setText(timeUsed);
-        lblReviewDate.setText(reviewDate);
+        
+        this.title = title;
+        this.rating = rating;
+        this.content = content;
+        this.timeUsed = timeUsed;
+        this.reviewDate = reviewDate;
+        setReviewData();
+        
         myTextArea();
+        pnlPic.setVisible(false);
     }   
+    
+    public void setReviewData()
+    {
+        lblTitle.setText(this.title);
+        lblRating.setText(String.valueOf(this.rating));
+        txtContent.setText(this.content);
+        lblTimeUsed.setText(this.timeUsed);
+        lblReviewDate.setText(this.reviewDate == null ? "Không có dữ liệu" : this.reviewDate);
+    }
     
     public void myTextArea()
     {
-        lblContent.setWrapStyleWord(true);
-        lblContent.setLineWrap(true);
+        txtContent.setWrapStyleWord(true);
+        txtContent.setLineWrap(true);
+        contentScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
+        txtContent.setCaretPosition(0); // scroll to top
     }
 
     /**
@@ -43,11 +69,13 @@ public class reviewComponent extends javax.swing.JPanel {
         lblTitle = new javax.swing.JLabel();
         lblRating = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        lblContent = new javax.swing.JTextArea();
-        jLabel1 = new javax.swing.JLabel();
+        lblTitleDateReview = new javax.swing.JLabel();
         lblTimeUsed = new javax.swing.JLabel();
         lblReviewDate = new javax.swing.JLabel();
+        pnlPic = new javax.swing.JPanel();
+        pnlContent = new javax.swing.JPanel();
+        contentScrollPane = new javax.swing.JScrollPane();
+        txtContent = new javax.swing.JTextArea();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -64,29 +92,51 @@ public class reviewComponent extends javax.swing.JPanel {
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/client/img/small_star.png"))); // NOI18N
 
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        lblTitleDateReview.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        lblTitleDateReview.setText("Ngày đánh giá: ");
 
-        lblContent.setEditable(false);
-        lblContent.setColumns(20);
-        lblContent.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        lblContent.setLineWrap(true);
-        lblContent.setRows(5);
-        lblContent.setText("Content\n");
-        lblContent.setAutoscrolls(false);
-        lblContent.setFocusable(false);
-        lblContent.setHighlighter(null);
-        jScrollPane1.setViewportView(lblContent);
-
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel1.setText("Ngày đánh giá: ");
-
-        lblTimeUsed.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblTimeUsed.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lblTimeUsed.setText("Đã dùng 1 tháng");
 
-        lblReviewDate.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblReviewDate.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lblReviewDate.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblReviewDate.setText("12/12/2021");
+
+        javax.swing.GroupLayout pnlPicLayout = new javax.swing.GroupLayout(pnlPic);
+        pnlPic.setLayout(pnlPicLayout);
+        pnlPicLayout.setHorizontalGroup(
+            pnlPicLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 139, Short.MAX_VALUE)
+        );
+        pnlPicLayout.setVerticalGroup(
+            pnlPicLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 86, Short.MAX_VALUE)
+        );
+
+        pnlContent.setBackground(new java.awt.Color(255, 255, 255));
+        pnlContent.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        contentScrollPane.setBorder(new javax.swing.border.MatteBorder(null));
+
+        txtContent.setEditable(false);
+        txtContent.setColumns(20);
+        txtContent.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtContent.setRows(5);
+        txtContent.setFocusable(false);
+        contentScrollPane.setViewportView(txtContent);
+
+        javax.swing.GroupLayout pnlContentLayout = new javax.swing.GroupLayout(pnlContent);
+        pnlContent.setLayout(pnlContentLayout);
+        pnlContentLayout.setHorizontalGroup(
+            pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(contentScrollPane)
+        );
+        pnlContentLayout.setVerticalGroup(
+            pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlContentLayout.createSequentialGroup()
+                .addComponent(contentScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -99,14 +149,15 @@ public class reviewComponent extends javax.swing.JPanel {
                         .addComponent(lblRating, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel3)
-                        .addGap(32, 32, 32)
-                        .addComponent(lblTimeUsed, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblTimeUsed, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblTitleDateReview)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblReviewDate, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 627, Short.MAX_VALUE)
-                    .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, 627, Short.MAX_VALUE))
+                        .addComponent(lblReviewDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, 627, Short.MAX_VALUE)
+                    .addComponent(pnlPic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pnlContent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -116,14 +167,16 @@ public class reviewComponent extends javax.swing.JPanel {
                 .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblTimeUsed, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
                     .addComponent(lblRating, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblReviewDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(23, Short.MAX_VALUE))
+                    .addComponent(lblReviewDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTitleDateReview, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTimeUsed, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(pnlContent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addComponent(pnlPic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         add(jPanel2, java.awt.BorderLayout.CENTER);
@@ -131,14 +184,16 @@ public class reviewComponent extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane contentScrollPane;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea lblContent;
     private javax.swing.JLabel lblRating;
     private javax.swing.JLabel lblReviewDate;
     private javax.swing.JLabel lblTimeUsed;
     private javax.swing.JLabel lblTitle;
+    private javax.swing.JLabel lblTitleDateReview;
+    private javax.swing.JPanel pnlContent;
+    private javax.swing.JPanel pnlPic;
+    private javax.swing.JTextArea txtContent;
     // End of variables declaration//GEN-END:variables
 }

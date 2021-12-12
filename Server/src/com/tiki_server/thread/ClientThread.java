@@ -61,6 +61,7 @@ public class ClientThread implements Runnable {
                     IHistoryBLL historyBLL = null;
                     IConfigurableProductHistoryBLL cpHistoryBLL = null;
                     IReviewBLL reviewBLL = null;
+                    ITimelineBLL timeLineBLL = null;
                     ICategoryBLL categoryBLL = null;
 
                     switch (clientRequest.getMessageType()) {
@@ -217,6 +218,19 @@ public class ClientThread implements Runnable {
 
                             responseContent.put("reviews", reviews);
                             response = new Message(responseContent, MessageType.REVIEWS);
+                            sendMessage(response);
+                            break;
+
+                        case GET_TIMELINE_BY_REVIEWID:
+                            requestContent = (Map<String, Object>) decryptContent(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
+
+                            Long reviewId = Long.valueOf((int) requestContent.get("reviewId"));
+
+                            timeLineBLL = new TimelineBLL();
+                            TimelineDTO timeline = timeLineBLL.findByReviewId(reviewId);
+                            responseContent = new HashMap<>();
+                            responseContent.put("timeline", timeline);
+                            response = new Message(responseContent, MessageType.TIMELINE_BY_REVIEWID);
                             sendMessage(response);
                             break;
 

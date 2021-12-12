@@ -32,6 +32,7 @@ public class ReadThread implements Runnable {
     private ByteArrayInputStream byteInputStream = null;
     private ObjectInput in = null;
     private String productName;
+    private List<LinkedHashMap<String, Object>> timelines;
     public panelTimNangCao panelAdvance = new panelTimNangCao(client);
 
     public ReadThread(Client client, Socket socket) throws IOException {
@@ -45,7 +46,7 @@ public class ReadThread implements Runnable {
             this.in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
             String json;
             Message response;
-
+                
             while(isRunning) {
 //            Get response from server
                 json = (String) in.readObject();
@@ -83,7 +84,8 @@ public class ReadThread implements Runnable {
                             client.updateProductInfoURL((String) recvProduct.get("name"), (String) recvProduct.get("imageUrl") );
                             this.productName = (String) recvProduct.get("name");
                             System.out.println("Client receive: " + recvProduct);
-                           
+                            client.setCurrentProduct(recvProduct);
+                            client.getReviews(Long.valueOf((int)recvProduct.get("id")));
                             break;
 
                         case PRODUCTS:
@@ -136,12 +138,30 @@ public class ReadThread implements Runnable {
                             break;
 
                         case REVIEWS:
-                            responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
-
+                            timelines = new  ArrayList<LinkedHashMap<String, Object>>();      
+                            responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));                           
                             List<LinkedHashMap<String, Object>> recvReviews = (List<LinkedHashMap<String, Object>>) responseContent.get("reviews");
-                            System.out.println("Client receive: ");
-                            recvReviews.forEach(System.out::println);
+                           
+                            if (recvReviews != null)
+                            {   
+                                for (LinkedHashMap<String, Object> review : recvReviews)
+                                {
+                                    client.getTimeLineByReviewId(Long.valueOf((int)review.get("id")));
+                                }
+                                
+                                
+                              
+                               client.setReviewsList((ArrayList<LinkedHashMap<String, Object>>) recvReviews);
+                               client.setTimelineList((ArrayList<LinkedHashMap<String, Object>>) this.timelines);
+                            }    
+                            
                             break;
+                        case TIMELINE_BY_REVIEWID:
+                            responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
+                            LinkedHashMap<String, Object> recvTimeline = (LinkedHashMap<String, Object>) responseContent.get("timeline");
+
+                            timelines.add(recvTimeline);
+                            break;   
                         
                         case CATEGORIES:
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));

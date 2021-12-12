@@ -83,13 +83,24 @@ public class Client extends javax.swing.JFrame {
         invisibleMenuScrollBar(8);
         this.hostname = hostname;
         this.port = port;
-        
         panelBody.repaint();
         panelBody.revalidate();
        
         initCardLayout();
         CustomWindow();
          
+    }
+    
+    public void setReviewsList(ArrayList<LinkedHashMap<String, Object>> reviewsList){
+        this.pnlURL.setReviewsList(reviewsList);
+    }
+    
+    public void setTimelineList(ArrayList<LinkedHashMap<String, Object>> timelinesList){
+        this.pnlURL.setTimelinesList(timelinesList);
+    }
+    
+    public void setCurrentProduct(LinkedHashMap<String, Object> product){
+        this.pnlURL.setCurrentProduct(product);
     }
     
     public void updateLineChartURL(List<LinkedHashMap<String, Object>> productHistories, String productName){
@@ -289,6 +300,14 @@ public class Client extends javax.swing.JFrame {
         request.put("productId", productId);
 
         Message requestMsg = new Message(request, MessageType.GET_REVIEWS_BY_PRODUCT_ID);
+        sendMessage(requestMsg);
+    }
+    
+    public void getTimeLineByReviewId(Long reviewId) throws IOException {
+        Map<String, Object> request = new HashMap<>();
+        request.put("reviewId", reviewId);
+        Message requestMsg = new Message(request, MessageType.GET_TIMELINE_BY_REVIEWID);
+       
         sendMessage(requestMsg);
     }
     
