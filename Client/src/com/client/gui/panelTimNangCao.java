@@ -206,7 +206,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
      
     public void updateBrandCheckbox(HashMap<Integer, String> listBrands, int numberOfBrands)
     {
-        System.out.println("call update brand checkbox");
+        pnlBrands.revalidate();
         int checkBoxWidth = 200;
         int checkBoxHeight = 40;
         int xColumn1 = 10;
@@ -214,8 +214,6 @@ public class panelTimNangCao extends javax.swing.JPanel {
         int y1 = 15; 
         for(int i=0;i<numberOfBrands;i++)
         {   
-            
-            System.out.println(listBrands.get(i));
             JCheckBox checkBox = new JCheckBox(listBrands.get(i));
            // checkBox.setBounds(xColumn1, y1, checkBoxWidth, checkBoxHeight); // dòng này nó làm gì?
             checkBox.addItemListener(new ItemListener() {

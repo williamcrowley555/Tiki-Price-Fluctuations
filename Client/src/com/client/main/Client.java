@@ -145,9 +145,8 @@ public class Client extends javax.swing.JFrame {
         this.pnlAdvanced.showLineChart(productName, month, year, dates, prices);
     }
     
-    public void updateBrands(List<LinkedHashMap<String, Object>> recvBrands, String ...a)
-    {
-      
+    public void updateBrands(List<LinkedHashMap<String, Object>> recvBrands)
+    {  
         HashMap<Integer, String> listBrands = new HashMap<Integer, String>();
         int numberOfBrands = 0;
         for (LinkedHashMap<String, Object> brand : recvBrands)

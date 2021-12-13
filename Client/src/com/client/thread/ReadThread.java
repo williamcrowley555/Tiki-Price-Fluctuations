@@ -171,9 +171,11 @@ public class ReadThread implements Runnable {
                             break;
                         case BRANDS_BY_CATEGORY_ID:
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
-                            List<LinkedHashMap<String, Object>> recvBrands = (List<LinkedHashMap<String, Object>>) responseContent.get("brands");
-//                            if(recvBrands != null && recvBrands.isEmpty())
+                            if(responseContent.get("brands")!= null)
+                            {
+                                List<LinkedHashMap<String, Object>> recvBrands = (List<LinkedHashMap<String, Object>>) responseContent.get("brands");
                                 client.updateBrands(recvBrands);
+                            }
                             break;
 
 //                        case ADVANCE_CATEGORIES:
