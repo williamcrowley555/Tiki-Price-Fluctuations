@@ -32,7 +32,7 @@ public class Server {
                     server = new ServerSocket(port);
                     System.out.println("Server started!");
 
-                    while(true) {
+                    while (true) {
                         System.out.println("Waiting for a client ...");
                         Socket socket = server.accept();
                         System.out.println("Client " + server.getInetAddress() + " at port " + server.getLocalPort() + " accepted");
@@ -60,7 +60,7 @@ public class Server {
     }
 
     public static void main(String[] args) {
-        Server server = new Server(5001);
+        Server server = new Server(5002);
         server.run();
     }
 }

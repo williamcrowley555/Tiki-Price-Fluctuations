@@ -31,6 +31,7 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.security.PublicKey;
 import java.util.HashMap;
@@ -57,7 +58,7 @@ public class Client extends javax.swing.JFrame {
      * Creates new form Main
      */
     private static String hostname = "localhost";
-    private static int port = 5001;
+    private static int port = 5002;
 
     private Socket socket;
 
@@ -168,6 +169,8 @@ public class Client extends javax.swing.JFrame {
 
             readThread = new Thread(new ReadThread(this, this.socket));
             readThread.start();
+        } catch (ConnectException conEx){
+            System.err.println("Can't connect to server");
         } catch (IOException e) {
             e.printStackTrace();
         }
