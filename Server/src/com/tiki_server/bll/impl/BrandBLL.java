@@ -25,6 +25,9 @@ public class BrandBLL implements IBrandBLL {
     }
 
     @Override
+    public List<BrandDTO> findByCategoryId(Long categoryId) { return brandDAL.findByCategoryId(categoryId); }
+
+    @Override
     public Long save(BrandDTO brand) {
         return brandDAL.save(brand);
     }

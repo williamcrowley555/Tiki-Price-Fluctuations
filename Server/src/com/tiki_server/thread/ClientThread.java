@@ -63,6 +63,7 @@ public class ClientThread implements Runnable {
                     IReviewBLL reviewBLL = null;
                     ITimelineBLL timeLineBLL = null;
                     ICategoryBLL categoryBLL = null;
+                    IBrandBLL brandBLL = null;
 
                     switch (clientRequest.getMessageType()) {
                         case GET_PUBLIC_KEY:
@@ -250,8 +251,23 @@ public class ClientThread implements Runnable {
                             sendMessage(response);
                             break;
 
+                        case GET_BRANDS_BY_CATEGORY_ID:
+                            requestContent = (Map<String, Object>) decryptContent(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
+                            Long categoryId = Long.valueOf((int) requestContent.get("categoryId"));
+                            brandBLL = new BrandBLL();
+                            List<BrandDTO> brands = brandBLL.findByCategoryId(categoryId);
+
+                            responseContent = new HashMap<>();
+
+                            if (brands != null && brands.isEmpty())
+                                brands = null;
+
+                            responseContent.put("brands", brands);
+                            response = new Message(responseContent, MessageType.BRANDS_BY_CATEGORY_ID);
+                            sendMessage(response);
+                            break;
+
                         case GET_ADVANCE_PRODUCTS:
-                            ObjectMapper mapper = new ObjectMapper();
                             productBLL = new ProductBLL();
                             requestContent = (Map<String, Object>) decryptContent(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
 
@@ -259,9 +275,9 @@ public class ClientThread implements Runnable {
 
                             String[] categoryIdAndName = requestContent.get("category").toString().split("-");
                             categoryIdAndName[0] = categoryIdAndName[0].trim();
-                            Long categoryId = Long.parseLong(categoryIdAndName[0]);
+                            categoryId = Long.parseLong(categoryIdAndName[0]);
 
-                            String productName = (String) requestContent.get("productName");
+                            String productName = requestContent.containsKey("productName") ? (String) requestContent.get("productName") : null;
                             Double ratingAverage = requestContent.containsKey("ratingAverage") ? Double.parseDouble((String) requestContent.get("ratingAverage")) : null;
                             Long minPrice = requestContent.containsKey("fromMoney") ? Long.valueOf((String) requestContent.get("fromMoney")) : null;
                             Long maxPrice = requestContent.containsKey("toMoney") ? Long.valueOf((String) requestContent.get("toMoney")) : null;
@@ -273,12 +289,18 @@ public class ClientThread implements Runnable {
                                 brandNames.add(tokenizer.nextToken());
 
                             List<List<ProductDTO>> listAdvanceProduct = new ArrayList<>();
-                            for (String brand : brandNames) {
-                                brand = brand.toUpperCase();
+                            if(brandNames.size() == 0)
+                            {
+                                String brand = null;
                                 List<ProductDTO> productAdvance = productBLL.findAdvance(productName, brand, categoryId, ratingAverage, minPrice, maxPrice);
+                            } else {
+                                for (String brand : brandNames) {
+                                    brand = brand.toUpperCase();
+                                    List<ProductDTO> productAdvance = productBLL.findAdvance(productName, brand, categoryId, ratingAverage, minPrice, maxPrice);
 
-                                if (productAdvance != null)
-                                    listAdvanceProduct.add(productAdvance);
+                                    if (productAdvance != null)
+                                        listAdvanceProduct.add(productAdvance);
+                                }
                             }
 
                             responseContent = new HashMap<>();

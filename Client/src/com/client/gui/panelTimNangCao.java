@@ -7,7 +7,9 @@ package com.client.gui;
 
 import com.client.gui.others.MyComboBoxEditor;
 import com.client.gui.others.MyComboBoxRenderer;
+import com.client.gui.others.MyScrollBarUI;
 import com.client.main.Client;
+import com.client.model.CategoryComboItem;
 import com.client.thread.ReadThread;
 import com.client.thread.WriteThread;
 import com.client.util.InputValidatorUtil;
@@ -77,6 +79,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
     int month = 11;
     int year = 2021;
     ArrayList<String> name = new ArrayList<String>();
+    Long categoryId = 2L; //2L là id của Root - toàn bộ danh mục
     Client main;
     public panelTimNangCao(Client main) {
        
@@ -89,18 +92,19 @@ public class panelTimNangCao extends javax.swing.JPanel {
             prices.add(i +100 );
         }
         
-        brandList.add("a");
-        brandList.add("b");
-        brandList.add("c");
-        brandList.add("e");
-        brandList.add("f");
-        brandList.add("g");
-        brandList.add("h");
-        brandList.add("i");
-        brandList.add("j");
-        initBrandCheckbox(brandList);
+//        brandList.add("a");
+//        brandList.add("b");
+//        brandList.add("c");
+//        brandList.add("e");
+//        brandList.add("f");
+//        brandList.add("g");
+//        brandList.add("h");
+//        brandList.add("i");
+//        brandList.add("j");
+//        initBrandCheckbox(brandList);
         showLineChart(productName, month, year, dates, prices);
         comboboxCategory = myComboBox(comboboxCategory, new Color(14,142,233));
+        scrollPaneBrands.getVerticalScrollBar().setUI(new MyScrollBarUI());
     }
     
     // in ra cai code t doc thu
@@ -122,14 +126,18 @@ public class panelTimNangCao extends javax.swing.JPanel {
             
     public void listNameCategory(ArrayList<String> name, ArrayList<Integer> idCate) {
         String[] tourItems = new String[name.size()];
+        CategoryComboItem[] list = new CategoryComboItem[name.size()];
+        
+        CategoryComboItem c;
         for(int i = 0 ; i < name.size(); i++) {
-            tourItems[i] = idCate.get(i) + " - " + name.get(i);
-            //System.out.println(tourItems[i]);
+             c = new CategoryComboItem(idCate.get(i), name.get(i).equals("Root") ? "-- Chọn danh mục --" : name.get(i));
+             list[i] = c;
+            // System.out.println(c.getId());
         }
-         setComboBox(comboboxCategory, tourItems);
+         setComboBox(comboboxCategory, list);
     }
     
-    public void setComboBox(JComboBox<String> comboBox, String[] listItems) {
+    public void setComboBox(JComboBox<CategoryComboItem> comboBox, CategoryComboItem[] listItems) {
         comboBox.setModel(new DefaultComboBoxModel<>(listItems));
     }
     
@@ -202,10 +210,64 @@ public class panelTimNangCao extends javax.swing.JPanel {
        return box;
     } 
      
+    public void updateBrandCheckbox(HashMap<Integer, String> listBrands, int numberOfBrands)
+    {
+        pnlBrands.revalidate();
+        int checkBoxWidth = 200;
+        int checkBoxHeight = 40;
+        int xColumn1 = 10;
+        int xColumn2 = xColumn1 + checkBoxWidth + 40;
+        int y1 = 15; 
+        for(int i=0;i<numberOfBrands;i++)
+        {   
+            JCheckBox checkBox = new JCheckBox(listBrands.get(i));
+           // checkBox.setBounds(xColumn1, y1, checkBoxWidth, checkBoxHeight); // dòng này nó làm gì?
+            checkBox.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED)
+                {
+                    selectedBrands.add(checkBox.getText());
+                } else {
+                    selectedBrands.remove(checkBox.getText());
+                }                 
+            }
+            });
+            pnlBrands.add(checkBox);
+            pnlBrands.revalidate();
+            y1 += 25;
+        }
+      
+        
+//        int y2 = 15; 
+//        for(int i=numberOfBrands/2; i<numberOfBrands;i++)
+//        {   
+//            
+//            System.out.println(listBrands.get(i));
+//            JCheckBox checkBox = new JCheckBox(listBrands.get(i));
+//            checkBox.setBounds(xColumn2, y2, checkBoxWidth, checkBoxHeight); // dòng này nó làm gì?
+//            checkBox.addItemListener(new ItemListener() {
+//
+//            @Override
+//            public void itemStateChanged(ItemEvent e) {
+//                if (e.getStateChange() == ItemEvent.SELECTED)
+//                {
+//                    selectedBrands.add(checkBox.getText());
+//                } else {
+//                    selectedBrands.remove(checkBox.getText());
+//                }                 
+//            }
+//            });
+//            pnlBrands.add(checkBox);
+//            y2 += 25;
+//        }
+    }
+    
     public void initBrandCheckbox(ArrayList<String> list){
         int y = 15; // 15 chu cai dau tien cua brands 
-        for (String category : list){
-            JCheckBox checkBox = new JCheckBox(category);
+        for (String brand : list){
+            JCheckBox checkBox = new JCheckBox(brand);
             checkBox.setBounds(10, y, 200, 40);
             checkBox.addItemListener(new ItemListener() {
 
@@ -300,11 +362,13 @@ public class panelTimNangCao extends javax.swing.JPanel {
         pnlSearch = new javax.swing.JPanel();
         lblTitleTenSanPham = new javax.swing.JLabel();
         txtSearch = new javax.swing.JTextField();
-        comboboxCategory = new javax.swing.JComboBox<String>();
+        comboboxCategory = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         pnlFilter = new javax.swing.JPanel();
         pnlCategory = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
+        scrollPaneBrands = new javax.swing.JScrollPane();
+        pnlBrands = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
@@ -344,7 +408,6 @@ public class panelTimNangCao extends javax.swing.JPanel {
         lblTitleTenSanPham.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lblTitleTenSanPham.setText("Tên sản phẩm:");
 
-        comboboxCategory.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         comboboxCategory.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 comboboxCategoryMouseClicked(evt);
@@ -398,6 +461,15 @@ public class panelTimNangCao extends javax.swing.JPanel {
         jLabel5.setText("Thương hiệu:");
         pnlCategory.add(jLabel5);
         jLabel5.setBounds(10, 6, 100, 20);
+
+        scrollPaneBrands.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        pnlBrands.setBackground(new java.awt.Color(255, 255, 255));
+        pnlBrands.setLayout(new javax.swing.BoxLayout(pnlBrands, javax.swing.BoxLayout.PAGE_AXIS));
+        scrollPaneBrands.setViewportView(pnlBrands);
+
+        pnlCategory.add(scrollPaneBrands);
+        scrollPaneBrands.setBounds(10, 30, 180, 210);
 
         pnlFilter.add(pnlCategory, java.awt.BorderLayout.LINE_START);
 
@@ -575,24 +647,24 @@ public class panelTimNangCao extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void comboboxCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboboxCategoryActionPerformed
-//        try {
-//            main.getCategory();
-//        } catch (IOException ex) {
-//            Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-
-         String selectedCategory = comboboxCategory.getSelectedItem().toString();  
-         System.out.println(selectedCategory);
+        CategoryComboItem selectedCategory = (CategoryComboItem)comboboxCategory.getSelectedItem(); 
+        categoryId = Long.valueOf((int)selectedCategory.getId());
         
+        if(categoryId != 2L)  //2 là id của root
+        {
+            System.out.println(categoryId);
+            try {
+                main.getBrandsByCategoryId(categoryId);
+            } catch (IOException ex) {
+                Logger.getLogger(panelTimNangCao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            System.out.println("Chọn tất cả danh mục");
+        }
     }//GEN-LAST:event_comboboxCategoryActionPerformed
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
         String productName = txtSearch.getText();
-        if(productName.equals(""))
-        {
-            System.out.println("Hiện thông báo lỗi: Tên sản phẩm không được bỏ trống");
-            return;
-        }
         String valid = null;
         String rating = selectedButtonGroupStar();
 //        if(rating.equals("0"))
@@ -663,15 +735,14 @@ public class panelTimNangCao extends javax.swing.JPanel {
     }//GEN-LAST:event_advanceProductTableMouseClicked
 
     private void comboboxCategoryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboboxCategoryMouseClicked
-        // TODO add your handling code here:
-        System.out.println(selectedBrands);
+
     }//GEN-LAST:event_comboboxCategoryMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable advanceProductTable;
     private javax.swing.ButtonGroup buttonGroupStar;
-    private javax.swing.JComboBox<String> comboboxCategory;
+    private javax.swing.JComboBox<CategoryComboItem> comboboxCategory;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel4;
@@ -692,6 +763,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JLabel lblTitleTenSanPham;
+    private javax.swing.JPanel pnlBrands;
     private javax.swing.JPanel pnlCategory;
     private javax.swing.JPanel pnlChart;
     private javax.swing.JPanel pnlFilter;
@@ -699,6 +771,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
     private javax.swing.JPanel pnlSearch;
     private javax.swing.JPanel pnlSearchAndFilter;
     private javax.swing.JPanel pnlTable;
+    private javax.swing.JScrollPane scrollPaneBrands;
     private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }
