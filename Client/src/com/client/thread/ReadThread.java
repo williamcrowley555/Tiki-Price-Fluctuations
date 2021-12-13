@@ -169,6 +169,7 @@ public class ReadThread implements Runnable {
                            // recvCategories.forEach(System.out::println);
                             client.updateComboboxCategory(recvCategories);
                             break;
+                            
                         case BRANDS_BY_CATEGORY_ID:
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
                             if(responseContent.get("brands")!= null)

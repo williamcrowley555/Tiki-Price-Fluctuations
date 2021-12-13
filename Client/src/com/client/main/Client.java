@@ -150,7 +150,8 @@ public class Client extends javax.swing.JFrame {
         HashMap<Integer, String> listBrands = new HashMap<Integer, String>();
         int numberOfBrands = 0;
         for (LinkedHashMap<String, Object> brand : recvBrands)
-        {
+        {   
+            System.out.println(brand.get("name"));
             if(!listBrands.containsValue(brand.get("name")))
             {
                 listBrands.put(numberOfBrands, (String) brand.get("name"));

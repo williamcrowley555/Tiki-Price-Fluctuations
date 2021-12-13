@@ -9,6 +9,7 @@ import com.client.gui.others.MyComboBoxEditor;
 import com.client.gui.others.MyComboBoxRenderer;
 import com.client.gui.others.MyScrollBarUI;
 import com.client.main.Client;
+import com.client.model.CategoryComboItem;
 import com.client.thread.ReadThread;
 import com.client.thread.WriteThread;
 import com.client.util.InputValidatorUtil;
@@ -78,6 +79,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
     int month = 11;
     int year = 2021;
     ArrayList<String> name = new ArrayList<String>();
+    Long categoryId = 2L; //2L là id của Root - toàn bộ danh mục
     Client main;
     public panelTimNangCao(Client main) {
        
@@ -124,14 +126,18 @@ public class panelTimNangCao extends javax.swing.JPanel {
             
     public void listNameCategory(ArrayList<String> name, ArrayList<Integer> idCate) {
         String[] tourItems = new String[name.size()];
+        CategoryComboItem[] list = new CategoryComboItem[name.size()];
+        
+        CategoryComboItem c;
         for(int i = 0 ; i < name.size(); i++) {
-            tourItems[i] = idCate.get(i) + " - " + name.get(i);
-            //System.out.println(tourItems[i]);
+             c = new CategoryComboItem(idCate.get(i), name.get(i).equals("Root") ? "-- Chọn danh mục --" : name.get(i));
+             list[i] = c;
+            // System.out.println(c.getId());
         }
-         setComboBox(comboboxCategory, tourItems);
+         setComboBox(comboboxCategory, list);
     }
     
-    public void setComboBox(JComboBox<String> comboBox, String[] listItems) {
+    public void setComboBox(JComboBox<CategoryComboItem> comboBox, CategoryComboItem[] listItems) {
         comboBox.setModel(new DefaultComboBoxModel<>(listItems));
     }
     
@@ -356,7 +362,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         pnlSearch = new javax.swing.JPanel();
         lblTitleTenSanPham = new javax.swing.JLabel();
         txtSearch = new javax.swing.JTextField();
-        comboboxCategory = new javax.swing.JComboBox<String>();
+        comboboxCategory = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         pnlFilter = new javax.swing.JPanel();
         pnlCategory = new javax.swing.JPanel();
@@ -402,7 +408,6 @@ public class panelTimNangCao extends javax.swing.JPanel {
         lblTitleTenSanPham.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lblTitleTenSanPham.setText("Tên sản phẩm:");
 
-        comboboxCategory.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         comboboxCategory.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 comboboxCategoryMouseClicked(evt);
@@ -642,17 +647,19 @@ public class panelTimNangCao extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void comboboxCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboboxCategoryActionPerformed
-        String selectedCategory = comboboxCategory.getSelectedItem().toString();  
-        if(!selectedCategory.equals("2 - Root"))
+        CategoryComboItem selectedCategory = (CategoryComboItem)comboboxCategory.getSelectedItem(); 
+        categoryId = Long.valueOf((int)selectedCategory.getId());
+        
+        if(categoryId != 2L)  //2 là id của root
         {
-            String[] category = selectedCategory.split("-");
-            Long categoryId = Long.parseLong(category[0].trim());
             System.out.println(categoryId);
             try {
                 main.getBrandsByCategoryId(categoryId);
             } catch (IOException ex) {
                 Logger.getLogger(panelTimNangCao.class.getName()).log(Level.SEVERE, null, ex);
             }
+        } else {
+            System.out.println("Chọn tất cả danh mục");
         }
     }//GEN-LAST:event_comboboxCategoryActionPerformed
 
@@ -735,7 +742,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable advanceProductTable;
     private javax.swing.ButtonGroup buttonGroupStar;
-    private javax.swing.JComboBox<String> comboboxCategory;
+    private javax.swing.JComboBox<CategoryComboItem> comboboxCategory;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel4;
