@@ -145,6 +145,22 @@ public class Client extends javax.swing.JFrame {
         this.pnlAdvanced.showLineChart(productName, month, year, dates, prices);
     }
     
+    public void updateBrands(List<LinkedHashMap<String, Object>> recvBrands, String ...a)
+    {
+      
+        HashMap<Integer, String> listBrands = new HashMap<Integer, String>();
+        int numberOfBrands = 0;
+        for (LinkedHashMap<String, Object> brand : recvBrands)
+        {
+            if(!listBrands.containsValue(brand.get("name")))
+            {
+                listBrands.put(numberOfBrands, (String) brand.get("name"));
+                numberOfBrands++;
+            }
+        }
+        pnlAdvanced.updateBrandCheckbox(listBrands, numberOfBrands);
+    }
+    
     public void updateComboboxCategory(List<LinkedHashMap<String, Object>> categories){
         ArrayList<String> name = new ArrayList<String>();
         ArrayList<Integer> idCate = new ArrayList<Integer>();
@@ -214,6 +230,15 @@ public class Client extends javax.swing.JFrame {
         Message requestMsg = new Message(request, MessageType.GET_PRODUCT);
         sendMessage(requestMsg);
     }
+    
+    public void getBrandsByCategoryId(Long categoryId) throws IOException
+    {
+        Map<String, Object> request = new HashMap<>();
+        request.put("categoryId", categoryId);
+        
+        Message requestMsg = new Message(request, MessageType.GET_BRANDS_BY_CATEGORY_ID);
+        sendMessage(requestMsg);
+    }
 
     public void filterProducts(String productName, Long categoryId, Long brandId, float ratingAverage, Long minPrice, Long maxPrice) throws IOException {
         Map<String, Object> request = new HashMap<>();
@@ -244,9 +269,11 @@ public class Client extends javax.swing.JFrame {
     
     public void sendRequestAdvanceProducts(String productName, String category, String brands, String rating, String fromMoney, String toMoney) throws IOException {
         Map<String, Object> request = new HashMap<>();
-        request.put("productName", productName);
+        if(!productName.equals(""))
+            request.put("productName", productName);
         request.put("category", category);
-        request.put("brands", brands);
+        if(!brands.equals(""))
+            request.put("brands", brands);
         if(rating.equals("0"))
         {
             JOptionPane.showMessageDialog(this, "Không có check", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 

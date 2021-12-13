@@ -124,8 +124,6 @@ public class ReadThread implements Runnable {
                             
                             System.out.println("Client receive: ");
                             
-                            //if (recvProductHistoriesById != null)
-                            //client.getProduct(Long.valueOf((int) recvProductHistoriesById.get(0).get("productId")));
                             client.updateLineChartAdvance(recvProductHistoriesById, "");
                             break;
 
@@ -170,6 +168,12 @@ public class ReadThread implements Runnable {
                             System.out.println("Client receive: ");
                            // recvCategories.forEach(System.out::println);
                             client.updateComboboxCategory(recvCategories);
+                            break;
+                        case BRANDS_BY_CATEGORY_ID:
+                            responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
+                            List<LinkedHashMap<String, Object>> recvBrands = (List<LinkedHashMap<String, Object>>) responseContent.get("brands");
+//                            if(recvBrands != null && recvBrands.isEmpty())
+                                client.updateBrands(recvBrands);
                             break;
 
 //                        case ADVANCE_CATEGORIES:
