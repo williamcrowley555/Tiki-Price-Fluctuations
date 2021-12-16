@@ -81,7 +81,7 @@ public class ReadThread implements Runnable {
                             //System.out.println(responseContent.get("product"));
                             LinkedHashMap<String, Object> recvProduct;
                             recvProduct = (LinkedHashMap<String, Object>) responseContent.get("product");
-                            client.updateProductInfoURL((String) recvProduct.get("name"), (String) recvProduct.get("imageUrl") );
+                            client.updateProductInfoURL(recvProduct);
                             this.productName = (String) recvProduct.get("name");
                             System.out.println("Client receive: " + recvProduct);
                             client.setCurrentProduct(recvProduct);

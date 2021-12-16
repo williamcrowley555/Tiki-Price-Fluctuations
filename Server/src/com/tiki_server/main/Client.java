@@ -161,7 +161,7 @@ public class Client {
     }
 
     public static void main(String[] args) throws IOException {
-        Client client = new Client("localhost", 5001);
+        Client client = new Client("localhost", 5002);
         client.run();
 
         if (client.getPublicKey() == null)
