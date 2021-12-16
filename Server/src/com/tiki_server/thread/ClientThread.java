@@ -273,10 +273,7 @@ public class ClientThread implements Runnable {
 
                             System.out.println(requestContent);
 
-                            String[] categoryIdAndName = requestContent.get("category").toString().split("-");
-                            categoryIdAndName[0] = categoryIdAndName[0].trim();
-                            categoryId = Long.parseLong(categoryIdAndName[0]);
-
+                            String categoryName = requestContent.containsKey("category") ? (String) requestContent.get("productName") : null;
                             String productName = requestContent.containsKey("productName") ? (String) requestContent.get("productName") : null;
                             Double ratingAverage = requestContent.containsKey("ratingAverage") ? Double.parseDouble((String) requestContent.get("ratingAverage")) : null;
                             Long minPrice = requestContent.containsKey("fromMoney") ? Long.valueOf((String) requestContent.get("fromMoney")) : null;
@@ -292,11 +289,11 @@ public class ClientThread implements Runnable {
                             if(brandNames.size() == 0)
                             {
                                 String brand = null;
-                                List<ProductDTO> productAdvance = productBLL.findAdvance(productName, brand, categoryId, ratingAverage, minPrice, maxPrice);
+                                List<ProductDTO> productAdvance = productBLL.findAdvance(productName, brand, categoryName, ratingAverage, minPrice, maxPrice);
                             } else {
                                 for (String brand : brandNames) {
                                     brand = brand.toUpperCase();
-                                    List<ProductDTO> productAdvance = productBLL.findAdvance(productName, brand, categoryId, ratingAverage, minPrice, maxPrice);
+                                    List<ProductDTO> productAdvance = productBLL.findAdvance(productName, brand, categoryName, ratingAverage, minPrice, maxPrice);
 
                                     if (productAdvance != null)
                                         listAdvanceProduct.add(productAdvance);

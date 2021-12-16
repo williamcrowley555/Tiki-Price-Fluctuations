@@ -212,7 +212,10 @@ public class panelTimNangCao extends javax.swing.JPanel {
      
     public void updateBrandCheckbox(HashMap<Integer, String> listBrands, int numberOfBrands)
     {
+        selectedBrands.clear();
+        pnlBrands.removeAll();
         pnlBrands.revalidate();
+        pnlBrands.repaint();
         int checkBoxWidth = 200;
         int checkBoxHeight = 40;
         int xColumn1 = 10;

@@ -33,7 +33,7 @@ public class test {
         Long minPrice = 1000l;
         Long maxPrice = 1000000000l;
 
-        listProductAdvance = productBLL.findAdvance(productName,brandName,categoryId,ratingAverage,minPrice,maxPrice);
+        //listProductAdvance = productBLL.findAdvance(productName,brandName,categoryId,ratingAverage,minPrice,maxPrice);
         System.out.println(listProductAdvance.size());
 
         // categoryID list: 316, 915, 1815, 1801, 1883, 44816, 49288, 49588, 53058
