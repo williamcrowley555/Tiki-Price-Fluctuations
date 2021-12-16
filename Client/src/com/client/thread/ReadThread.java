@@ -134,6 +134,13 @@ public class ReadThread implements Runnable {
                             System.out.println("Client receive: ");
                             recvCPHistories.forEach(System.out::println);
                             break;
+                        
+                        case CONFIGURABLE_OPTION_BY_PRODUCT_ID:
+                            responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
+                            LinkedHashMap<String, Object> recvConfigurableOption = (LinkedHashMap<String, Object>) responseContent.get("configurableOptionById");
+                            System.out.println("Client receive: ");
+                           // System.out.println(recvConfigurableOption);
+                            break;    
 
                         case REVIEWS:
                             timelines = new  ArrayList<LinkedHashMap<String, Object>>();      

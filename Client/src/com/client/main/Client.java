@@ -301,6 +301,14 @@ public class Client extends javax.swing.JFrame {
         Message requestMsg = new Message(request, MessageType.GET_PRODUCT_HISTORIES_BY_URL);
         sendMessage(requestMsg);
     }
+    
+    public void getConfigurableOptionById(Long productId) throws IOException {
+        Map<String, Object> request = new HashMap<>();
+        request.put("productId", productId);
+        
+        Message requestMsg = new Message(request, MessageType.GET_CONFIGURABLE_OPTION_BY_PRODUCT_ID);
+        sendMessage(requestMsg);
+    }
 
     public void getProductHistoriesById(Long productId, int month, int year) throws IOException {
         Map<String, Object> request = new HashMap<>();

@@ -60,6 +60,7 @@ public class ClientThread implements Runnable {
                     IConfigurableProductBLL cpBLL = null;
                     IHistoryBLL historyBLL = null;
                     IConfigurableProductHistoryBLL cpHistoryBLL = null;
+                    IConfigurableOptionBLL configurableOptionBLL = null;
                     IReviewBLL reviewBLL = null;
                     ITimelineBLL timeLineBLL = null;
                     ICategoryBLL categoryBLL = null;
@@ -201,6 +202,20 @@ public class ClientThread implements Runnable {
 
                             responseContent.put("configurableProductHistories", cpHistories);
                             response = new Message(responseContent, MessageType.CONFIGURABLE_PRODUCT_HISTORIES);
+                            sendMessage(response);
+                            break;
+
+                        case GET_CONFIGURABLE_OPTION_BY_PRODUCT_ID:
+                            requestContent = (Map<String, Object>) decryptContent(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
+
+                            productId = Long.valueOf((int) requestContent.get("productId"));
+
+                            configurableOptionBLL = new ConfigurableOptionBLL();
+                            ConfigurableOptionDTO configurableOptions = configurableOptionBLL.findByProductId(productId);
+                            responseContent = new HashMap<>();
+
+                            responseContent.put("configurableOptionById", configurableOptions);
+                            response = new Message(responseContent, MessageType.CONFIGURABLE_OPTION_BY_PRODUCT_ID);
                             sendMessage(response);
                             break;
 
