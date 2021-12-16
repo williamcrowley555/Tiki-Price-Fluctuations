@@ -60,12 +60,10 @@ public class Client {
         Thread writeThread = new Thread(new WriteThread(this, this.socket, this.out, message));
         writeThread.start();
 
-        if (message.getMessageType().equals(MessageType.GET_PUBLIC_KEY)) {
-            try {
-                writeThread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        try {
+            writeThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 

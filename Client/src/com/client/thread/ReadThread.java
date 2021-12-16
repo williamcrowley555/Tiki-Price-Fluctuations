@@ -32,7 +32,9 @@ public class ReadThread implements Runnable {
     private ByteArrayInputStream byteInputStream = null;
     private ObjectInput in = null;
     private String productName;
+    private Long productId;
     private List<LinkedHashMap<String, Object>> timelines;
+    private List<LinkedHashMap<String, Object>> onfigurableProduct;
     public panelTimNangCao panelAdvance = new panelTimNangCao(client);
 
     public ReadThread(Client client, Socket socket) throws IOException {
@@ -85,7 +87,11 @@ public class ReadThread implements Runnable {
                             this.productName = (String) recvProduct.get("name");
                             System.out.println("Client receive: " + recvProduct);
                             client.setCurrentProduct(recvProduct);
-                            client.getReviews(Long.valueOf((int)recvProduct.get("id")));
+                            
+                            this.productId = Long.valueOf((int)recvProduct.get("id"));
+                            client.getReviews(this.productId);
+                            client.getConfigurableProducts(this.productId);
+           
                             break;
 
                         case PRODUCTS:
@@ -100,12 +106,13 @@ public class ReadThread implements Runnable {
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
                             List<LinkedHashMap<String, Object>> recvCPs = (List<LinkedHashMap<String, Object>>) responseContent.get("configurableProducts");
                             System.out.println("Client receive: ");
-                            recvCPs.forEach(System.out::println);
+                            //recvCPs.forEach(System.out::println);
+                            onfigurableProduct = (List<LinkedHashMap<String, Object>>) responseContent.get("configurableProducts");
+                            client.getConfigurableOptionById(this.productId);
+                            //onfigurableProduct.forEach(System.out::println);
                             break;
 
                         case PRODUCT_HISTORIES:
-                           
-
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
                             List<LinkedHashMap<String, Object>> recvProductHistories = (List<LinkedHashMap<String, Object>>) responseContent.get("productHistories");
                            
@@ -134,6 +141,14 @@ public class ReadThread implements Runnable {
                             System.out.println("Client receive: ");
                             recvCPHistories.forEach(System.out::println);
                             break;
+                        
+                        case CONFIGURABLE_OPTION_BY_PRODUCT_ID:
+                            responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
+                            LinkedHashMap<String, Object> recvConfigurableOption = (LinkedHashMap<String, Object>) responseContent.get("configurableOptionById");
+                            System.out.println("Client receive: ");
+                            //System.out.println(recvConfigurableOption);
+                            client.setOption(recvConfigurableOption,onfigurableProduct);
+                            break;    
 
                         case REVIEWS:
                             timelines = new  ArrayList<LinkedHashMap<String, Object>>();      
@@ -147,8 +162,6 @@ public class ReadThread implements Runnable {
                                     client.getTimeLineByReviewId(Long.valueOf((int)review.get("id")));
                                 }
                                 
-                                
-                              
                                client.setReviewsList((ArrayList<LinkedHashMap<String, Object>>) recvReviews);
                                client.setTimelineList((ArrayList<LinkedHashMap<String, Object>>) this.timelines);
                             }    

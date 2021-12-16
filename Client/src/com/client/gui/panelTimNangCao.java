@@ -738,7 +738,11 @@ public class panelTimNangCao extends javax.swing.JPanel {
     }//GEN-LAST:event_advanceProductTableMouseClicked
 
     private void comboboxCategoryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboboxCategoryMouseClicked
-
+//        try {
+//            main.getConfigurableOptionById(249953L);
+//        } catch (IOException ex) {
+//            Logger.getLogger(panelTimNangCao.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }//GEN-LAST:event_comboboxCategoryMouseClicked
 
 

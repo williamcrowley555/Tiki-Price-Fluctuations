@@ -125,6 +125,16 @@ public class Client extends javax.swing.JFrame {
         this.pnlURL.showLineChart(productName, month, year, dates, prices);
     }
     
+     public void setOption(LinkedHashMap<String, Object> name, List<LinkedHashMap<String, Object>> option) throws IOException {
+         System.out.println("----------------");
+//         System.out.println(name.get("optionName1"));
+//         for(LinkedHashMap t : option)
+//            System.out.println(t);
+          //  System.out.println(name.size());
+         System.out.println("----------------");
+        this.pnlURL.setConfigurableProducts(name,option);
+    }
+    
     public void updateLineChartAdvance(List<LinkedHashMap<String, Object>> productHistories, String productName){
         if (productHistories == null) {
             JOptionPane.showMessageDialog(this, "Không có dữ liệu lịch sử giá", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
@@ -206,13 +216,11 @@ public class Client extends javax.swing.JFrame {
     public void sendMessage(Message message) throws IOException {
         Thread writeThread = new Thread(new WriteThread(this, this.socket, this.out, message));
         writeThread.start();
-
-        if (message.getMessageType().equals(MessageType.GET_PUBLIC_KEY)) {
-            try {
-                writeThread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        
+        try {
+            writeThread.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -299,6 +307,14 @@ public class Client extends javax.swing.JFrame {
         request.put("year", year);
 
         Message requestMsg = new Message(request, MessageType.GET_PRODUCT_HISTORIES_BY_URL);
+        sendMessage(requestMsg);
+    }
+    
+    public void getConfigurableOptionById(Long productId) throws IOException {
+        Map<String, Object> request = new HashMap<>();
+        request.put("productId", productId);
+        
+        Message requestMsg = new Message(request, MessageType.GET_CONFIGURABLE_OPTION_BY_PRODUCT_ID);
         sendMessage(requestMsg);
     }
 

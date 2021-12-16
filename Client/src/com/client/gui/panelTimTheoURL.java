@@ -193,6 +193,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
        
             txtTenSP.setText((String) recvProduct.get("name"));
             String path = (String) recvProduct.get("imageUrl");
+            Long id =  Long.valueOf((int) recvProduct.get("id"));
             URL url = null;
             Image image = null;
             try {
@@ -235,9 +236,24 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     }
     
     public void setConfigurableProducts(LinkedHashMap<String, Object> configurableOptionsName, List<LinkedHashMap<String, Object>> configurableProducts){
-        switch (configurableOptionsName.size()){
+        int flag = 0;
+        if (configurableOptionsName.get("optionName1") == null)
+        {
+             flag = 0;
+        } else if (configurableOptionsName.get("optionName1") != null && configurableOptionsName.get("optionName2") == null) {
+             flag = 1;
+        } else if (configurableOptionsName.get("optionName1") != null && configurableOptionsName.get("optionName2") != null && configurableOptionsName.get("optionName3") == null)
+        {
+             flag = 2;
+        } else
+        {
+             flag = 3;
+        }       
+        
+        switch (flag){
             case 1: 
             {    
+                System.out.println("run case 1");
                  String name1 = String.valueOf(configurableOptionsName.get("optionName1"));
                  List<String> options = new ArrayList<>();
                  for(LinkedHashMap<String, Object> configurableProduct : configurableProducts)
@@ -804,38 +820,6 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         } catch (IOException ex) {
             Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        LinkedHashMap<String, Object> name =  new LinkedHashMap<>();
-        name.put("optionName1", "Màu");
-        name.put("optionName2", "Size");
-        name.put("optionName3", "Chất liệu");
-        
-        
-         LinkedHashMap<String, Object> option1 =  new LinkedHashMap<>();
-         option1.put("option1", "Đỏ");
-         option1.put("option2", "35");
-         option1.put("option3", "Gỗ");
-         
-         LinkedHashMap<String, Object> option2 =  new LinkedHashMap<>();
-         option2.put("option1", "Xám");
-         option2.put("option2", "38");
-         option2.put("option3", "Đá");
-         
-         LinkedHashMap<String, Object> option3 =  new LinkedHashMap<>();
-         option3.put("option1", "Đen");
-         option3.put("option2", "40");
-         option3.put("option3", "Giấy");
-         
-         
-         
-         
-        List<LinkedHashMap<String, Object>> options = new ArrayList<>();
-        
-        options.add(option1);
-        options.add(option2);
-        options.add(option3);
-        
-        setConfigurableProducts(name, options);
     }//GEN-LAST:event_btnTimKiemActionPerformed
 
     private void btnXemReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXemReviewActionPerformed
