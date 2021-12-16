@@ -223,7 +223,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         int y1 = 15; 
         for(int i=0;i<numberOfBrands;i++)
         {   
-            JCheckBox checkBox = new JCheckBox(listBrands.get(i));
+            JCheckBox checkBox = new JCheckBox(String.valueOf(listBrands.get(i)));
            // checkBox.setBounds(xColumn1, y1, checkBoxWidth, checkBoxHeight); 
             checkBox.addItemListener(new ItemListener() {
 
