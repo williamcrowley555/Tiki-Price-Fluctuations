@@ -139,7 +139,7 @@ public class ReadThread implements Runnable {
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
                             LinkedHashMap<String, Object> recvConfigurableOption = (LinkedHashMap<String, Object>) responseContent.get("configurableOptionById");
                             System.out.println("Client receive: ");
-                           // System.out.println(recvConfigurableOption);
+                            System.out.println(recvConfigurableOption);
                             break;    
 
                         case REVIEWS:
