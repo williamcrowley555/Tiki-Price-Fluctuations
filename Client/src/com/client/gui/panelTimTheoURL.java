@@ -8,12 +8,19 @@ package com.client.gui;
 import com.client.gui.others.MyComboBoxEditor;
 import com.client.gui.others.MyComboBoxRenderer;
 import com.client.main.Client;
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -23,15 +30,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.border.MatteBorder;
@@ -77,25 +87,22 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     Client main;
     ArrayList<String> dates = new ArrayList<String>();
     ArrayList<Integer> prices = new ArrayList<Integer>();
-    String productName = "Laptop A";
+    String productName = "";
     int month = 11;
     int year = 2021;
     LinkedHashMap<String, Object> currentproduct;
+    String selectedOption1;
+    String selectedOption2;
+    String selectedOption3;
     ArrayList<LinkedHashMap<String, Object>> reviewsList;
     ArrayList<LinkedHashMap<String, Object>> timelinesList;
     ImageIcon unCheckedRadio = new ImageIcon(getClass().getResource("/com/client/img/unchecked_radio.png"));
     public panelTimTheoURL(Client main) {
         initComponents();
-        for(int i = 1; i < 31; i ++){
-            dates.add(String.valueOf(i));
-        }
-        for (int i = 1; i < 31; i++){
-            prices.add(i +100 );
-        }
         this.main = main;
-       
         showLineChart(productName, month, year, dates, prices);
         customMonthYearChooser();
+        myTextArea();
         
     }
     
@@ -182,10 +189,10 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         pnlChart.setVisible(true);
     }
     
-    public void updateProductInfo(String productName, String productImg){
+    public void updateProductInfo(LinkedHashMap<String, Object> recvProduct){
        
-            txtTenSP.setText(productName);
-            String path = productImg;
+            txtTenSP.setText((String) recvProduct.get("name"));
+            String path = (String) recvProduct.get("imageUrl");
             URL url = null;
             Image image = null;
             try {
@@ -208,6 +215,160 @@ public class panelTimTheoURL extends javax.swing.JPanel {
             pnlPic.add(label, BorderLayout.CENTER);
             pnlPic.revalidate();
             pnlPic.setVisible(true);
+            
+            if ((int) recvProduct.get("discount_rate") == 0)
+            {
+                lblPrice1.setText(String.valueOf(recvProduct.get("price")) + " Đ");
+            } else {
+                Font font = new Font("helvetica", Font.PLAIN, 12);
+                Map  attributes = font.getAttributes();
+                attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);
+                Font newFont = new Font(attributes); 
+                
+                lblPrice.setFont(newFont);
+                lblPrice.setText(String.valueOf(recvProduct.get("original_price")) + " Đ");
+                
+                lblPrice1.setText(String.valueOf(recvProduct.get("price")) + " Đ");
+            }
+            
+            txtMota.setText((String) recvProduct.get("description"));
+    }
+    
+    public void setConfigurableProducts(LinkedHashMap<String, Object> configurableOptionsName, List<LinkedHashMap<String, Object>> configurableProducts){
+        switch (configurableOptionsName.size()){
+            case 1: 
+            {    
+                 String name1 = String.valueOf(configurableOptionsName.get("optionName1"));
+                 List<String> options = new ArrayList<>();
+                 for(LinkedHashMap<String, Object> configurableProduct : configurableProducts)
+                 {
+                     System.out.println(configurableProduct.get("option1"));  
+                     options.add(String.valueOf(configurableProduct.get("option1")));
+                 }
+                  setConfigurableProductRadioButtons(name1, options, pnlOptionName1, pnlOptions1, 1);
+                  break;
+            }
+            
+            case 2: 
+            {    
+                 String name1 = String.valueOf(configurableOptionsName.get("optionName1"));
+                 List<String> options1 = new ArrayList<>();
+                 for(LinkedHashMap<String, Object> configurableProduct : configurableProducts)
+                 {
+                     System.out.println(configurableProduct.get("option1"));  
+                     options1.add(String.valueOf(configurableProduct.get("option1")));
+                 }
+                 setConfigurableProductRadioButtons(name1, options1, pnlOptionName1, pnlOptions1, 1);
+                
+                 String name2 = String.valueOf(configurableOptionsName.get("optionName2"));
+                 List<String> options2 = new ArrayList<>();
+                 for(LinkedHashMap<String, Object> configurableProduct : configurableProducts)
+                 {
+                     System.out.println(configurableProduct.get("option2"));  
+                     options2.add(String.valueOf(configurableProduct.get("option2")));
+                 }
+                  setConfigurableProductRadioButtons(name2, options2, pnlOptionName2, pnlOptions2, 1);
+                  break;
+            }
+            
+            case 3: 
+            {    
+                 String name1 = String.valueOf(configurableOptionsName.get("optionName1"));
+                 List<String> options1 = new ArrayList<>();
+                 for(LinkedHashMap<String, Object> configurableProduct : configurableProducts)
+                 {
+                     System.out.println(configurableProduct.get("option1"));  
+                     options1.add(String.valueOf(configurableProduct.get("option1")));
+                 }
+                 setConfigurableProductRadioButtons(name1, options1, pnlOptionName1, pnlOptions1, 1);
+                
+                 String name2 = String.valueOf(configurableOptionsName.get("optionName2"));
+                 List<String> options2 = new ArrayList<>();
+                 for(LinkedHashMap<String, Object> configurableProduct : configurableProducts)
+                 {
+                     System.out.println(configurableProduct.get("option2"));  
+                     options2.add(String.valueOf(configurableProduct.get("option2")));
+                 }
+                  setConfigurableProductRadioButtons(name2, options2, pnlOptionName2, pnlOptions2, 2);
+                  
+                 String name3 = String.valueOf(configurableOptionsName.get("optionName3"));
+                 List<String> options3 = new ArrayList<>();
+                 for(LinkedHashMap<String, Object> configurableProduct : configurableProducts)
+                 {
+                     System.out.println(configurableProduct.get("option3"));  
+                     options3.add(String.valueOf(configurableProduct.get("option3")));
+                 }
+                  setConfigurableProductRadioButtons(name3, options3, pnlOptionName3, pnlOptions3, 3);
+                  break;
+            }
+               
+            default:
+                System.out.println("not supported yet");
+                break;
+        }
+    }
+    
+    public void setConfigurableProductRadioButtons(String name, List<String> options, JPanel pnlName,JPanel pnlOption, int stateVariable)
+    {
+        JLabel optionName = new JLabel(name);
+        pnlName.add(optionName);
+        ButtonGroup buttonGroup = new ButtonGroup();
+        GridLayout gridLayout = new GridLayout(options.size(),1);
+        pnlOption.setLayout(gridLayout);
+        for(int i=0;i<options.size();i++)
+        {   
+            JRadioButton radioButton = new JRadioButton(options.get(i));
+            switch (stateVariable){
+                case 1:
+                    radioButton.addItemListener(new ItemListener() {
+                    @Override
+                    public void itemStateChanged(ItemEvent e) {
+                        if (e.getStateChange() == ItemEvent.SELECTED)
+                        {
+                            selectedOption1 = radioButton.getText();
+                            System.out.println(selectedOption1);
+                        } else {
+                            selectedOption1 = "";
+                        }                 
+                    }
+                    });
+                    break;
+                case 2:
+                    radioButton.addItemListener(new ItemListener() {
+                    @Override
+                    public void itemStateChanged(ItemEvent e) {
+                        if (e.getStateChange() == ItemEvent.SELECTED)
+                        {
+                            selectedOption2 = radioButton.getText();
+                            System.out.println(selectedOption2);
+                        } else {
+                            selectedOption2 = "";
+                        }                 
+                    }
+                    });
+                    break;
+                case 3:
+                    radioButton.addItemListener(new ItemListener() {
+                    @Override
+                    public void itemStateChanged(ItemEvent e) {
+                        if (e.getStateChange() == ItemEvent.SELECTED)
+                        {
+                            selectedOption3 = radioButton.getText();
+                             System.out.println(selectedOption3);
+                        } else {
+                            selectedOption3 = "";
+                        }                 
+                    }
+                    });
+                    break;
+                default:
+                    System.out.println("not supported yet");
+                    break;
+            }
+            buttonGroup.add(radioButton);
+            pnlOption.add(radioButton);
+            pnlOption.revalidate();
+        }  
     }
     
     public void createImage(String str, JLabel label) {
@@ -256,6 +417,19 @@ public class panelTimTheoURL extends javax.swing.JPanel {
        return box;
     }
     
+    public void myTextArea()
+    {
+        txtTenSP.setWrapStyleWord(true);
+        txtTenSP.setLineWrap(true);
+        jScrollPane1.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
+        txtTenSP.setCaretPosition(0); // scroll to top
+        
+        txtMota.setWrapStyleWord(true);
+        txtMota.setLineWrap(true);
+        jScrollPane3.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
+        txtMota.setCaretPosition(0); // scroll to top
+    }
+    
     public void hideSpinnerArrow(JSpinner spinner) {
         spinner.setUI(new BasicSpinnerUI() {
             protected Component createNextButton() {
@@ -298,6 +472,22 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         txtTenSP = new javax.swing.JTextArea();
         jLabel6 = new javax.swing.JLabel();
         pnlPic = new javax.swing.JPanel();
+        lblPrice = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        lblPrice1 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txtMota = new javax.swing.JTextArea();
+        pnlOption = new javax.swing.JPanel();
+        pnlOption1 = new javax.swing.JPanel();
+        pnlOptions1 = new javax.swing.JPanel();
+        pnlOptionName1 = new javax.swing.JPanel();
+        pnlOption2 = new javax.swing.JPanel();
+        pnlOptions2 = new javax.swing.JPanel();
+        pnlOptionName2 = new javax.swing.JPanel();
+        pnlOption3 = new javax.swing.JPanel();
+        pnlOptions3 = new javax.swing.JPanel();
+        pnlOptionName3 = new javax.swing.JPanel();
         pnlChart = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(255, 255, 255));
@@ -314,6 +504,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         jPanel4.setPreferredSize(new java.awt.Dimension(250, 111));
 
         btnTimKiem.setBackground(new java.awt.Color(77, 77, 77));
+        btnTimKiem.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         btnTimKiem.setForeground(new java.awt.Color(255, 255, 255));
         btnTimKiem.setText("Tìm Kiếm");
         btnTimKiem.setContentAreaFilled(false);
@@ -326,6 +517,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         });
 
         btnXemReview.setBackground(new java.awt.Color(77, 77, 77));
+        btnXemReview.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         btnXemReview.setForeground(new java.awt.Color(255, 255, 255));
         btnXemReview.setText("Xem review");
         btnXemReview.setContentAreaFilled(false);
@@ -377,10 +569,10 @@ public class panelTimTheoURL extends javax.swing.JPanel {
             }
         });
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         jLabel3.setText("Nhập URL:");
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         jLabel4.setText("Tháng:");
 
         yearChooser.setBackground(new java.awt.Color(204, 204, 204));
@@ -402,7 +594,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
                         .addComponent(monthChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(yearChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 325, Short.MAX_VALUE)))
+                        .addGap(0, 471, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -429,22 +621,49 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setPreferredSize(new java.awt.Dimension(400, 366));
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel5.setText("Tên sp:");
+        jLabel5.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        jLabel5.setText("Giá:");
+
+        jScrollPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         txtTenSP.setEditable(false);
         txtTenSP.setColumns(20);
-        txtTenSP.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtTenSP.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         txtTenSP.setLineWrap(true);
         txtTenSP.setRows(5);
+        txtTenSP.setFocusable(false);
         jScrollPane1.setViewportView(txtTenSP);
 
+        jLabel6.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         jLabel6.setText("Hình ảnh:");
 
         pnlPic.setBackground(new java.awt.Color(255, 255, 255));
         pnlPic.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         pnlPic.setPreferredSize(new java.awt.Dimension(300, 199));
         pnlPic.setLayout(new java.awt.BorderLayout());
+
+        lblPrice.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        lblPrice.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+
+        jLabel7.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        jLabel7.setText("Tên sp:");
+
+        lblPrice1.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        lblPrice1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+
+        jLabel8.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        jLabel8.setText("Mô tả:");
+
+        jScrollPane3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        txtMota.setEditable(false);
+        txtMota.setColumns(20);
+        txtMota.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtMota.setLineWrap(true);
+        txtMota.setRows(5);
+        txtMota.setWrapStyleWord(true);
+        txtMota.setFocusable(false);
+        jScrollPane3.setViewportView(txtMota);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -453,30 +672,107 @@ public class panelTimTheoURL extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlPic, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
+                            .addComponent(pnlPic, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblPrice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblPrice1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel5)
+                                            .addComponent(jLabel7))
+                                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addGap(10, 10, 10))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(18, Short.MAX_VALUE))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel6)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlPic, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnlPic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(13, 13, 13)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblPrice1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pnlLeft.add(jPanel2, java.awt.BorderLayout.LINE_START);
+
+        pnlOption.setBackground(new java.awt.Color(255, 255, 255));
+        pnlOption.setPreferredSize(new java.awt.Dimension(150, 475));
+        pnlOption.setLayout(new java.awt.GridLayout(3, 1));
+
+        pnlOption1.setBackground(new java.awt.Color(255, 255, 255));
+        pnlOption1.setLayout(new java.awt.BorderLayout());
+
+        pnlOptions1.setBackground(new java.awt.Color(255, 255, 255));
+        pnlOptions1.setPreferredSize(new java.awt.Dimension(150, 120));
+        pnlOptions1.setLayout(new java.awt.GridLayout(5, 1));
+        pnlOption1.add(pnlOptions1, java.awt.BorderLayout.PAGE_END);
+
+        pnlOptionName1.setBackground(new java.awt.Color(255, 255, 255));
+        pnlOptionName1.setMinimumSize(new java.awt.Dimension(100, 50));
+        pnlOptionName1.setPreferredSize(new java.awt.Dimension(150, 40));
+        pnlOptionName1.setLayout(new java.awt.GridBagLayout());
+        pnlOption1.add(pnlOptionName1, java.awt.BorderLayout.CENTER);
+
+        pnlOption.add(pnlOption1);
+
+        pnlOption2.setBackground(new java.awt.Color(255, 255, 255));
+        pnlOption2.setLayout(new java.awt.BorderLayout());
+
+        pnlOptions2.setBackground(new java.awt.Color(255, 255, 255));
+        pnlOptions2.setPreferredSize(new java.awt.Dimension(150, 120));
+        pnlOptions2.setLayout(new java.awt.GridLayout());
+        pnlOption2.add(pnlOptions2, java.awt.BorderLayout.PAGE_END);
+
+        pnlOptionName2.setBackground(new java.awt.Color(255, 255, 255));
+        pnlOptionName2.setLayout(new java.awt.GridBagLayout());
+        pnlOption2.add(pnlOptionName2, java.awt.BorderLayout.CENTER);
+
+        pnlOption.add(pnlOption2);
+
+        pnlOption3.setBackground(new java.awt.Color(255, 255, 255));
+        pnlOption3.setLayout(new java.awt.BorderLayout());
+
+        pnlOptions3.setBackground(new java.awt.Color(255, 255, 255));
+        pnlOptions3.setPreferredSize(new java.awt.Dimension(150, 120));
+        pnlOptions3.setLayout(new java.awt.GridBagLayout());
+        pnlOption3.add(pnlOptions3, java.awt.BorderLayout.PAGE_END);
+
+        pnlOptionName3.setBackground(new java.awt.Color(255, 255, 255));
+        pnlOptionName3.setLayout(new java.awt.GridBagLayout());
+        pnlOption3.add(pnlOptionName3, java.awt.BorderLayout.CENTER);
+
+        pnlOption.add(pnlOption3);
+
+        pnlLeft.add(pnlOption, java.awt.BorderLayout.LINE_END);
 
         pnlChart.setLayout(new java.awt.BorderLayout());
         pnlLeft.add(pnlChart, java.awt.BorderLayout.CENTER);
@@ -495,7 +791,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(pnlSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE))
+                .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -508,6 +804,38 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         } catch (IOException ex) {
             Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        LinkedHashMap<String, Object> name =  new LinkedHashMap<>();
+        name.put("optionName1", "Màu");
+        name.put("optionName2", "Size");
+        name.put("optionName3", "Chất liệu");
+        
+        
+         LinkedHashMap<String, Object> option1 =  new LinkedHashMap<>();
+         option1.put("option1", "Đỏ");
+         option1.put("option2", "35");
+         option1.put("option3", "Gỗ");
+         
+         LinkedHashMap<String, Object> option2 =  new LinkedHashMap<>();
+         option2.put("option1", "Xám");
+         option2.put("option2", "38");
+         option2.put("option3", "Đá");
+         
+         LinkedHashMap<String, Object> option3 =  new LinkedHashMap<>();
+         option3.put("option1", "Đen");
+         option3.put("option2", "40");
+         option3.put("option3", "Giấy");
+         
+         
+         
+         
+        List<LinkedHashMap<String, Object>> options = new ArrayList<>();
+        
+        options.add(option1);
+        options.add(option2);
+        options.add(option3);
+        
+        setConfigurableProducts(name, options);
     }//GEN-LAST:event_btnTimKiemActionPerformed
 
     private void btnXemReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXemReviewActionPerformed
@@ -551,18 +879,34 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel lblPrice;
+    private javax.swing.JLabel lblPrice1;
     private com.toedter.calendar.JMonthChooser monthChooser;
     private javax.swing.JPanel pnlChart;
     private javax.swing.JPanel pnlLeft;
+    private javax.swing.JPanel pnlOption;
+    private javax.swing.JPanel pnlOption1;
+    private javax.swing.JPanel pnlOption2;
+    private javax.swing.JPanel pnlOption3;
+    private javax.swing.JPanel pnlOptionName1;
+    private javax.swing.JPanel pnlOptionName2;
+    private javax.swing.JPanel pnlOptionName3;
+    private javax.swing.JPanel pnlOptions1;
+    private javax.swing.JPanel pnlOptions2;
+    private javax.swing.JPanel pnlOptions3;
     private javax.swing.JPanel pnlPic;
     private javax.swing.JPanel pnlSearch;
     private javax.swing.ButtonGroup sizeGroup;
+    private javax.swing.JTextArea txtMota;
     private javax.swing.JTextArea txtTenSP;
     private javax.swing.JTextField txtTimTheoURL;
     private com.toedter.calendar.JYearChooser yearChooser;

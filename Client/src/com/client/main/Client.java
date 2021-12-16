@@ -174,8 +174,8 @@ public class Client extends javax.swing.JFrame {
         this.pnlAdvanced.listNameCategory(name,idCate);
     }
     
-    public void updateProductInfoURL(String productName, String img){
-       this.pnlURL.updateProductInfo(productName, img);
+    public void updateProductInfoURL(LinkedHashMap<String, Object> recvProduct){
+       this.pnlURL.updateProductInfo(recvProduct);
     }
     
     public void run() {
