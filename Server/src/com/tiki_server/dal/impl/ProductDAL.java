@@ -26,9 +26,9 @@ public class ProductDAL extends AbstractDAL<ProductDTO> implements IProductDAL {
     }
 
     @Override
-    public List<ProductDTO> findAdvance(String productName, String brandName, Long categoryId, double ratingAverage, Long minPrice, Long maxPrice) {
-        String sql = "CALL usp_product_getAdvanceProducts(?, ?, ?, ?, ?, ?);";
-        return query(sql, new ProductMapper(),productName, categoryId, brandName, ratingAverage, minPrice, maxPrice);
+    public List<ProductDTO> findAdvance(String productName, String brandName, String categoryName, double ratingAverage, Long minPrice, Long maxPrice) {
+        String sql = "CALL usp_product_advance(?, ?, ?, ?, ?, ?);";
+        return query(sql, new ProductMapper(),productName, categoryName, brandName, ratingAverage, minPrice, maxPrice);
     }
 
     @Override
