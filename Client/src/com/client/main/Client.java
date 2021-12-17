@@ -229,8 +229,18 @@ public class Client extends javax.swing.JFrame {
     }
     
     public void setTable(List<List<LinkedHashMap<String, Object>>> listAdvanceProducts)
-    {
-        pnlAdvanced.setTable(listAdvanceProducts);
+    {   
+        
+        if(listAdvanceProducts.size() == 1 && listAdvanceProducts.get(0).isEmpty())
+            JOptionPane.showMessageDialog(this, "Không tìm thấy bất kì sản phẩm nào", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        
+        try {
+            pnlAdvanced.setTable(listAdvanceProducts);
+        } catch (Exception e)
+        {
+            System.out.println("catched");
+            JOptionPane.showMessageDialog(this, "Thao tác quá nhanh, hệ thống không kịp cập nhật", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     public void getProduct(Long productId) throws IOException {
@@ -456,6 +466,11 @@ public class Client extends javax.swing.JFrame {
            this.setExtendedState(JFrame.MAXIMIZED_BOTH);
            maximized = true;   
        }
+    }
+    
+    public void clearBrandPanel()
+    {
+        pnlAdvanced.clearBrandPanel();
     }
     
    

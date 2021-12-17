@@ -26,7 +26,8 @@ public class BrandDAL extends AbstractDAL<BrandDTO> implements IBrandDAL {
     public List<BrandDTO> findByCategoryId(Long categoryId) {
         String sql = "SELECT b.* FROM brand AS b, category as c, product AS p WHERE p.brand_id = b.id" +
                 " AND p.category_id = c.id " +
-                " AND c.id = ?";
+                " AND c.id = ? " +
+                " GROUP BY b.id ";
         List<BrandDTO> brand = query(sql, new BrandMapper(), categoryId);
         return brand.isEmpty() ? null : brand;
     }

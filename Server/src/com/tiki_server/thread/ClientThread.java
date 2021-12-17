@@ -163,7 +163,6 @@ public class ClientThread implements Runnable {
                         case GET_PRODUCT_HISTORIES_BY_PRODUCT_ID:
                             requestContent = (Map<String, Object>) decryptContent(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
 
-                            System.out.println("hello");
                             productId = Long.valueOf((int) requestContent.get("productId"));
                             month = (int) requestContent.get("month");
                             year = (int) requestContent.get("year");
@@ -300,7 +299,8 @@ public class ClientThread implements Runnable {
                             if(listBrands == null) {
                                 Long brandId = null;
                                 List<ProductDTO> productAdvance = productBLL.findAdvance(productName, categoryId, brandId, ratingAverage, minPrice, maxPrice);
-                                listAdvanceProduct.add(productAdvance);
+                                if(productAdvance != null)
+                                    listAdvanceProduct.add(productAdvance);
                             } else {
                                 StringTokenizer tokenizer = new StringTokenizer(listBrands, "-");
                                 List<Long> brandIds = new ArrayList<>();
@@ -308,29 +308,12 @@ public class ClientThread implements Runnable {
                                     brandIds.add(Long.valueOf(tokenizer.nextToken()));
                                 for (Long brandId : brandIds) {
                                     List<ProductDTO> productAdvance = productBLL.findAdvance(productName, categoryId, brandId, ratingAverage, minPrice, maxPrice);
-                                    listAdvanceProduct.add(productAdvance);
+                                    if(productAdvance != null)
+                                        listAdvanceProduct.add(productAdvance);
                                 }
                             }
-
-//                            StringTokenizer tokenizer = new StringTokenizer(listBrands, "-");
-//                            List<String> brandNames = new ArrayList<>();
-//                            while (tokenizer.hasMoreTokens())
-//                                brandNames.add(tokenizer.nextToken());
-//
-//                            List<List<ProductDTO>> listAdvanceProduct = new ArrayList<>();
-//                            if(brandNames.size() == 0)
-//                            {
-//                                String brand = null;
-//                                List<ProductDTO> productAdvance = productBLL.findAdvance(productName, brand, categoryName, ratingAverage, minPrice, maxPrice);
-//                            } else {
-//                                for (String brand : brandNames) {
-//                                    brand = brand.toUpperCase();
-//                                    List<ProductDTO> productAdvance = productBLL.findAdvance(productName, brand, categoryName, ratingAverage, minPrice, maxPrice);
-//
-//                                    if (productAdvance != null)
-//                                        listAdvanceProduct.add(productAdvance);
-//                                }
-//                            }
+                            if(listAdvanceProduct.size()==0)
+                                listAdvanceProduct = null;
 
                             responseContent = new HashMap<>();
                             responseContent.put("list_advance_products", listAdvanceProduct);

@@ -73,6 +73,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
     String searchData;
     String json;
     BrandComboItem[] listBrands;
+    HashMap<Long, String> brandIdAndName;
     ArrayList<String> brandList = new ArrayList<>();
     ArrayList<String> selectedBrands = new ArrayList<>();
     ArrayList<String> dates = new ArrayList<String>();
@@ -137,7 +138,6 @@ public class panelTimNangCao extends javax.swing.JPanel {
     }
             
     public void listNameCategory(ArrayList<String> name, ArrayList<Integer> idCate) {
-        String[] tourItems = new String[name.size()];
         CategoryComboItem[] list = new CategoryComboItem[name.size()];
         
         CategoryComboItem c;
@@ -147,6 +147,15 @@ public class panelTimNangCao extends javax.swing.JPanel {
             // System.out.println(c.getId());
         }
          setComboBox(comboboxCategory, list);
+    }
+    
+    public void clearBrandPanel()
+    {
+        selectedBrands.clear();
+        pnlBrands.removeAll();
+        pnlBrands.revalidate();
+        pnlBrands.repaint();
+        JOptionPane.showMessageDialog(this, "Danh mục bạn chọn không có thương hiệu nào", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
     }
     
     public void setComboBox(JComboBox<CategoryComboItem> comboBox, CategoryComboItem[] listItems) {
@@ -235,17 +244,18 @@ public class panelTimNangCao extends javax.swing.JPanel {
         int y1 = 15;
         int numberOfBrands = 0;
         HashMap<Integer, Object> brandNames = new HashMap();
+//        for(int i=0;i<listBrands.length;i++)
+//        {
+//            if(!brandNames.containsValue(listBrands[i].getName()))
+//            {
+//                brandNames.put(numberOfBrands, listBrands[i].getName());
+//                numberOfBrands++;
+//            }
+//        }        
         for(int i=0;i<listBrands.length;i++)
         {
-            if(!brandNames.containsValue(listBrands[i].getName()))
-            {
-                brandNames.put(numberOfBrands, listBrands[i].getName());
-                numberOfBrands++;
-            }
-        }
-        for(int i=0;i<numberOfBrands;i++)
-        {   
-            JCheckBox checkBox = new JCheckBox(String.valueOf(brandNames.get(i)));
+            System.out.println("ID = " + listBrands[i].getId() + " Name = " + listBrands[i].getName());
+            JCheckBox checkBox = new JCheckBox(String.valueOf(listBrands[i].getName()));
            // checkBox.setBounds(xColumn1, y1, checkBoxWidth, checkBoxHeight); 
             checkBox.addItemListener(new ItemListener() {
 
@@ -679,7 +689,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         if(!minPrice.equals(""))
             if(maxPrice.equals(""))
             {
-                JOptionPane.showMessageDialog(this, "Bạn phải nhập cả giá từ và giá đến", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+               JOptionPane.showMessageDialog(this, "Bạn phải nhập cả giá từ và giá đến", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                return;
             }
         if(!maxPrice.equals(""))
@@ -723,22 +733,38 @@ public class panelTimNangCao extends javax.swing.JPanel {
             for(int i=0;i<listBrands.length;i++)
             {
                 if(listBrands[i].getName().equals(selectedBrands.get(0)))
+                {
                     brands += listBrands[i].getId();
+                    i = listBrands.length;
+                }
             }
         } else
         {
+            
             for(int i=0;i<selectedBrands.size();i++)
             {
+               
+                String selectedBrandName = selectedBrands.get(i);
+//                System.out.println("selected brand name: " +selectedBrandName);
                 for(int j=0;j<listBrands.length;j++)
-                    if(listBrands[j].getName().equals(selectedBrands.get(i)))
+                {
+                    String brandInList = listBrands[j].getName();
+                    if(brandInList.equals(selectedBrandName))
                     {
+//                        System.out.println("Brand in list: " + brandInList);
                         if(i==selectedBrands.size()-1)
-                            brands += listBrands[i].getId();
+                            brands += listBrands[j].getId();
+                            
                         else
-                            brands += listBrands[i].getId() + "-";
+                            brands += listBrands[j].getId() + "-";
+                        
+                        j = listBrands.length;
                     }
+                }
+                    
             }
         }
+        System.out.println(brands);
 
         try {
             main.sendRequestAdvanceProducts(productName, categoryId, brands, ratingAverage, minPrice, maxPrice);
@@ -746,7 +772,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
             Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton2MouseClicked
-
+    
     private void advanceProductTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_advanceProductTableMouseClicked
 
         int row = advanceProductTable.getSelectedRow();

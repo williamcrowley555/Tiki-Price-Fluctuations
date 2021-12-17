@@ -189,6 +189,9 @@ public class ReadThread implements Runnable {
                             {
                                 List<LinkedHashMap<String, Object>> recvBrands = (List<LinkedHashMap<String, Object>>) responseContent.get("brands");
                                 client.updateBrands(recvBrands);
+                            } else
+                            {
+                                client.clearBrandPanel();
                             }
                             break;
 
@@ -216,6 +219,7 @@ public class ReadThread implements Runnable {
                         case ADVANCE_PRODUCTS:
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
                             List<List<LinkedHashMap<String, Object>>> listAdvanceProducts = (List<List<LinkedHashMap<String, Object>>>) responseContent.get("list_advance_products");
+                            
                             client.setTable(listAdvanceProducts);
                             break;
 
