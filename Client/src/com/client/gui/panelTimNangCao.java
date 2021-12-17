@@ -9,6 +9,7 @@ import com.client.gui.others.MyComboBoxEditor;
 import com.client.gui.others.MyComboBoxRenderer;
 import com.client.gui.others.MyScrollBarUI;
 import com.client.main.Client;
+import com.client.model.BrandComboItem;
 import com.client.model.CategoryComboItem;
 import com.client.thread.ReadThread;
 import com.client.thread.WriteThread;
@@ -35,6 +36,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
 import javax.swing.border.MatteBorder;
@@ -70,6 +72,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
      */
     String searchData;
     String json;
+    BrandComboItem[] listBrands;
     ArrayList<String> brandList = new ArrayList<>();
     ArrayList<String> selectedBrands = new ArrayList<>();
     ArrayList<String> dates = new ArrayList<String>();
@@ -117,11 +120,20 @@ public class panelTimNangCao extends javax.swing.JPanel {
             return "4";
         if(jRadioButton3.isSelected())
             return "3";
-        if(jRadioButton4.isSelected())
-            return "2";
         if(jRadioButton5.isSelected())
-            return "1";
-        return "0";
+            return "2";
+        return "1";
+    }
+    
+    public void listNameBrand (ArrayList<String> brandNames, ArrayList<Integer> brandIds)
+    {
+        listBrands = new BrandComboItem[brandNames.size()];
+        BrandComboItem b;
+        for (int i=0;i<brandNames.size();i++)
+        {
+            b = new BrandComboItem(brandIds.get(i),brandNames.get(i));
+            listBrands[i] = b;
+        }
     }
             
     public void listNameCategory(ArrayList<String> name, ArrayList<Integer> idCate) {
@@ -210,7 +222,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
        return box;
     } 
      
-    public void updateBrandCheckbox(HashMap<Integer, String> listBrands, int numberOfBrands)
+    public void updateBrandCheckbox()
     {
         selectedBrands.clear();
         pnlBrands.removeAll();
@@ -220,10 +232,20 @@ public class panelTimNangCao extends javax.swing.JPanel {
         int checkBoxHeight = 40;
         int xColumn1 = 10;
         int xColumn2 = xColumn1 + checkBoxWidth + 40;
-        int y1 = 15; 
+        int y1 = 15;
+        int numberOfBrands = 0;
+        HashMap<Integer, Object> brandNames = new HashMap();
+        for(int i=0;i<listBrands.length;i++)
+        {
+            if(!brandNames.containsValue(listBrands[i].getName()))
+            {
+                brandNames.put(numberOfBrands, listBrands[i].getName());
+                numberOfBrands++;
+            }
+        }
         for(int i=0;i<numberOfBrands;i++)
         {   
-            JCheckBox checkBox = new JCheckBox(String.valueOf(listBrands.get(i)));
+            JCheckBox checkBox = new JCheckBox(String.valueOf(brandNames.get(i)));
            // checkBox.setBounds(xColumn1, y1, checkBoxWidth, checkBoxHeight); 
             checkBox.addItemListener(new ItemListener() {
 
@@ -241,30 +263,6 @@ public class panelTimNangCao extends javax.swing.JPanel {
             pnlBrands.revalidate();
             y1 += 25;
         }
-      
-        
-//        int y2 = 15; 
-//        for(int i=numberOfBrands/2; i<numberOfBrands;i++)
-//        {   
-//            
-//            System.out.println(listBrands.get(i));
-//            JCheckBox checkBox = new JCheckBox(listBrands.get(i));
-//            checkBox.setBounds(xColumn2, y2, checkBoxWidth, checkBoxHeight); // dòng này nó làm gì?
-//            checkBox.addItemListener(new ItemListener() {
-//
-//            @Override
-//            public void itemStateChanged(ItemEvent e) {
-//                if (e.getStateChange() == ItemEvent.SELECTED)
-//                {
-//                    selectedBrands.add(checkBox.getText());
-//                } else {
-//                    selectedBrands.remove(checkBox.getText());
-//                }                 
-//            }
-//            });
-//            pnlBrands.add(checkBox);
-//            y2 += 25;
-//        }
     }
     
     public void initBrandCheckbox(ArrayList<String> list){
@@ -365,7 +363,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         pnlSearch = new javax.swing.JPanel();
         lblTitleTenSanPham = new javax.swing.JLabel();
         txtSearch = new javax.swing.JTextField();
-        comboboxCategory = new javax.swing.JComboBox<>();
+        comboboxCategory = new javax.swing.JComboBox<CategoryComboItem>();
         jLabel4 = new javax.swing.JLabel();
         pnlFilter = new javax.swing.JPanel();
         pnlCategory = new javax.swing.JPanel();
@@ -386,8 +384,8 @@ public class panelTimNangCao extends javax.swing.JPanel {
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
         jRadioButton3 = new javax.swing.JRadioButton();
-        jRadioButton4 = new javax.swing.JRadioButton();
         jRadioButton5 = new javax.swing.JRadioButton();
+        jRadioButton4 = new javax.swing.JRadioButton();
         pnlTable = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         advanceProductTable = new javax.swing.JTable();
@@ -568,11 +566,11 @@ public class panelTimNangCao extends javax.swing.JPanel {
         buttonGroupStar.add(jRadioButton3);
         jRadioButton3.setText("Từ 3 sao");
 
-        buttonGroupStar.add(jRadioButton4);
-        jRadioButton4.setText("Từ 1 sao");
-
         buttonGroupStar.add(jRadioButton5);
-        jRadioButton5.setText("Từ 2 sao");
+        jRadioButton5.setText("Từ 1 sao");
+
+        buttonGroupStar.add(jRadioButton4);
+        jRadioButton4.setText("Từ 2 sao");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -581,11 +579,11 @@ public class panelTimNangCao extends javax.swing.JPanel {
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jRadioButton4)
+                    .addComponent(jRadioButton5)
                     .addComponent(jRadioButton2)
                     .addComponent(jRadioButton1)
                     .addComponent(jLabel6)
-                    .addComponent(jRadioButton5)
+                    .addComponent(jRadioButton4)
                     .addComponent(jRadioButton3))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -601,9 +599,9 @@ public class panelTimNangCao extends javax.swing.JPanel {
                 .addGap(14, 14, 14)
                 .addComponent(jRadioButton3)
                 .addGap(14, 14, 14)
-                .addComponent(jRadioButton5)
-                .addGap(14, 14, 14)
                 .addComponent(jRadioButton4)
+                .addGap(14, 14, 14)
+                .addComponent(jRadioButton5)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -668,59 +666,82 @@ public class panelTimNangCao extends javax.swing.JPanel {
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
         String productName = txtSearch.getText();
-        String valid = null;
-        String rating = selectedButtonGroupStar();
-//        if(rating.equals("0"))
-//        {
-//            System.out.println("Hiện thông báo lỗi: Bạn chưa chọn đánh giá");
-//            return;
-//        }
-        String fromMoney = jTextField3.getText();
-        valid = validator.isValidMoney(fromMoney);
-        if(valid.equals("Số tiền không hợp lệ") || valid.equals("Số tiền phải lớn hơn 0"))
-        {
-            System.out.println("Hiện thông báo lỗi: Giá từ" + valid);
-            return;
-        }
-        if(valid.equals(" không được để trống"))
-            fromMoney = "";
-        String toMoney = jTextField4.getText();
-        valid = validator.isValidMoney(toMoney);
-        if(valid.equals("Số tiền không hợp lệ") || valid.equals("Số tiền phải lớn hơn 0"))
-        {
-            System.out.println("Hiện thông báo lỗi: Giá đến" + valid);
-            return;
-        }
-        if(valid.equals(" không được để trống"))
-            toMoney = "";
-        Long money = 0l;
-        if(!fromMoney.equals("") && !toMoney.equals(""))
-        {
-            money = Long.parseLong(toMoney) - Long.parseLong(fromMoney);
-            if(money < 0)
+        if(productName.equals(""))
+            productName = null;
+        
+        CategoryComboItem selectedCategory = (CategoryComboItem)comboboxCategory.getSelectedItem(); 
+        categoryId = Long.valueOf((int)selectedCategory.getId());
+        
+        String ratingAverage = selectedButtonGroupStar();
+        
+        String minPrice = jTextField3.getText();
+        String maxPrice = jTextField4.getText();
+        if(!minPrice.equals(""))
+            if(maxPrice.equals(""))
             {
-                System.out.println("Hiện thông báo lỗi: Giá từ phải nhỏ hơn Giá đến");
+                JOptionPane.showMessageDialog(this, "Bạn phải nhập cả giá từ và giá đến", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+               return;
+            }
+        if(!maxPrice.equals(""))
+            if(minPrice.equals(""))
+            {
+                JOptionPane.showMessageDialog(this, "Bạn phải nhập cả giá từ và giá đến", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+               return;
+            }
+        if(!minPrice.equals("") && !maxPrice.equals(""))
+        {
+            String message = validator.isValidMoney(minPrice);
+            if(!message.equals(""))
+            {
+                JOptionPane.showMessageDialog(this, message, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            
+            message = validator.isValidMoney(minPrice);
+            if(!message.equals(""))
+            {
+                JOptionPane.showMessageDialog(this, message, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            if(Long.parseLong(minPrice) > Long.parseLong(maxPrice))
+            {
+                JOptionPane.showMessageDialog(this, "Giá từ phải bé hơn giá đến", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
         }
+        if(minPrice.equals("") && minPrice.equals(""))
+        {
+            minPrice = null;
+            maxPrice = null;
+        }
+        
         String brands = "";
         if(selectedBrands.size() == 0)
-            brands += "a-b-c-d-e-f-g-h-i-j-k-l-m-n-o-p-q-r-s-t-u-v-w-x-y-z\"";
+            brands = null;
         else if(selectedBrands.size() == 1)
-            brands += selectedBrands.get(0);
-        else
+        {
+            for(int i=0;i<listBrands.length;i++)
+            {
+                if(listBrands[i].getName().equals(selectedBrands.get(0)))
+                    brands += listBrands[i].getId();
+            }
+        } else
         {
             for(int i=0;i<selectedBrands.size();i++)
             {
-                if(i==selectedBrands.size()-1)
-                    brands+= selectedBrands.get(i);
-                else
-                    brands+= selectedBrands.get(i) + "-";
+                for(int j=0;j<listBrands.length;j++)
+                    if(listBrands[j].getName().equals(selectedBrands.get(i)))
+                    {
+                        if(i==selectedBrands.size()-1)
+                            brands += listBrands[i].getId();
+                        else
+                            brands += listBrands[i].getId() + "-";
+                    }
             }
         }
-        String category = comboboxCategory.getSelectedItem().toString();
+
         try {
-            main.sendRequestAdvanceProducts(productName, category, brands, rating, fromMoney, toMoney);
+            main.sendRequestAdvanceProducts(productName, categoryId, brands, ratingAverage, minPrice, maxPrice);
         } catch (IOException ex) {
             Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
         }

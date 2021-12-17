@@ -158,18 +158,17 @@ public class Client extends javax.swing.JFrame {
     
     public void updateBrands(List<LinkedHashMap<String, Object>> recvBrands)
     {  
-        HashMap<Integer, String> listBrands = new HashMap<Integer, String>();
+        ArrayList<String> brandNames = new ArrayList<>();
+        ArrayList<Integer> brandIds = new ArrayList<>();
         int numberOfBrands = 0;
         for (LinkedHashMap<String, Object> brand : recvBrands)
-        {   
+        {
+            brandIds.add((Integer) brand.get("id"));
+            brandNames.add(brand.get("name").toString());
             System.out.println(brand.get("name"));
-            if(!listBrands.containsValue(brand.get("name")))
-            {
-                listBrands.put(numberOfBrands, (String) brand.get("name"));
-                numberOfBrands++;
-            }
         }
-        pnlAdvanced.updateBrandCheckbox(listBrands, numberOfBrands);
+        pnlAdvanced.listNameBrand(brandNames, brandIds);
+        pnlAdvanced.updateBrandCheckbox();
     }
     
     public void updateComboboxCategory(List<LinkedHashMap<String, Object>> categories){
@@ -278,24 +277,23 @@ public class Client extends javax.swing.JFrame {
         sendMessage(requestMsg);
     }
     
-    public void sendRequestAdvanceProducts(String productName, String category, String brands, String rating, String fromMoney, String toMoney) throws IOException {
+    public void sendRequestAdvanceProducts(String productName, Long categoryId, String brands, String ratingAverage, String minPrice, String maxPrice) throws IOException {
         Map<String, Object> request = new HashMap<>();
-        if(!productName.equals(""))
+        if(productName != null)
             request.put("productName", productName);
-        request.put("category", category);
-        if(!brands.equals(""))
+        
+        request.put("categoryId", categoryId);
+        
+        if(brands != null)
             request.put("brands", brands);
-        if(rating.equals("0"))
-        {
-            JOptionPane.showMessageDialog(this, "Không có check", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
-            return;
-        }
-        else
-            request.put("ratingAverage", rating);
-        if(!fromMoney.equals(""))
-            request.put("fromMoney", fromMoney);
-        if(!toMoney.equals(""))
-            request.put("toMoney", toMoney);
+        
+        request.put("ratingAverage", ratingAverage);
+        if(minPrice != null)
+            request.put("minPrice", minPrice);
+        
+        if(maxPrice != null)
+            request.put("maxPrice", maxPrice);
+        
         Message requestMsg = new Message(request, MessageType.GET_ADVANCE_PRODUCTS);
         sendMessage(requestMsg);
     }

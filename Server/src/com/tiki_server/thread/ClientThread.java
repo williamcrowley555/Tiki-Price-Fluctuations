@@ -288,32 +288,49 @@ public class ClientThread implements Runnable {
 
                             System.out.println(requestContent);
 
-                            String categoryName = requestContent.containsKey("category") ? (String) requestContent.get("productName") : null;
+                            categoryId = requestContent.containsKey("categoryId") ? Long.valueOf((int) requestContent.get("categoryId")) : null;
                             String productName = requestContent.containsKey("productName") ? (String) requestContent.get("productName") : null;
-                            Double ratingAverage = requestContent.containsKey("ratingAverage") ? Double.parseDouble((String) requestContent.get("ratingAverage")) : null;
-                            Long minPrice = requestContent.containsKey("fromMoney") ? Long.valueOf((String) requestContent.get("fromMoney")) : null;
-                            Long maxPrice = requestContent.containsKey("toMoney") ? Long.valueOf((String) requestContent.get("toMoney")) : null;
-                            String listBrands = (String) requestContent.get("brands");
-
-                            StringTokenizer tokenizer = new StringTokenizer(listBrands, "-");
-                            List<String> brandNames = new ArrayList<>();
-                            while (tokenizer.hasMoreTokens())
-                                brandNames.add(tokenizer.nextToken());
+                            float ratingAverage = requestContent.containsKey("ratingAverage") ? Float.valueOf((String) requestContent.get("ratingAverage")) : null;
+                            Long minPrice = requestContent.containsKey("minPrice") ? Long.valueOf((String) requestContent.get("minPrice")) : null;
+                            Long maxPrice = requestContent.containsKey("maxPrice") ? Long.valueOf((String) requestContent.get("maxPrice")) : null;
+                            String listBrands = requestContent.containsKey("brands") ? (String) requestContent.get("brands") : null;
 
                             List<List<ProductDTO>> listAdvanceProduct = new ArrayList<>();
-                            if(brandNames.size() == 0)
-                            {
-                                String brand = null;
-                                List<ProductDTO> productAdvance = productBLL.findAdvance(productName, brand, categoryName, ratingAverage, minPrice, maxPrice);
-                            } else {
-                                for (String brand : brandNames) {
-                                    brand = brand.toUpperCase();
-                                    List<ProductDTO> productAdvance = productBLL.findAdvance(productName, brand, categoryName, ratingAverage, minPrice, maxPrice);
 
-                                    if (productAdvance != null)
-                                        listAdvanceProduct.add(productAdvance);
+                            if(listBrands == null) {
+                                Long brandId = null;
+                                List<ProductDTO> productAdvance = productBLL.findAdvance(productName, categoryId, brandId, ratingAverage, minPrice, maxPrice);
+                                listAdvanceProduct.add(productAdvance);
+                            } else {
+                                StringTokenizer tokenizer = new StringTokenizer(listBrands, "-");
+                                List<Long> brandIds = new ArrayList<>();
+                                while (tokenizer.hasMoreTokens())
+                                    brandIds.add(Long.valueOf(tokenizer.nextToken()));
+                                for (Long brandId : brandIds) {
+                                    List<ProductDTO> productAdvance = productBLL.findAdvance(productName, categoryId, brandId, ratingAverage, minPrice, maxPrice);
+                                    listAdvanceProduct.add(productAdvance);
                                 }
                             }
+
+//                            StringTokenizer tokenizer = new StringTokenizer(listBrands, "-");
+//                            List<String> brandNames = new ArrayList<>();
+//                            while (tokenizer.hasMoreTokens())
+//                                brandNames.add(tokenizer.nextToken());
+//
+//                            List<List<ProductDTO>> listAdvanceProduct = new ArrayList<>();
+//                            if(brandNames.size() == 0)
+//                            {
+//                                String brand = null;
+//                                List<ProductDTO> productAdvance = productBLL.findAdvance(productName, brand, categoryName, ratingAverage, minPrice, maxPrice);
+//                            } else {
+//                                for (String brand : brandNames) {
+//                                    brand = brand.toUpperCase();
+//                                    List<ProductDTO> productAdvance = productBLL.findAdvance(productName, brand, categoryName, ratingAverage, minPrice, maxPrice);
+//
+//                                    if (productAdvance != null)
+//                                        listAdvanceProduct.add(productAdvance);
+//                                }
+//                            }
 
                             responseContent = new HashMap<>();
                             responseContent.put("list_advance_products", listAdvanceProduct);

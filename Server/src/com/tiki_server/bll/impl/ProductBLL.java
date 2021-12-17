@@ -30,8 +30,8 @@ public class ProductBLL implements IProductBLL {
     }
 
     @Override
-    public List<ProductDTO> findAdvance(String productName, String brandName, String categoryName, double ratingAverage, Long minPrice, Long maxPrice) {
-        return productDAL.findAdvance(productName, brandName, categoryName, ratingAverage, minPrice, maxPrice);
+    public List<ProductDTO> findAdvance(String productName, Long categoryId, Long brandId, float ratingAverage, Long minPrice, Long maxPrice) {
+        return productDAL.findAdvance(productName, categoryId, brandId, ratingAverage, minPrice, maxPrice);
     }
 
     @Override
