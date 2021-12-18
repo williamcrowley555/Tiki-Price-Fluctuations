@@ -8,6 +8,7 @@ package com.client.gui;
 import com.client.gui.others.MyComboBoxEditor;
 import com.client.gui.others.MyComboBoxRenderer;
 import com.client.main.Client;
+import com.client.util.InputValidatorUtil;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
@@ -812,14 +813,19 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnTimKiemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimKiemActionPerformed
-
         searchURL = txtTimTheoURL.getText();
-
-        try {
-            main.getProductHistories(searchURL, monthChooser.getMonth()+1, yearChooser.getYear());
-        } catch (IOException ex) {
-            Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        String errorMessage = InputValidatorUtil.isValidTikiURL(searchURL);
+        boolean isValidTikiURL = errorMessage.isEmpty();
+        
+        if (isValidTikiURL) {
+            try {
+                main.getProductHistories(searchURL, monthChooser.getMonth()+1, yearChooser.getYear());
+            } catch (IOException ex) {
+                Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else 
+            JOptionPane.showMessageDialog(this, "URL không hợp lệ", "Thông báo", JOptionPane.ERROR_MESSAGE);
+        
     }//GEN-LAST:event_btnTimKiemActionPerformed
 
     private void btnXemReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXemReviewActionPerformed

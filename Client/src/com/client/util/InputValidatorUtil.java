@@ -226,7 +226,43 @@ public class InputValidatorUtil {
         
         return "";
     }
-    
+
+    public static String isValidURL(String url) {
+        if (url == null || url.isEmpty()) return " không được để trống";
+
+        String regex = "((http|https)://)(www.)?"
+                + "[a-zA-Z0-9@:%._\\+~#?&//=]"
+                + "{2,256}\\.[a-z]"
+                + "{2,6}\\b([-a-zA-Z0-9@:%"
+                + "._\\+~#?&//=]*)";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(url);
+        boolean result = matcher.matches();
+
+        if (!result) {
+            return "URL không hợp lệ";
+        }
+
+        return "";
+    }
+
+    public static String isValidTikiURL(String tikiURL) {
+        if (tikiURL == null || tikiURL.isEmpty()) return " không được để trống";
+
+        String regex = "((http|https)://)(www.)?tiki\\.vn/"
+                + "[a-zA-Z0-9@:%._\\+~#?&//=-]+";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(tikiURL);
+        boolean result = matcher.matches();
+
+        if (!result) {
+            return "URL không hợp lệ";
+        }
+
+        return "";
+    }
     
     public static void main(String[] args)
     {
