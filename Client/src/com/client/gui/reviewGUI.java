@@ -8,10 +8,12 @@ package com.client.gui;
 
 import com.client.gui.others.MyScrollBarUI;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -22,8 +24,12 @@ import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.plaf.basic.BasicComboPopup;
 import javax.swing.plaf.basic.ComboPopup;
 import java.util.Vector;
+import java.util.stream.Collectors;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.border.LineBorder;
 
 
 /**
@@ -32,7 +38,7 @@ import javax.swing.JOptionPane;
  */
 public class reviewGUI extends javax.swing.JFrame {
     private String action;
-    
+    private ArrayList<LinkedHashMap<String, Object>> reviewList;
     public reviewGUI() {
         initComponents();
         this.action = action;
@@ -42,6 +48,7 @@ public class reviewGUI extends javax.swing.JFrame {
     public reviewGUI(Float averageRating,  ArrayList<LinkedHashMap<String, Object>> reviewList, ArrayList<LinkedHashMap<String, Object>> timelineList) {
         
         initComponents();
+        initFilterIcon();
         for (LinkedHashMap<String, Object> review : reviewList)
         {   
             if (review != null)
@@ -63,8 +70,10 @@ public class reviewGUI extends javax.swing.JFrame {
                 );
                 reviews.add(reviewComp);
                 reviews.revalidate();
+               
             }
         }
+        this.reviewList = reviewList;
 //        for (LinkedHashMap<String, Object> review : reviewList)
 //        {   
 //            reviewComponent reviewComp = new reviewComponent(
@@ -90,7 +99,79 @@ public class reviewGUI extends javax.swing.JFrame {
        
     }
     
- 
+    public ArrayList<LinkedHashMap<String, Object>> filterReview(int selectedStar){
+       ArrayList<LinkedHashMap<String, Object>> fiteredReviewList = new ArrayList<>();
+       for (LinkedHashMap<String, Object> review : this.reviewList){
+           if ((int) review.get("rating") == selectedStar)
+           {
+               fiteredReviewList.add(review);
+           }
+       }
+       lblReviewsCount.setText("Sản phẩm có: " + fiteredReviewList.size() + " đánh giá");
+       return fiteredReviewList;
+    }
+    public void setReviews(ArrayList<LinkedHashMap<String, Object>> reviewList){
+        if (reviewList.isEmpty()) JOptionPane.showMessageDialog(this, "Không có review nào", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        resetReviewsPanel();
+        for (LinkedHashMap<String, Object> review : reviewList)
+        {
+            if (review != null)
+            {
+               reviewComponent reviewComp = new reviewComponent(
+                    (String) review.get("title"), 
+                     Float.valueOf((int) review.get("rating")), 
+                    (String) review.get("content"), 
+                    (String) review.get("date_used"),
+                    (String) review.get("review_created_date") 
+                );
+                reviews.add(reviewComp);
+                reviews.revalidate();
+            }
+        }
+    }
+    
+    public void resetReviewsPanel(){
+        reviews.removeAll();
+        reviews.revalidate();
+    }
+    
+    public void resetFilterSelection(){
+       lblOneStar.setBackground(new Color(240,240,240));
+       lblOneStar.setOpaque(true);
+       lblTwoStar.setBackground(new Color(240,240,240));
+       lblTwoStar.setOpaque(true);
+       lblThreeStar.setBackground(new Color(240,240,240));
+       lblThreeStar.setOpaque(true);
+       lblFourStar.setBackground(new Color(240,240,240));
+       lblFourStar.setOpaque(true);
+       lblFiveStar.setBackground(new Color(240,240,240));
+       lblFiveStar.setOpaque(true);
+    }
+    public void initFilterIcon(){
+        
+        ImageIcon iconOneStar = new ImageIcon(getClass().getResource("/com/client/img/small_star.png"));
+        lblOneStar.setIcon(iconOneStar);
+        lblOneStar.setBackground(new Color(240,240,240));
+        lblOneStar.setOpaque(true);
+        
+        setMultipleStarsIcon(iconOneStar, 2, lblTwoStar);
+        setMultipleStarsIcon(iconOneStar, 3, lblThreeStar);
+        setMultipleStarsIcon(iconOneStar, 4, lblFourStar);
+        setMultipleStarsIcon(iconOneStar, 5, lblFiveStar);
+    }
+    
+    public void setMultipleStarsIcon(ImageIcon icon, int times, JLabel label){
+        label.setLayout(new BoxLayout(label, BoxLayout.X_AXIS));
+       
+        for (int i = 0; i < times; i++){
+            JLabel iconLabel = new JLabel();
+            
+            iconLabel.setIcon(icon);
+            label.add(iconLabel);
+        }
+        label.setBackground(new Color(240,240,240));
+        label.setOpaque(true);
+    }
     
     
     public void center()
@@ -126,6 +207,13 @@ public class reviewGUI extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         lblAverageRating = new javax.swing.JLabel();
         lblReviewsCount = new javax.swing.JLabel();
+        lblTwoStar = new javax.swing.JLabel();
+        lblThreeStar = new javax.swing.JLabel();
+        lblFourStar = new javax.swing.JLabel();
+        lblFiveStar = new javax.swing.JLabel();
+        lblOneStar = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        lblReset = new javax.swing.JLabel();
         pnlReviews = new javax.swing.JPanel();
         reviewScrollPane = new javax.swing.JScrollPane();
         reviews = new javax.swing.JPanel();
@@ -197,33 +285,108 @@ public class reviewGUI extends javax.swing.JFrame {
         lblReviewsCount.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lblReviewsCount.setText("review count");
 
+        lblTwoStar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTwoStar.setBorder(new javax.swing.border.MatteBorder(null));
+        lblTwoStar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblTwoStarMouseClicked(evt);
+            }
+        });
+
+        lblThreeStar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblThreeStar.setBorder(new javax.swing.border.MatteBorder(null));
+        lblThreeStar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblThreeStarMouseClicked(evt);
+            }
+        });
+
+        lblFourStar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblFourStar.setBorder(new javax.swing.border.MatteBorder(null));
+        lblFourStar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblFourStarMouseClicked(evt);
+            }
+        });
+
+        lblFiveStar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblFiveStar.setBorder(new javax.swing.border.MatteBorder(null));
+        lblFiveStar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblFiveStarMouseClicked(evt);
+            }
+        });
+
+        lblOneStar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblOneStar.setBorder(new javax.swing.border.MatteBorder(null));
+        lblOneStar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblOneStarMouseClicked(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        jLabel3.setText("Lọc đánh giá");
+
+        lblReset.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/client/img/refresh.png"))); // NOI18N
+        lblReset.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblResetMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(51, 51, 51)
-                        .addComponent(lblAverageRating, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lblReviewsCount, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel2)
-                .addGap(161, 161, 161))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblAverageRating, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel2)
+                        .addGap(24, 24, 24))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(lblReviewsCount, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblOneStar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblTwoStar, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblThreeStar, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(lblFourStar, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblFiveStar, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblReset, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblAverageRating, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblAverageRating, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblReviewsCount, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
+                    .addComponent(lblReviewsCount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTwoStar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblFourStar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblFiveStar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblThreeStar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblOneStar, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblReset, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pnlBody.add(jPanel1, java.awt.BorderLayout.PAGE_START);
@@ -240,11 +403,11 @@ public class reviewGUI extends javax.swing.JFrame {
         pnlReviews.setLayout(pnlReviewsLayout);
         pnlReviewsLayout.setHorizontalGroup(
             pnlReviewsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(reviewScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 676, Short.MAX_VALUE)
+            .addComponent(reviewScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 848, Short.MAX_VALUE)
         );
         pnlReviewsLayout.setVerticalGroup(
             pnlReviewsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(reviewScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+            .addComponent(reviewScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
         );
 
         pnlBody.add(pnlReviews, java.awt.BorderLayout.CENTER);
@@ -253,7 +416,7 @@ public class reviewGUI extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelHeader, javax.swing.GroupLayout.DEFAULT_SIZE, 676, Short.MAX_VALUE)
+            .addComponent(panelHeader, javax.swing.GroupLayout.DEFAULT_SIZE, 848, Short.MAX_VALUE)
             .addComponent(pnlBody, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -261,7 +424,7 @@ public class reviewGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panelHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(pnlBody, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                .addComponent(pnlBody, javax.swing.GroupLayout.DEFAULT_SIZE, 687, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
 
@@ -279,6 +442,52 @@ public class reviewGUI extends javax.swing.JFrame {
     private void panelHeaderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelHeaderMouseDragged
         setLocation (evt.getXOnScreen()-(getWidth()/2),evt.getYOnScreen()-10);
     }//GEN-LAST:event_panelHeaderMouseDragged
+
+    private void lblOneStarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblOneStarMouseClicked
+        ArrayList<LinkedHashMap<String, Object>> fiteredReviewList = filterReview(1);
+        setReviews(fiteredReviewList);
+        resetFilterSelection();
+        lblOneStar.setBackground(new Color(77,77,77)); 
+        lblOneStar.setOpaque(true);
+    }//GEN-LAST:event_lblOneStarMouseClicked
+
+    private void lblTwoStarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblTwoStarMouseClicked
+        ArrayList<LinkedHashMap<String, Object>> fiteredReviewList = filterReview(2);
+        setReviews(fiteredReviewList);
+        resetFilterSelection();
+        lblTwoStar.setBackground(new Color(77,77,77));
+        lblTwoStar.setOpaque(true);
+    }//GEN-LAST:event_lblTwoStarMouseClicked
+
+    private void lblThreeStarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblThreeStarMouseClicked
+       ArrayList<LinkedHashMap<String, Object>> fiteredReviewList = filterReview(3);
+       setReviews(fiteredReviewList);
+       resetFilterSelection();
+       lblThreeStar.setBackground(new Color(77,77,77));
+       lblThreeStar.setOpaque(true);
+    }//GEN-LAST:event_lblThreeStarMouseClicked
+
+    private void lblFourStarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblFourStarMouseClicked
+       ArrayList<LinkedHashMap<String, Object>> fiteredReviewList = filterReview(4);
+       setReviews(fiteredReviewList);
+        resetFilterSelection();
+       lblFourStar.setBackground(new Color(77,77,77));
+       lblFourStar.setOpaque(true);
+    }//GEN-LAST:event_lblFourStarMouseClicked
+
+    private void lblFiveStarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblFiveStarMouseClicked
+       ArrayList<LinkedHashMap<String, Object>> fiteredReviewList = filterReview(5);
+       setReviews(fiteredReviewList);
+       resetFilterSelection();
+       lblFiveStar.setBackground(new Color(77,77,77));
+       lblFiveStar.setOpaque(true);
+    }//GEN-LAST:event_lblFiveStarMouseClicked
+
+    private void lblResetMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblResetMouseClicked
+      setReviews(this.reviewList);
+       resetFilterSelection();
+      lblReviewsCount.setText("Sản phẩm có: " + this.reviewList.size() + " đánh giá");
+    }//GEN-LAST:event_lblResetMouseClicked
 
     /**
      * @param args the command line arguments
@@ -381,11 +590,18 @@ public class reviewGUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblAverageRating;
     private javax.swing.JLabel lblExit;
+    private javax.swing.JLabel lblFiveStar;
+    private javax.swing.JLabel lblFourStar;
     private javax.swing.JLabel lblMinimize;
+    private javax.swing.JLabel lblOneStar;
+    private javax.swing.JLabel lblReset;
     private javax.swing.JLabel lblReviewsCount;
+    private javax.swing.JLabel lblThreeStar;
+    private javax.swing.JLabel lblTwoStar;
     private javax.swing.JPanel panelHeader;
     private javax.swing.JPanel pnlBody;
     private javax.swing.JPanel pnlReviews;
