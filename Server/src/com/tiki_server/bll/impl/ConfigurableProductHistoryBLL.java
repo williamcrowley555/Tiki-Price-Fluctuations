@@ -49,19 +49,23 @@ public class ConfigurableProductHistoryBLL implements IConfigurableProductHistor
 
     @Override
     public List<ConfigurableProductHistoryDTO> findByProductPageUrl(String url, int month, int year) {
-        String productId = null;
-        StringTokenizer stringTokenizer = new StringTokenizer(url, "-?");
+        boolean isValidTikiURL = InputValidatorUtil.isValidTikiURL(url).isEmpty();
 
-        while (stringTokenizer.hasMoreTokens()) {
-            String tmp = stringTokenizer.nextToken();
-            if (tmp.contains(".html"))
-                productId = tmp;
-        }
+        if (isValidTikiURL) {
+            String productId = null;
+            StringTokenizer stringTokenizer = new StringTokenizer(url, "-?");
 
-        if (productId != null) {
-            productId = StringUtils.substringBetween(productId, "p", ".html");
-            if (InputValidatorUtil.isLong(productId).isEmpty())
-                return findByProductId(Long.valueOf(productId), month, year);
+            while (stringTokenizer.hasMoreTokens()) {
+                String tmp = stringTokenizer.nextToken();
+                if (tmp.contains(".html"))
+                    productId = tmp;
+            }
+
+            if (productId != null) {
+                productId = StringUtils.substringBetween(productId, "p", ".html");
+                if (InputValidatorUtil.isLong(productId).isEmpty())
+                    return findByProductId(Long.valueOf(productId), month, year);
+            }
         }
 
         return null;

@@ -228,13 +228,53 @@ public class InputValidatorUtil {
         
         return "";
     }
-    
+
+    public static String isValidURL(String url) {
+        if (url == null || url.isEmpty()) return " không được để trống";
+
+        String regex = "((http|https)://)(www.)?"
+                + "[a-zA-Z0-9@:%._\\+~#?&//=]"
+                + "{2,256}\\.[a-z]"
+                + "{2,6}\\b([-a-zA-Z0-9@:%"
+                + "._\\+~#?&//=]*)";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(url);
+        boolean result = matcher.matches();
+
+        if (!result) {
+            return "URL không hợp lệ";
+        }
+
+        return "";
+    }
+
+    public static String isValidTikiURL(String tikiURL) {
+        if (tikiURL == null || tikiURL.isEmpty()) return " không được để trống";
+
+        String regex = "((http|https)://)(www.)?tiki\\.vn/"
+                + "[a-zA-Z0-9@:%._\\+~#?&//=-]+";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(tikiURL);
+        boolean result = matcher.matches();
+
+        if (!result) {
+            return "URL không hợp lệ";
+        }
+
+        return "";
+    }
     
     public static void main(String[] args)
     {
-        String rs = "123456789121";
-        if (InputValidatorUtil.isVailidIdentityID(rs).isEmpty())
+        String url = "https://tiki.vn/day-nit-nam-that-lung-nam-day-da-cao-cap-khoa-tu-dong-tien-loi-thiet-ke-mat-cach-dieu-ca-tinh-mbc89-p144234944.html?itm_campaign=tiki-reco_UNK_DT_UNK_UNK_similar-products_UNK_similar-products-v1_202112160600_MD_PID.144234945&itm_medium=CPC&itm_source=tiki-reco&spid=144234945";
+        String errorMessage = InputValidatorUtil.isValidTikiURL(url);
+        boolean isValidTikiURL = errorMessage.isEmpty();
+
+        if (isValidTikiURL)
             System.out.println("ok");
-        else System.out.println(InputValidatorUtil.isVailidIdentityID(rs));
+        else
+            System.out.println(errorMessage);
     }
 }
