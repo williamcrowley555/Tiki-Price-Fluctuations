@@ -86,7 +86,7 @@ public class Client extends javax.swing.JFrame {
         this.port = port;
         panelBody.repaint();
         panelBody.revalidate();
-       
+        
         initCardLayout();
         CustomWindow();
          

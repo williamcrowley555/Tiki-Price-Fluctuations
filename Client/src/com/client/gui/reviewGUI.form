@@ -27,8 +27,8 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="panelHeader" pref="848" max="32767" attributes="0"/>
-          <Component id="pnlBody" alignment="0" max="32767" attributes="0"/>
+          <Component id="panelHeader" pref="838" max="32767" attributes="0"/>
+          <Component id="pnlBody" alignment="0" pref="838" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -161,7 +161,7 @@
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="lblFiveStar" min="-2" pref="119" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="lblReset" pref="34" max="32767" attributes="0"/>
+                              <Component id="lblReset" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -332,7 +332,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="reviewScrollPane" alignment="0" pref="848" max="32767" attributes="0"/>
+                  <Component id="reviewScrollPane" alignment="0" pref="838" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">

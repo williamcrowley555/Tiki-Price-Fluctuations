@@ -5,10 +5,23 @@
  */
 package com.client.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Image;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 /**
  *
@@ -20,11 +33,12 @@ public class reviewComponent extends javax.swing.JPanel {
     String content;
     String timeUsed;
     String reviewDate;
+    String imageUrl;
     /**
      * Creates new form reviewComponent
      */
     
-    public reviewComponent(String title, float rating, String content, String timeUsed, String reviewDate) {
+    public reviewComponent(String title, float rating, String content, String timeUsed, String reviewDate, String imageUrl) {
         
         initComponents();
         
@@ -33,28 +47,66 @@ public class reviewComponent extends javax.swing.JPanel {
         this.content = content;
         this.timeUsed = timeUsed;
         this.reviewDate = reviewDate;
+        this.imageUrl = imageUrl;
         setReviewData();
-        
-        myTextArea();
-        pnlPic.setVisible(false);
     }   
     
     public void setReviewData()
     {
         lblTitle.setText(this.title);
         lblRating.setText(String.valueOf(this.rating));
-        txtContent.setText(this.content);
+        
+        JTextArea content = new JTextArea(this.content);
+        content.setLineWrap(true);
+        content.setWrapStyleWord(true);
+        content.setEditable(false);
+        content.setFocusable(false);
+        content.setBorder(new EmptyBorder(10,10,10,10));
+        Font contentFont =  new Font("Arial", Font.PLAIN, 14);
+        content.setFont(contentFont);
+        pnlContent.add(content);
+        pnlContent.revalidate();
+        
         lblTimeUsed.setText(this.timeUsed);
         lblReviewDate.setText(this.reviewDate == null ? "Không có dữ liệu" : this.reviewDate);
+        
+        if (this.imageUrl != null)
+        {
+            setPicture(this.imageUrl);
+        }
+        else
+            pnlPic.setVisible(false);
     }
     
-    public void myTextArea()
-    {
-        txtContent.setWrapStyleWord(true);
-        txtContent.setLineWrap(true);
-        contentScrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
-        txtContent.setCaretPosition(0); // scroll to top
+    public void setPicture(String imageUrl){
+            URL url = null;
+            Image image = null;
+            try {
+                url = new URL(imageUrl);
+                System.out.println(url);
+                image = ImageIO.read(url);
+            } catch (MalformedURLException ex) {
+                System.out.println("Malformed URL");
+            } catch (IOException iox) {
+                System.out.println("Can not load file");
+            }
+            
+            System.out.println(pnlPic.getHeight());
+            System.out.println(pnlPic.getWidth());
+            
+            //Resize img to fit jpanel
+            Image scaledImage = image.getScaledInstance(
+                    200,
+                    200,
+                    Image.SCALE_SMOOTH
+            );
+            
+            JLabel label = new JLabel(new ImageIcon(scaledImage));
+            pnlPic.add(label, BorderLayout.CENTER);
+            pnlPic.revalidate();
+            pnlPic.setVisible(true);
     }
+     
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -65,6 +117,8 @@ public class reviewComponent extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        contentScrollPane = new javax.swing.JScrollPane();
+        txtContent = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
         lblTitle = new javax.swing.JLabel();
         lblRating = new javax.swing.JLabel();
@@ -74,8 +128,15 @@ public class reviewComponent extends javax.swing.JPanel {
         lblReviewDate = new javax.swing.JLabel();
         pnlPic = new javax.swing.JPanel();
         pnlContent = new javax.swing.JPanel();
-        contentScrollPane = new javax.swing.JScrollPane();
-        txtContent = new javax.swing.JTextArea();
+
+        contentScrollPane.setBorder(new javax.swing.border.MatteBorder(null));
+
+        txtContent.setEditable(false);
+        txtContent.setColumns(20);
+        txtContent.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtContent.setRows(5);
+        txtContent.setFocusable(false);
+        contentScrollPane.setViewportView(txtContent);
 
         setLayout(new java.awt.BorderLayout());
 
@@ -102,43 +163,11 @@ public class reviewComponent extends javax.swing.JPanel {
         lblReviewDate.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblReviewDate.setText("12/12/2021");
 
-        javax.swing.GroupLayout pnlPicLayout = new javax.swing.GroupLayout(pnlPic);
-        pnlPic.setLayout(pnlPicLayout);
-        pnlPicLayout.setHorizontalGroup(
-            pnlPicLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 139, Short.MAX_VALUE)
-        );
-        pnlPicLayout.setVerticalGroup(
-            pnlPicLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 86, Short.MAX_VALUE)
-        );
+        pnlPic.setLayout(new java.awt.BorderLayout());
 
         pnlContent.setBackground(new java.awt.Color(255, 255, 255));
         pnlContent.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        contentScrollPane.setBorder(new javax.swing.border.MatteBorder(null));
-
-        txtContent.setEditable(false);
-        txtContent.setColumns(20);
-        txtContent.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        txtContent.setRows(5);
-        txtContent.setFocusable(false);
-        contentScrollPane.setViewportView(txtContent);
-
-        javax.swing.GroupLayout pnlContentLayout = new javax.swing.GroupLayout(pnlContent);
-        pnlContent.setLayout(pnlContentLayout);
-        pnlContentLayout.setHorizontalGroup(
-            pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlContentLayout.createSequentialGroup()
-                .addComponent(contentScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        pnlContentLayout.setVerticalGroup(
-            pnlContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlContentLayout.createSequentialGroup()
-                .addComponent(contentScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
+        pnlContent.setLayout(new java.awt.BorderLayout());
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -146,21 +175,23 @@ public class reviewComponent extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnlPic, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(lblRating, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel3)
                         .addGap(18, 18, 18)
-                        .addComponent(lblTimeUsed, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblTimeUsed, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 824, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(lblTitleDateReview)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblReviewDate, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnlPic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pnlContent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(18, Short.MAX_VALUE))
+                    .addComponent(pnlContent, javax.swing.GroupLayout.PREFERRED_SIZE, 766, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -172,13 +203,13 @@ public class reviewComponent extends javax.swing.JPanel {
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
                     .addComponent(lblRating, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblTimeUsed, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblTitleDateReview, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblReviewDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblTitleDateReview, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblReviewDate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(pnlContent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
-                .addComponent(pnlPic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlPic, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         add(jPanel2, java.awt.BorderLayout.CENTER);
