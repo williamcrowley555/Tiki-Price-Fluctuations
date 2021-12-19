@@ -29,12 +29,21 @@ public class ConfigurableProductHistoryBLL implements IConfigurableProductHistor
 
     @Override
     public List<ConfigurableProductHistoryDTO> findByProductId(Long productId, int month, int year) {
-        return cpHistoryDAL.findByProductId(productId, month, year);
+        List<ConfigurableProductHistoryDTO> cps = cpHistoryDAL.findByProductId(productId, month, year);
+
+        if (cps!= null && cps.isEmpty())
+            return List.of(findLatestByProductIdBefore(productId, month, year));
+        return cps;
     }
 
     @Override
     public List<ConfigurableProductHistoryDTO> findByProductIdAndConfigurableProductId(Long productId, Long cpId, int month, int year) {
         return cpHistoryDAL.findByProductIdAndConfigurableProductId(productId, cpId, month, year);
+    }
+
+    @Override
+    public ConfigurableProductHistoryDTO findLatestByProductIdBefore(Long productId, int month, int year) {
+        return cpHistoryDAL.findLatestByProductIdBefore(productId, month, year);
     }
 
     @Override

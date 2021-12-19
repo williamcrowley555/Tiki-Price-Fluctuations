@@ -38,6 +38,7 @@ public class Client {
         try {
             socket = new Socket(hostname, port);
             out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            out.flush();
 
             readThread = new Thread(new ReadThread(this, this.socket));
             readThread.start();
@@ -65,11 +66,6 @@ public class Client {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    public void sendPublicKeyRequest() throws IOException {
-        Message requestMsg = new Message(null, MessageType.GET_PUBLIC_KEY);
-        sendMessage(requestMsg);
     }
 
     public void getProduct(Long productId) throws IOException {
@@ -161,9 +157,6 @@ public class Client {
     public static void main(String[] args) throws IOException {
         Client client = new Client("localhost", 5002);
         client.run();
-
-        if (client.getPublicKey() == null)
-            client.sendPublicKeyRequest();
 
         System.out.println("Connecting ...");
         while (client.getSecretKey() == null) {

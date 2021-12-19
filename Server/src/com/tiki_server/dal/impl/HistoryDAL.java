@@ -21,6 +21,13 @@ public class HistoryDAL extends AbstractDAL<HistoryDTO> implements IHistoryDAL {
     }
 
     @Override
+    public HistoryDTO findLatestByProductIdBefore(Long productId, int month, int year) {
+        String sql = "{CALL usp_history_getLatestByProductIdBefore(?, ?, ?)}";
+        List<HistoryDTO> histories = callQueryProc(sql, new HistoryMapper(), productId, month, year);
+        return histories.isEmpty() ? null : histories.get(0);
+    }
+
+    @Override
     public HistoryDTO findById(Long id) {
         String sql = "SELECT * FROM history WHERE id = ?";
         List<HistoryDTO> histories = query(sql, new HistoryMapper(), id);

@@ -60,19 +60,17 @@ public class WriteThread implements Runnable {
         String reqContentInJSON = new ObjectMapper().writeValueAsString(request.getContent());
         byte[] reqContentInBytes = BytesUtil.decode(reqContentInJSON);
 
-        if (!request.getMessageType().equals(MessageType.GET_PUBLIC_KEY)) {
-            if (request.getMessageType().equals(MessageType.SEND_SECRET_KEY)) {
-//                Encrypt AES key with Public key
-                byte[] encryptedKey = RSAUtil.encrypt(client.getPublicKey(), reqContentInBytes);
-                String content = Base64.getEncoder().encodeToString(encryptedKey);
+        if (request.getMessageType().equals(MessageType.SEND_SECRET_KEY)) {
+//            Encrypt AES key with Public key
+            byte[] encryptedKey = RSAUtil.encrypt(client.getPublicKey(), reqContentInBytes);
+            String content = Base64.getEncoder().encodeToString(encryptedKey);
 
-                request.setContent(content);
-            } else {
-                byte[] encryptedMessage = AESUtil.encrypt(this.client.getSecretKey(), reqContentInBytes);
-                String content = Base64.getEncoder().encodeToString(encryptedMessage);
+            request.setContent(content);
+        } else {
+            byte[] encryptedMessage = AESUtil.encrypt(this.client.getSecretKey(), reqContentInBytes);
+            String content = Base64.getEncoder().encodeToString(encryptedMessage);
 
-                request.setContent(content);
-            }
+            request.setContent(content);
         }
 
         String json = new ObjectMapper().writeValueAsString(request);
