@@ -17,6 +17,7 @@ import com.client.util.InputValidatorUtil;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ItemEvent;
@@ -38,11 +39,13 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.border.MatteBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.plaf.basic.BasicComboPopup;
+import javax.swing.plaf.basic.BasicSpinnerUI;
 import javax.swing.plaf.basic.ComboPopup;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -95,24 +98,62 @@ public class panelTimNangCao extends javax.swing.JPanel {
         for (int i = 1; i < 31; i++){
             prices.add(i +100 );
         }
-        
-//        brandList.add("a");
-//        brandList.add("b");
-//        brandList.add("c");
-//        brandList.add("e");
-//        brandList.add("f");
-//        brandList.add("g");
-//        brandList.add("h");
-//        brandList.add("i");
-//        brandList.add("j");
-//        initBrandCheckbox(brandList);
         showLineChart(productName, month, year, dates, prices);
         comboboxCategory = myComboBox(comboboxCategory, new Color(14,142,233));
         scrollPaneBrands.getVerticalScrollBar().setUI(new MyScrollBarUI());
+        initNullTable();
+        customMonthYearChooser();
     }
     
-    // in ra cai code t doc thu
-   
+    public void customMonthYearChooser(){
+        javax.swing.JComboBox boxMonth = (javax.swing.JComboBox) monthChooser.getComboBox();
+        boxMonth = myComboBox(boxMonth, new Color(77,77,77));
+        boxMonth.setLightWeightPopupEnabled (false);
+        hideSpinnerArrow((javax.swing.JSpinner) monthChooser.getSpinner());
+        hideSpinnerArrow((javax.swing.JSpinner) yearChooser.getSpinner());
+    }
+    
+    public void initNullTable()
+    {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Id");
+        model.addColumn("Tên");
+        model.addColumn("Số lượng đã bán");
+        model.addColumn("Giá");
+        
+        tableScrollPane.getVerticalScrollBar().setUI(new MyScrollBarUI());
+        advanceProductTable.setModel(model);
+        headerColor(77,77,77, advanceProductTable);
+        
+    }
+    
+     public void hideSpinnerArrow(JSpinner spinner) {
+        spinner.setUI(new BasicSpinnerUI() {
+            protected Component createNextButton() {
+                return null;
+            }
+
+            protected Component createPreviousButton() {
+                return null;
+            }
+        });
+    }
+     
+    public void headerColor(int r, int b, int g, JTable table)
+    {
+        Color color = new Color(r,b,g);
+        DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer();
+        headerRenderer.setBackground(color);
+        headerRenderer.setForeground(color.WHITE);
+        
+
+        for (int i = 0; i < table.getModel().getColumnCount(); i++) {
+        table.getColumnModel().getColumn(i).setHeaderRenderer(headerRenderer);
+        }       
+         
+        table.setFont(new Font("Tahoma", Font.PLAIN, 16));
+    }
+    
     public String selectedButtonGroupStar()
     {
         if(jRadioButton1.isSelected())
@@ -162,19 +203,6 @@ public class panelTimNangCao extends javax.swing.JPanel {
         comboBox.setModel(new DefaultComboBoxModel<>(listItems));
     }
     
-     public void headerColor(int r, int b, int g, JTable table)
-    {
-        Color color = new Color(r,b,g);
-        DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer();
-        headerRenderer.setBackground(color);
-        headerRenderer.setForeground(color.WHITE);
-        
-
-        for (int i = 0; i < table.getModel().getColumnCount(); i++) {
-        table.getColumnModel().getColumn(i).setHeaderRenderer(headerRenderer);
-        }       
-         
-    }
     
     public void setTable(List<List<LinkedHashMap<String, Object>>> listAdvanceProducts)
     {
@@ -198,6 +226,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
             }
         }
         advanceProductTable.setModel(model);
+        headerColor(77,77,77, advanceProductTable);
     }
      
     public JComboBox myComboBox(JComboBox box, Color color)
@@ -373,7 +402,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         pnlSearch = new javax.swing.JPanel();
         lblTitleTenSanPham = new javax.swing.JLabel();
         txtSearch = new javax.swing.JTextField();
-        comboboxCategory = new javax.swing.JComboBox<CategoryComboItem>();
+        comboboxCategory = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         pnlFilter = new javax.swing.JPanel();
         pnlCategory = new javax.swing.JPanel();
@@ -397,7 +426,12 @@ public class panelTimNangCao extends javax.swing.JPanel {
         jRadioButton5 = new javax.swing.JRadioButton();
         jRadioButton4 = new javax.swing.JRadioButton();
         pnlTable = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        pnlTableTop = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        monthChooser = new com.toedter.calendar.JMonthChooser();
+        yearChooser = new com.toedter.calendar.JYearChooser();
+        pnlTableBottom = new javax.swing.JPanel();
+        tableScrollPane = new javax.swing.JScrollPane();
         advanceProductTable = new javax.swing.JTable();
         pnlChart = new javax.swing.JPanel();
 
@@ -624,6 +658,43 @@ public class panelTimNangCao extends javax.swing.JPanel {
         pnlTable.setBackground(new java.awt.Color(255, 255, 255));
         pnlTable.setLayout(new java.awt.BorderLayout());
 
+        pnlTableTop.setBackground(new java.awt.Color(255, 255, 255));
+        pnlTableTop.setPreferredSize(new java.awt.Dimension(574, 60));
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        jLabel10.setText("Xem lịch sử giá :");
+
+        yearChooser.setBackground(new java.awt.Color(204, 204, 204));
+        yearChooser.setBorder(new javax.swing.border.MatteBorder(null));
+
+        javax.swing.GroupLayout pnlTableTopLayout = new javax.swing.GroupLayout(pnlTableTop);
+        pnlTableTop.setLayout(pnlTableTopLayout);
+        pnlTableTopLayout.setHorizontalGroup(
+            pnlTableTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTableTopLayout.createSequentialGroup()
+                .addGap(252, 252, 252)
+                .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(monthChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(yearChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11))
+        );
+        pnlTableTopLayout.setVerticalGroup(
+            pnlTableTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlTableTopLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(pnlTableTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(monthChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(yearChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        pnlTable.add(pnlTableTop, java.awt.BorderLayout.PAGE_START);
+
+        pnlTableBottom.setLayout(new java.awt.BorderLayout());
+
         advanceProductTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -640,9 +711,11 @@ public class panelTimNangCao extends javax.swing.JPanel {
                 advanceProductTableMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(advanceProductTable);
+        tableScrollPane.setViewportView(advanceProductTable);
 
-        pnlTable.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        pnlTableBottom.add(tableScrollPane, java.awt.BorderLayout.CENTER);
+
+        pnlTable.add(pnlTableBottom, java.awt.BorderLayout.CENTER);
 
         pnlLeft.add(pnlTable, java.awt.BorderLayout.CENTER);
 
@@ -778,6 +851,8 @@ public class panelTimNangCao extends javax.swing.JPanel {
         int row = advanceProductTable.getSelectedRow();
         Long id = Long.parseLong(advanceProductTable.getModel().getValueAt(row, 0).toString());
         try {
+            int month = monthChooser.getMonth()+1;
+            int year = yearChooser.getYear();
             main.getProductHistoriesById(id, month, year);
         } catch (IOException ex) {
             Logger.getLogger(panelTimNangCao.class.getName()).log(Level.SEVERE, null, ex);
@@ -799,6 +874,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
     private javax.swing.JComboBox<CategoryComboItem> comboboxCategory;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -812,11 +888,11 @@ public class panelTimNangCao extends javax.swing.JPanel {
     private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JRadioButton jRadioButton5;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JLabel lblTitleTenSanPham;
+    private com.toedter.calendar.JMonthChooser monthChooser;
     private javax.swing.JPanel pnlBrands;
     private javax.swing.JPanel pnlCategory;
     private javax.swing.JPanel pnlChart;
@@ -825,7 +901,11 @@ public class panelTimNangCao extends javax.swing.JPanel {
     private javax.swing.JPanel pnlSearch;
     private javax.swing.JPanel pnlSearchAndFilter;
     private javax.swing.JPanel pnlTable;
+    private javax.swing.JPanel pnlTableBottom;
+    private javax.swing.JPanel pnlTableTop;
     private javax.swing.JScrollPane scrollPaneBrands;
+    private javax.swing.JScrollPane tableScrollPane;
     private javax.swing.JTextField txtSearch;
+    private com.toedter.calendar.JYearChooser yearChooser;
     // End of variables declaration//GEN-END:variables
 }
