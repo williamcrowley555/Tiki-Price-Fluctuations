@@ -305,7 +305,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
     }
     
     public void initBrandCheckbox(ArrayList<String> list){
-        int y = 15; // 15 chu cai dau tien cua brands 
+        int y = 15; 
         for (String brand : list){
             JCheckBox checkBox = new JCheckBox(brand);
             checkBox.setBounds(10, y, 200, 40);
