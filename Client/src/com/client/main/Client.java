@@ -126,13 +126,7 @@ public class Client extends javax.swing.JFrame {
     }
     
      public void setOption(LinkedHashMap<String, Object> name, List<LinkedHashMap<String, Object>> option) throws IOException {
-         System.out.println("----------------");
-//         System.out.println(name.get("optionName1"));
-//         for(LinkedHashMap t : option)
-//            System.out.println(t);
-          //  System.out.println(name.size());
-         System.out.println("----------------");
-        this.pnlURL.setConfigurableProducts(name,option);
+        this.pnlURL.setConfigurableProducts(name, option);
     }
     
     public void updateLineChartAdvance(List<LinkedHashMap<String, Object>> productHistories, String productName){

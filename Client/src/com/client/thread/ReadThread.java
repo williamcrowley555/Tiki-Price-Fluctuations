@@ -34,7 +34,7 @@ public class ReadThread implements Runnable {
     private String productName;
     private Long productId;
     private List<LinkedHashMap<String, Object>> timelines;
-    private List<LinkedHashMap<String, Object>> onfigurableProduct;
+    private List<LinkedHashMap<String, Object>> configurableProduct;
     public panelTimNangCao panelAdvance = new panelTimNangCao(client);
 
     public ReadThread(Client client, Socket socket) throws IOException {
@@ -107,10 +107,18 @@ public class ReadThread implements Runnable {
                             List<LinkedHashMap<String, Object>> recvCPs = (List<LinkedHashMap<String, Object>>) responseContent.get("configurableProducts");
                             System.out.println("Client receive: ");
                             //recvCPs.forEach(System.out::println);
-                            onfigurableProduct = (List<LinkedHashMap<String, Object>>) responseContent.get("configurableProducts");
+                            configurableProduct = (List<LinkedHashMap<String, Object>>) responseContent.get("configurableProducts");
                             client.getConfigurableOptionById(this.productId);
                             //onfigurableProduct.forEach(System.out::println);
                             break;
+                        
+                        case CONFIGURABLE_OPTION_BY_PRODUCT_ID:
+                            responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
+                            LinkedHashMap<String, Object> recvConfigurableOption = (LinkedHashMap<String, Object>) responseContent.get("configurableOptionById");
+                            System.out.println("Client receive: ");
+                            //System.out.println(recvConfigurableOption);
+                            client.setOption(recvConfigurableOption, configurableProduct);
+                            break; 
 
                         case PRODUCT_HISTORIES:
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
@@ -140,15 +148,7 @@ public class ReadThread implements Runnable {
                             List<LinkedHashMap<String, Object>> recvCPHistories = (List<LinkedHashMap<String, Object>>) responseContent.get("configurableProductHistories");
                             System.out.println("Client receive: ");
                             recvCPHistories.forEach(System.out::println);
-                            break;
-                        
-                        case CONFIGURABLE_OPTION_BY_PRODUCT_ID:
-                            responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
-                            LinkedHashMap<String, Object> recvConfigurableOption = (LinkedHashMap<String, Object>) responseContent.get("configurableOptionById");
-                            System.out.println("Client receive: ");
-                            //System.out.println(recvConfigurableOption);
-                            client.setOption(recvConfigurableOption,onfigurableProduct);
-                            break;    
+                            break;   
 
                         case REVIEWS:
                             timelines = new  ArrayList<LinkedHashMap<String, Object>>();      

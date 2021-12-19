@@ -29,9 +29,11 @@ import java.net.URL;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -236,103 +238,66 @@ public class panelTimTheoURL extends javax.swing.JPanel {
             txtMota.setText((String) recvProduct.get("description"));
     }
     
+    public void removeComponent(JPanel panel) {
+        panel.removeAll();
+        panel.revalidate();
+        panel.repaint();
+    }
+    
+    public void removeComponents(List<JPanel> panels) {
+        for (JPanel panel : panels)
+            removeComponent(panel);
+    }
+    
     public void setConfigurableProducts(LinkedHashMap<String, Object> configurableOptionsName, List<LinkedHashMap<String, Object>> configurableProducts){
-        int flag = 0;
-        if (configurableOptionsName.get("optionName1") == null)
-        {
-             flag = 0;
-        } else if (configurableOptionsName.get("optionName1") != null && configurableOptionsName.get("optionName2") == null) {
-             flag = 1;
-        } else if (configurableOptionsName.get("optionName1") != null && configurableOptionsName.get("optionName2") != null && configurableOptionsName.get("optionName3") == null)
-        {
-             flag = 2;
-        } else
-        {
-             flag = 3;
-        }       
+        removeComponents(Arrays.asList(pnlOptionName1, pnlOptionName2, pnlOptionName3));
+        removeComponents(Arrays.asList(pnlOptions1, pnlOptions2, pnlOptions3));
         
-        switch (flag){
-            case 1: 
-            {    
-                System.out.println("run case 1");
-                 String name1 = String.valueOf(configurableOptionsName.get("optionName1"));
-                 List<String> options = new ArrayList<>();
-                 for(LinkedHashMap<String, Object> configurableProduct : configurableProducts)
-                 {
-                     System.out.println(configurableProduct.get("option1"));  
-                     options.add(String.valueOf(configurableProduct.get("option1")));
-                 }
-                  setConfigurableProductRadioButtons(name1, options, pnlOptionName1, pnlOptions1, 1);
-                  break;
+        Set<String> option1Values = new HashSet<String>();
+        Set<String> option2Values = new HashSet<String>();
+        Set<String> option3Values = new HashSet<String>();
+        
+        if (configurableOptionsName.get("optionName1") != null) {
+            String optionName1 = String.valueOf(configurableOptionsName.get("optionName1"));
+        
+            for(LinkedHashMap<String, Object> cp : configurableProducts) {  
+                option1Values.add(String.valueOf(cp.get("option1")));
             }
             
-            case 2: 
-            {    
-                 String name1 = String.valueOf(configurableOptionsName.get("optionName1"));
-                 List<String> options1 = new ArrayList<>();
-                 for(LinkedHashMap<String, Object> configurableProduct : configurableProducts)
-                 {
-                     System.out.println(configurableProduct.get("option1"));  
-                     options1.add(String.valueOf(configurableProduct.get("option1")));
-                 }
-                 setConfigurableProductRadioButtons(name1, options1, pnlOptionName1, pnlOptions1, 1);
-                
-                 String name2 = String.valueOf(configurableOptionsName.get("optionName2"));
-                 List<String> options2 = new ArrayList<>();
-                 for(LinkedHashMap<String, Object> configurableProduct : configurableProducts)
-                 {
-                     System.out.println(configurableProduct.get("option2"));  
-                     options2.add(String.valueOf(configurableProduct.get("option2")));
-                 }
-                  setConfigurableProductRadioButtons(name2, options2, pnlOptionName2, pnlOptions2, 1);
-                  break;
+            setConfigurableProductRadioButtons(optionName1, new ArrayList<>(option1Values), pnlOptionName1, pnlOptions1, 1);
+        }
+        
+        if (configurableOptionsName.get("optionName2") != null)
+        {
+            String name2 = String.valueOf(configurableOptionsName.get("optionName2"));
+            
+            for(LinkedHashMap<String, Object> cp : configurableProducts) {  
+                option2Values.add(String.valueOf(cp.get("option2")));
             }
             
-            case 3: 
-            {    
-                 String name1 = String.valueOf(configurableOptionsName.get("optionName1"));
-                 List<String> options1 = new ArrayList<>();
-                 for(LinkedHashMap<String, Object> configurableProduct : configurableProducts)
-                 {
-                     System.out.println(configurableProduct.get("option1"));  
-                     options1.add(String.valueOf(configurableProduct.get("option1")));
-                 }
-                 setConfigurableProductRadioButtons(name1, options1, pnlOptionName1, pnlOptions1, 1);
-                
-                 String name2 = String.valueOf(configurableOptionsName.get("optionName2"));
-                 List<String> options2 = new ArrayList<>();
-                 for(LinkedHashMap<String, Object> configurableProduct : configurableProducts)
-                 {
-                     System.out.println(configurableProduct.get("option2"));  
-                     options2.add(String.valueOf(configurableProduct.get("option2")));
-                 }
-                  setConfigurableProductRadioButtons(name2, options2, pnlOptionName2, pnlOptions2, 2);
-                  
-                 String name3 = String.valueOf(configurableOptionsName.get("optionName3"));
-                 List<String> options3 = new ArrayList<>();
-                 for(LinkedHashMap<String, Object> configurableProduct : configurableProducts)
-                 {
-                     System.out.println(configurableProduct.get("option3"));  
-                     options3.add(String.valueOf(configurableProduct.get("option3")));
-                 }
-                  setConfigurableProductRadioButtons(name3, options3, pnlOptionName3, pnlOptions3, 3);
-                  break;
+            setConfigurableProductRadioButtons(name2, new ArrayList<>(option2Values), pnlOptionName2, pnlOptions2, 2);
+        }
+        
+        if (configurableOptionsName.get("optionName3") != null)
+        {
+            String name3 = String.valueOf(configurableOptionsName.get("optionName3"));
+             
+            for(LinkedHashMap<String, Object> cp : configurableProducts) {  
+                option3Values.add(String.valueOf(cp.get("option3")));
             }
-               
-            default:
-                System.out.println("not supported yet");
-                break;
+            
+            setConfigurableProductRadioButtons(name3, new ArrayList<>(option3Values), pnlOptionName3, pnlOptions3, 3);
         }
     }
     
-    public void setConfigurableProductRadioButtons(String name, List<String> options, JPanel pnlName,JPanel pnlOption, int stateVariable)
-    {
+    public void setConfigurableProductRadioButtons(String name, List<String> options, JPanel pnlOptionName,JPanel pnlOption, int stateVariable) {
         JLabel optionName = new JLabel(name);
-        pnlName.add(optionName);
+        pnlOptionName.add(optionName);
         ButtonGroup buttonGroup = new ButtonGroup();
         GridLayout gridLayout = new GridLayout(options.size(),1);
         pnlOption.setLayout(gridLayout);
-        for(int i=0;i<options.size();i++)
+        
+        for(int i = 0; i < options.size(); i++)
         {   
             JRadioButton radioButton = new JRadioButton(options.get(i));
             switch (stateVariable){

@@ -298,7 +298,7 @@ public class ClientThread implements Runnable {
 
                             if(listBrands == null) {
                                 Long brandId = null;
-                                List<ProductDTO> productAdvance = productBLL.findAdvance(productName, categoryId, brandId, ratingAverage, minPrice, maxPrice);
+                                List<ProductDTO> productAdvance = productBLL.filter(productName, categoryId, brandId, ratingAverage, minPrice, maxPrice);
                                 if(productAdvance != null)
                                     listAdvanceProduct.add(productAdvance);
                             } else {
@@ -307,7 +307,7 @@ public class ClientThread implements Runnable {
                                 while (tokenizer.hasMoreTokens())
                                     brandIds.add(Long.valueOf(tokenizer.nextToken()));
                                 for (Long brandId : brandIds) {
-                                    List<ProductDTO> productAdvance = productBLL.findAdvance(productName, categoryId, brandId, ratingAverage, minPrice, maxPrice);
+                                    List<ProductDTO> productAdvance = productBLL.filter(productName, categoryId, brandId, ratingAverage, minPrice, maxPrice);
                                     if(productAdvance != null)
                                         listAdvanceProduct.add(productAdvance);
                                 }

@@ -686,18 +686,18 @@ public class panelTimNangCao extends javax.swing.JPanel {
         
         String minPrice = jTextField3.getText();
         String maxPrice = jTextField4.getText();
-        if(!minPrice.equals(""))
-            if(maxPrice.equals(""))
-            {
-               JOptionPane.showMessageDialog(this, "Bạn phải nhập cả giá từ và giá đến", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-               return;
-            }
-        if(!maxPrice.equals(""))
-            if(minPrice.equals(""))
-            {
-                JOptionPane.showMessageDialog(this, "Bạn phải nhập cả giá từ và giá đến", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-               return;
-            }
+//        if(!minPrice.equals(""))
+//            if(maxPrice.equals(""))
+//            {
+//               JOptionPane.showMessageDialog(this, "Bạn phải nhập cả giá từ và giá đến", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+//               return;
+//            }
+//        if(!maxPrice.equals(""))
+//            if(minPrice.equals(""))
+//            {
+//                JOptionPane.showMessageDialog(this, "Bạn phải nhập cả giá từ và giá đến", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+//               return;
+//            }
         if(!minPrice.equals("") && !maxPrice.equals(""))
         {
             String message = validator.isValidMoney(minPrice);
