@@ -193,7 +193,10 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     }
     
     public void updateProductInfo(LinkedHashMap<String, Object> recvProduct){
-       
+            // Remove old image
+            pnlPic.removeAll();
+            pnlPic.revalidate();
+            
             txtTenSP.setText((String) recvProduct.get("name"));
             String path = (String) recvProduct.get("imageUrl");
             Long id =  Long.valueOf((int) recvProduct.get("id"));
