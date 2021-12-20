@@ -335,8 +335,8 @@ public class panelTimNangCao extends javax.swing.JPanel {
 //        domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
         renderer1.setDefaultItemLabelGenerator(new StandardCategoryItemLabelGenerator("{2}", NumberFormat.getNumberInstance()));
         renderer1.setDefaultPositiveItemLabelPosition(new ItemLabelPosition( 
-             ItemLabelAnchor.CENTER, TextAnchor.BASELINE_LEFT, TextAnchor.BASELINE_LEFT, 
-             - Math.PI / 4)); 
+             ItemLabelAnchor.CENTER, TextAnchor.BASELINE_RIGHT, TextAnchor.BASELINE_RIGHT, 
+             - Math.PI / 8)); 
         
         renderer1.setDefaultItemLabelsVisible(true);
         
@@ -763,6 +763,8 @@ public class panelTimNangCao extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, errorMsg, "Thông báo", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+                
+            minPrice = Long.valueOf(txtMinPrice);
         }
         
         if (!txtMaxPrice.equals("")) {
@@ -773,14 +775,13 @@ public class panelTimNangCao extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, errorMsg, "Thông báo", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-        }
-        
-        if(Long.valueOf(txtMinPrice) > Long.valueOf(txtMaxPrice)) {
-            JOptionPane.showMessageDialog(this, "Khoảng giá không hợp lệ!", "Thông báo", JOptionPane.ERROR_MESSAGE);
-            return;
-        } else {
-            minPrice = Long.valueOf(txtMinPrice);
+            
             maxPrice = Long.valueOf(txtMaxPrice);
+                
+            if(minPrice >= maxPrice) {
+                JOptionPane.showMessageDialog(this, "Khoảng giá không hợp lệ!", "Thông báo", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
         }
 
         try {

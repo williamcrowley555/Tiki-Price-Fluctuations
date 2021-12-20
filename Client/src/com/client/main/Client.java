@@ -264,8 +264,10 @@ public class Client extends javax.swing.JFrame {
         request.put("categoryId", categoryId);
         request.put("brandIds", brandIds);
         request.put("ratingAverage", ratingAverage);
-        request.put("minPrice", minPrice);
-        request.put("maxPrice", maxPrice);
+        if (minPrice != null)
+            request.put("minPrice", minPrice);
+        if (maxPrice != null)
+            request.put("maxPrice", maxPrice);
 
         Message requestMsg = new Message(request, MessageType.FILTER_PRODUCTS);
         sendMessage(requestMsg);
