@@ -312,6 +312,9 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     
     public void setConfigurableProductRadioButtons(String name, List<String> options, JPanel pnlOptionName,JPanel pnlOption, int stateVariable) {
         JLabel optionName = new JLabel(name);
+        Font myFont = new Font("Arial", Font.BOLD, 14);
+        optionName.setFont(myFont);
+        
         pnlOptionName.add(optionName);
         ButtonGroup buttonGroup = new ButtonGroup();
         GridLayout gridLayout = new GridLayout(options.size(),1);
@@ -452,7 +455,6 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         colorGroup = new javax.swing.ButtonGroup();
         sizeGroup = new javax.swing.ButtonGroup();
@@ -743,25 +745,20 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         btnTimKiem1.setBackground(new java.awt.Color(77, 77, 77));
         btnTimKiem1.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         btnTimKiem1.setForeground(new java.awt.Color(255, 255, 255));
-        btnTimKiem1.setText("Lọc");
+        btnTimKiem1.setText("Lọc lựa chọn");
         btnTimKiem1.setContentAreaFilled(false);
         btnTimKiem1.setOpaque(true);
-        btnTimKiem1.setPreferredSize(new java.awt.Dimension(130, 32));
+        btnTimKiem1.setPreferredSize(new java.awt.Dimension(140, 32));
         btnTimKiem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnTimKiem1ActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.ipadx = 29;
-        gridBagConstraints.ipady = 9;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(26, 10, 36, 10);
-        pnlButton.add(btnTimKiem1, gridBagConstraints);
+        pnlButton.add(btnTimKiem1, new java.awt.GridBagConstraints());
 
         pnlOption.add(pnlButton, java.awt.BorderLayout.PAGE_END);
+
+        scrollPaneOptions.setBorder(javax.swing.BorderFactory.createCompoundBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true), javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
         pnlOptionRadio.setLayout(new java.awt.GridLayout(3, 1));
 

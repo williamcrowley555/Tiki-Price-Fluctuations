@@ -68,7 +68,7 @@ public class reviewComponent extends javax.swing.JPanel {
         pnlContent.revalidate();
         
         lblTimeUsed.setText(this.timeUsed);
-        lblReviewDate.setText(this.reviewDate == null ? "Không có dữ liệu" : this.reviewDate);
+        lblReviewDate.setText(this.reviewDate == null ? "Ngày đánh giá: Không có dữ liệu" : "Ngày đánh giá: " + this.reviewDate);
         
         if (this.imageUrl != null)
         {
@@ -123,7 +123,6 @@ public class reviewComponent extends javax.swing.JPanel {
         lblTitle = new javax.swing.JLabel();
         lblRating = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        lblTitleDateReview = new javax.swing.JLabel();
         lblTimeUsed = new javax.swing.JLabel();
         lblReviewDate = new javax.swing.JLabel();
         pnlPic = new javax.swing.JPanel();
@@ -152,9 +151,6 @@ public class reviewComponent extends javax.swing.JPanel {
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/client/img/small_star.png"))); // NOI18N
-
-        lblTitleDateReview.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        lblTitleDateReview.setText("Ngày đánh giá: ");
 
         lblTimeUsed.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lblTimeUsed.setText("Đã dùng 1 tháng");
@@ -187,10 +183,7 @@ public class reviewComponent extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(lblTitleDateReview)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblReviewDate, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblReviewDate, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(pnlContent, javax.swing.GroupLayout.PREFERRED_SIZE, 766, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         jPanel2Layout.setVerticalGroup(
@@ -203,13 +196,12 @@ public class reviewComponent extends javax.swing.JPanel {
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
                     .addComponent(lblRating, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblTimeUsed, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblTitleDateReview, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblReviewDate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(pnlContent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlPic, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
 
         add(jPanel2, java.awt.BorderLayout.CENTER);
@@ -224,7 +216,6 @@ public class reviewComponent extends javax.swing.JPanel {
     private javax.swing.JLabel lblReviewDate;
     private javax.swing.JLabel lblTimeUsed;
     private javax.swing.JLabel lblTitle;
-    private javax.swing.JLabel lblTitleDateReview;
     private javax.swing.JPanel pnlContent;
     private javax.swing.JPanel pnlPic;
     private javax.swing.JTextArea txtContent;
