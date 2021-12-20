@@ -19,8 +19,10 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
@@ -82,13 +84,17 @@ public class panelTimNangCao extends javax.swing.JPanel {
     List<String> selectedBrands = new ArrayList<>();
     List<String> dates = new ArrayList<String>();
     List<Integer> prices = new ArrayList<Integer>();
+    LinkedHashMap<String, Object> currentproduct;
     InputValidatorUtil validator = new InputValidatorUtil();
-    String productName = "Laptop A";
+    String productName = "";
+    Long selectedProductId;
+    boolean found = false;
     int month = 11;
     int year = 2021;
     List<String> name = new ArrayList<String>();
     Long categoryId = 2L; //2L là id của Root - toàn bộ danh mục
     Client main;
+    productDetail popup;
     public panelTimNangCao(Client main) {
        
         initComponents();
@@ -192,6 +198,10 @@ public class panelTimNangCao extends javax.swing.JPanel {
     
     public void setComboBox(JComboBox<CategoryComboItem> comboBox, CategoryComboItem[] listItems) {
         comboBox.setModel(new DefaultComboBoxModel<>(listItems));
+    }
+    
+    public void setCurrentProduct(LinkedHashMap<String, Object> product){
+        this.currentproduct = product;
     }
     
     public void setTable(List<LinkedHashMap<String, Object>> products)
@@ -383,6 +393,8 @@ public class panelTimNangCao extends javax.swing.JPanel {
     private void initComponents() {
 
         buttonGroupStar = new javax.swing.ButtonGroup();
+        rightClickMenu = new javax.swing.JPopupMenu();
+        itemViewDetail = new javax.swing.JMenuItem();
         pnlLeft = new javax.swing.JPanel();
         pnlSearchAndFilter = new javax.swing.JPanel();
         pnlSearch = new javax.swing.JPanel();
@@ -420,6 +432,16 @@ public class panelTimNangCao extends javax.swing.JPanel {
         tableScrollPane = new javax.swing.JScrollPane();
         advanceProductTable = new javax.swing.JTable();
         pnlChart = new javax.swing.JPanel();
+
+        itemViewDetail.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        itemViewDetail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/client/img/view_detail_icon.png"))); // NOI18N
+        itemViewDetail.setText("Xem chi tiết");
+        itemViewDetail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemViewDetailActionPerformed(evt);
+            }
+        });
+        rightClickMenu.add(itemViewDetail);
 
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(0, 0, 0)));
@@ -650,6 +672,12 @@ public class panelTimNangCao extends javax.swing.JPanel {
         jLabel10.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         jLabel10.setText("Xem lịch sử giá :");
 
+        monthChooser.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                monthChooserPropertyChange(evt);
+            }
+        });
+
         yearChooser.setBackground(new java.awt.Color(204, 204, 204));
         yearChooser.setBorder(new javax.swing.border.MatteBorder(null));
 
@@ -695,6 +723,9 @@ public class panelTimNangCao extends javax.swing.JPanel {
         advanceProductTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 advanceProductTableMouseClicked(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                advanceProductTableMouseReleased(evt);
             }
         });
         tableScrollPane.setViewportView(advanceProductTable);
@@ -795,10 +826,14 @@ public class panelTimNangCao extends javax.swing.JPanel {
 
         int row = advanceProductTable.getSelectedRow();
         Long id = Long.parseLong(advanceProductTable.getModel().getValueAt(row, 0).toString());
+        this.selectedProductId = id;
         try {
             int month = monthChooser.getMonth()+1;
             int year = yearChooser.getYear();
             main.getProductHistoriesById(id, month, year);
+            main.getProduct(id);
+            System.out.println(currentproduct);
+            found = true;
         } catch (IOException ex) {
             Logger.getLogger(panelTimNangCao.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -812,11 +847,60 @@ public class panelTimNangCao extends javax.swing.JPanel {
 //        }
     }//GEN-LAST:event_comboboxCategoryMouseClicked
 
+    private void monthChooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_monthChooserPropertyChange
+        if (selectedProductId != null)
+        {
+            try {
+                int month = monthChooser.getMonth()+1;
+                int year = yearChooser.getYear();
+                main.getProductHistoriesById(selectedProductId, month, year);
+            } catch (IOException ex) {
+                Logger.getLogger(panelTimNangCao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (found)
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một sản phẩm", "Thông báo", JOptionPane.ERROR_MESSAGE);
+    }//GEN-LAST:event_monthChooserPropertyChange
+
+    private void advanceProductTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_advanceProductTableMouseReleased
+      int r = advanceProductTable.rowAtPoint(evt.getPoint());
+        if (r >= 0 && r < advanceProductTable.getRowCount()) {
+            advanceProductTable.setRowSelectionInterval(r, r);
+        } else {
+           advanceProductTable.clearSelection();
+        }
+        int rowindex = advanceProductTable.getSelectedRow();
+        if (rowindex < 0)
+            return;
+        if (evt.isPopupTrigger() && evt.getComponent() instanceof JTable ) {
+            
+            rightClickMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+        }
+    }//GEN-LAST:event_advanceProductTableMouseReleased
+
+    private void itemViewDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemViewDetailActionPerformed
+        int rowindex = advanceProductTable.getSelectedRow();
+        Long id = Long.parseLong(advanceProductTable.getValueAt(rowindex,0).toString());
+        if (this.popup == null) {
+            popup = new productDetail(currentproduct);
+            popup.setVisible(true);
+        } else {
+            this.popup.toFront();
+            this.popup.center();
+        }
+        popup.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                popup = null;
+            }
+        });
+    }//GEN-LAST:event_itemViewDetailActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable advanceProductTable;
     private javax.swing.ButtonGroup buttonGroupStar;
     private javax.swing.JComboBox<CategoryComboItem> comboboxCategory;
+    private javax.swing.JMenuItem itemViewDetail;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel10;
@@ -848,6 +932,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
     private javax.swing.JPanel pnlTable;
     private javax.swing.JPanel pnlTableBottom;
     private javax.swing.JPanel pnlTableTop;
+    private javax.swing.JPopupMenu rightClickMenu;
     private javax.swing.JScrollPane scrollPaneBrands;
     private javax.swing.JScrollPane tableScrollPane;
     private javax.swing.JTextField txtSearch;

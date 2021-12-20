@@ -271,6 +271,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         Set<String> option2Values = new HashSet<String>();
         Set<String> option3Values = new HashSet<String>();
         
+        if (configurableOptionsName == null || configurableOptionsName.isEmpty()) return;
         if (configurableOptionsName.get("optionName1") != null) {
             String optionName1 = String.valueOf(configurableOptionsName.get("optionName1"));
         

@@ -28,7 +28,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="panelHeader" pref="838" max="32767" attributes="0"/>
-          <Component id="pnlBody" alignment="0" pref="838" max="32767" attributes="0"/>
+          <Component id="pnlBody" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -180,15 +180,17 @@
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" max="-2" attributes="0">
-                          <Component id="lblReviewsCount" alignment="3" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="lblTwoStar" alignment="0" min="-2" pref="30" max="-2" attributes="0"/>
-                          <Component id="lblFourStar" alignment="3" max="32767" attributes="0"/>
-                          <Component id="lblFiveStar" alignment="3" max="32767" attributes="0"/>
-                          <Component id="lblThreeStar" alignment="3" max="32767" attributes="0"/>
-                          <Component id="jLabel3" alignment="3" max="32767" attributes="0"/>
                           <Component id="lblOneStar" alignment="1" min="-2" pref="29" max="-2" attributes="0"/>
                           <Component id="lblReset" alignment="0" pref="31" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblReviewsCount" alignment="3" max="32767" attributes="0"/>
+                              <Component id="lblFourStar" alignment="3" max="32767" attributes="0"/>
+                              <Component id="lblFiveStar" alignment="3" max="32767" attributes="0"/>
+                              <Component id="lblThreeStar" alignment="3" max="32767" attributes="0"/>
+                              <Component id="jLabel3" alignment="3" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
