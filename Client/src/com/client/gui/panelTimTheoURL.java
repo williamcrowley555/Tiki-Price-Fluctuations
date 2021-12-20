@@ -271,6 +271,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         Set<String> option2Values = new HashSet<String>();
         Set<String> option3Values = new HashSet<String>();
         
+        if (configurableOptionsName == null || configurableOptionsName.isEmpty()) return;
         if (configurableOptionsName.get("optionName1") != null) {
             String optionName1 = String.valueOf(configurableOptionsName.get("optionName1"));
         
@@ -485,7 +486,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         txtMota = new javax.swing.JTextArea();
         pnlOption = new javax.swing.JPanel();
         pnlButton = new javax.swing.JPanel();
-        btnTimKiem1 = new javax.swing.JButton();
+        btnCPFilter = new javax.swing.JButton();
         scrollPaneOptions = new javax.swing.JScrollPane();
         pnlOptionRadio = new javax.swing.JPanel();
         pnlOption1 = new javax.swing.JPanel();
@@ -742,19 +743,19 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         pnlButton.setPreferredSize(new java.awt.Dimension(150, 50));
         pnlButton.setLayout(new java.awt.GridBagLayout());
 
-        btnTimKiem1.setBackground(new java.awt.Color(77, 77, 77));
-        btnTimKiem1.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        btnTimKiem1.setForeground(new java.awt.Color(255, 255, 255));
-        btnTimKiem1.setText("Lọc lựa chọn");
-        btnTimKiem1.setContentAreaFilled(false);
-        btnTimKiem1.setOpaque(true);
-        btnTimKiem1.setPreferredSize(new java.awt.Dimension(140, 32));
-        btnTimKiem1.addActionListener(new java.awt.event.ActionListener() {
+        btnCPFilter.setBackground(new java.awt.Color(77, 77, 77));
+        btnCPFilter.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        btnCPFilter.setForeground(new java.awt.Color(255, 255, 255));
+        btnCPFilter.setText("Lọc lựa chọn");
+        btnCPFilter.setContentAreaFilled(false);
+        btnCPFilter.setOpaque(true);
+        btnCPFilter.setPreferredSize(new java.awt.Dimension(140, 32));
+        btnCPFilter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTimKiem1ActionPerformed(evt);
+                btnCPFilterActionPerformed(evt);
             }
         });
-        pnlButton.add(btnTimKiem1, new java.awt.GridBagConstraints());
+        pnlButton.add(btnCPFilter, new java.awt.GridBagConstraints());
 
         pnlOption.add(pnlButton, java.awt.BorderLayout.PAGE_END);
 
@@ -881,7 +882,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTimTheoURLFocusGained
 
-    private void btnTimKiem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimKiem1ActionPerformed
+    private void btnCPFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCPFilterActionPerformed
         if(currentproduct.get("id") == null){
             JOptionPane.showMessageDialog(this, "Bạn chưa tìm kiếm sản phẩm", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
             return;
@@ -891,12 +892,12 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         } catch (IOException ex) {
             Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_btnTimKiem1ActionPerformed
+    }//GEN-LAST:event_btnCPFilterActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCPFilter;
     private javax.swing.JButton btnTimKiem;
-    private javax.swing.JButton btnTimKiem1;
     private javax.swing.JButton btnXemReview;
     private javax.swing.ButtonGroup colorGroup;
     private javax.swing.JLabel jLabel3;

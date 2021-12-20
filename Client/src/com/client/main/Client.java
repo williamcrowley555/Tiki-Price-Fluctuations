@@ -118,6 +118,7 @@ public class Client extends javax.swing.JFrame {
     
     public void setCurrentProduct(LinkedHashMap<String, Object> product){
         this.pnlURL.setCurrentProduct(product);
+        this.pnlAdvanced.setCurrentProduct(product);
     }
     
     public void updateLineChartURL(List<LinkedHashMap<String, Object>> productHistories, String productName){
