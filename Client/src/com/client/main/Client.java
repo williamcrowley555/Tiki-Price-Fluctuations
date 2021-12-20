@@ -230,9 +230,9 @@ public class Client extends javax.swing.JFrame {
     
     public void setTable(List<LinkedHashMap<String, Object>> products)
     {   
-        
-        if(products.size() == 1 && products.get(0).isEmpty())
+        if(products == null || products.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Không tìm thấy bất kì sản phẩm nào", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        }
         
         try {
             pnlAdvanced.setTable(products);

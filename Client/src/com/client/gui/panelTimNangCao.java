@@ -170,7 +170,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
             return 4f;
         if(jRadioButton3.isSelected())
             return 3f;
-        if(jRadioButton5.isSelected())
+        if(jRadioButton4.isSelected())
             return 2f;
         return 1f;
     }
@@ -212,17 +212,16 @@ public class panelTimNangCao extends javax.swing.JPanel {
         model.addColumn("Số lượng đã bán");
         model.addColumn("Giá");
         
-        List<Integer> id = new ArrayList<>();
-        List<String> name = new ArrayList<>();
-        
-        for(LinkedHashMap<String, Object> product : products)
-        {
-            Vector row = new Vector();
-            row.add(product.get("id"));
-            row.add(product.get("name"));
-            row.add(product.get("all_time_quantity_sold"));
-            row.add(product.get("price"));
-            model.addRow(row);
+        if (products != null) {
+            for(LinkedHashMap<String, Object> product : products)
+            {
+                Vector row = new Vector();
+                row.add(product.get("id"));
+                row.add(product.get("name"));
+                row.add(product.get("all_time_quantity_sold"));
+                row.add(product.get("price"));
+                model.addRow(row);
+            }
         }
         
         advanceProductTable.setModel(model);
