@@ -98,8 +98,8 @@ public class ReadThread implements Runnable {
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
                             
                             List<LinkedHashMap<String, Object>> recvProducts = (List<LinkedHashMap<String, Object>>) responseContent.get("products");
-                            System.out.println("Client receive: ");
-                            recvProducts.forEach(System.out::println);
+                            
+                            client.setTable(recvProducts);
                             break;
 
                         case CONFIGURABLE_PRODUCTS:
@@ -214,13 +214,6 @@ public class ReadThread implements Runnable {
 
                             String error = (String) responseContent.get("error");
                             System.out.println("Client receive: " + error);
-                            break;
-                            
-                        case ADVANCE_PRODUCTS:
-                            responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
-                            List<List<LinkedHashMap<String, Object>>> listAdvanceProducts = (List<List<LinkedHashMap<String, Object>>>) responseContent.get("list_advance_products");
-                            
-                            client.setTable(listAdvanceProducts);
                             break;
 
                         default:

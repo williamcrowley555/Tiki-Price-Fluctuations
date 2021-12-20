@@ -10,6 +10,7 @@ import java.io.*;
 import java.net.Socket;
 import java.security.PublicKey;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -76,11 +77,11 @@ public class Client {
         sendMessage(requestMsg);
     }
 
-    public void filterProducts(String productName, Long categoryId, Long brandId, float ratingAverage, Long minPrice, Long maxPrice) throws IOException {
+    public void filterProducts(String productName, Long categoryId, List<Long> brandIds, float ratingAverage, Long minPrice, Long maxPrice) throws IOException {
         Map<String, Object> request = new HashMap<>();
         request.put("productName", productName);
         request.put("categoryId", categoryId);
-        request.put("brandId", brandId);
+        request.put("brandIds", brandIds);
         request.put("ratingAverage", ratingAverage);
         request.put("minPrice", minPrice);
         request.put("maxPrice", maxPrice);
@@ -191,11 +192,11 @@ public class Client {
                 } else if (input.equals("2")) {
                     String productName = null;
                     Long categoryId = 1815L;
-                    Long brandId = 246045L;
+                    List<Long> brandIds = List.of(18984L, 246045L);
                     Float ratingAverage = 4f;
                     Long minPrice = 0L;
                     Long maxPrice = 300000L;
-                    client.filterProducts(productName, categoryId, brandId, ratingAverage, minPrice, maxPrice);
+                    client.filterProducts(productName, categoryId, brandIds, ratingAverage, minPrice, maxPrice);
                 } else if (input.equals("3")) {
                     client.getConfigurableProducts(249953L);
                 } else if (input.equals("4")) {

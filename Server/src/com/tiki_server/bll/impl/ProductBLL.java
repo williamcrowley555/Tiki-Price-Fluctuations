@@ -35,8 +35,22 @@ public class ProductBLL implements IProductBLL {
     }
 
     @Override
-    public List<ProductDTO> filter(String productName, Long categoryId, Long brandId, float ratingAverage, Long minPrice, Long maxPrice) {
-        return productDAL.filter(productName, categoryId, brandId, ratingAverage, minPrice, maxPrice);
+    public List<ProductDTO> filter(String productName, Long categoryId, List<Long> brandIds, float ratingAverage, Long minPrice, Long maxPrice) {
+        String strBrandIds = null;
+
+        if (brandIds != null && !brandIds.isEmpty()) {
+            strBrandIds = "";
+
+            for (Long brandId : brandIds)
+                strBrandIds += brandId + ",";
+        }
+
+        if (strBrandIds != null) {
+//            Remove last comma
+            strBrandIds = strBrandIds.substring(0, strBrandIds.length() - 1);
+        }
+
+        return productDAL.filter(productName, categoryId, strBrandIds, ratingAverage, minPrice, maxPrice);
     }
 
     @Override

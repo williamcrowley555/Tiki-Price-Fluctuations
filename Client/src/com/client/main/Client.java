@@ -89,7 +89,23 @@ public class Client extends javax.swing.JFrame {
         
         initCardLayout();
         CustomWindow();
-         
+        addWindowClosingListener(this);
+    }
+    
+    public void addWindowClosingListener(Client client) {
+        client.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
+        public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+            try {
+                client.closeSocket();
+            } catch (IOException ex) {
+                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            System.exit(0);
+        }
+        });
     }
     
     public void setReviewsList(ArrayList<LinkedHashMap<String, Object>> reviewsList){
@@ -150,19 +166,13 @@ public class Client extends javax.swing.JFrame {
         this.pnlAdvanced.showLineChart(productName, month, year, dates, prices);
     }
     
-    public void updateBrands(List<LinkedHashMap<String, Object>> recvBrands)
-    {  
-        ArrayList<String> brandNames = new ArrayList<>();
-        ArrayList<Integer> brandIds = new ArrayList<>();
-        int numberOfBrands = 0;
+    public void updateBrands(List<LinkedHashMap<String, Object>> recvBrands) {  
+        Map<Long, String> brands = new HashMap<>();
+        
         for (LinkedHashMap<String, Object> brand : recvBrands)
-        {
-            brandIds.add((Integer) brand.get("id"));
-            brandNames.add(brand.get("name").toString());
-            System.out.println(brand.get("name"));
-        }
-        pnlAdvanced.listNameBrand(brandNames, brandIds);
-        pnlAdvanced.updateBrandCheckbox();
+            brands.put(Long.valueOf((Integer) brand.get("id")), brand.get("name").toString());
+        
+        pnlAdvanced.updateBrandCheckbox(brands);
     }
     
     public void updateComboboxCategory(List<LinkedHashMap<String, Object>> categories){
@@ -196,7 +206,6 @@ public class Client extends javax.swing.JFrame {
         }
     }
     
-    
     public void closeSocket() throws IOException, InterruptedException {
         Message message = new Message(null, MessageType.USER_DISCONNECT);
         sendMessage(message);
@@ -218,16 +227,15 @@ public class Client extends javax.swing.JFrame {
         }
     }
     
-    public void setTable(List<List<LinkedHashMap<String, Object>>> listAdvanceProducts)
+    public void setTable(List<LinkedHashMap<String, Object>> products)
     {   
         
-        if(listAdvanceProducts.size() == 1 && listAdvanceProducts.get(0).isEmpty())
+        if(products.size() == 1 && products.get(0).isEmpty())
             JOptionPane.showMessageDialog(this, "Không tìm thấy bất kì sản phẩm nào", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         
         try {
-            pnlAdvanced.setTable(listAdvanceProducts);
-        } catch (Exception e)
-        {
+            pnlAdvanced.setTable(products);
+        } catch (Exception e) {
             System.out.println("catched");
             JOptionPane.showMessageDialog(this, "Thao tác quá nhanh, hệ thống không kịp cập nhật", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -250,11 +258,11 @@ public class Client extends javax.swing.JFrame {
         sendMessage(requestMsg);
     }
 
-    public void filterProducts(String productName, Long categoryId, Long brandId, float ratingAverage, Long minPrice, Long maxPrice) throws IOException {
+    public void filterProducts(String productName, Long categoryId, List<Long> brandIds, float ratingAverage, Long minPrice, Long maxPrice) throws IOException {
         Map<String, Object> request = new HashMap<>();
         request.put("productName", productName);
         request.put("categoryId", categoryId);
-        request.put("brandId", brandId);
+        request.put("brandIds", brandIds);
         request.put("ratingAverage", ratingAverage);
         request.put("minPrice", minPrice);
         request.put("maxPrice", maxPrice);
@@ -274,27 +282,6 @@ public class Client extends javax.swing.JFrame {
     public void getCategories() throws IOException {
         Map<String, Object> request = new HashMap<>();
         Message requestMsg = new Message(request, MessageType.GET_CATEGORIES);
-        sendMessage(requestMsg);
-    }
-    
-    public void sendRequestAdvanceProducts(String productName, Long categoryId, String brands, String ratingAverage, String minPrice, String maxPrice) throws IOException {
-        Map<String, Object> request = new HashMap<>();
-        if(productName != null)
-            request.put("productName", productName);
-        
-        request.put("categoryId", categoryId);
-        
-        if(brands != null)
-            request.put("brands", brands);
-        
-        request.put("ratingAverage", ratingAverage);
-        if(minPrice != null)
-            request.put("minPrice", minPrice);
-        
-        if(maxPrice != null)
-            request.put("maxPrice", maxPrice);
-        
-        Message requestMsg = new Message(request, MessageType.GET_ADVANCE_PRODUCTS);
         sendMessage(requestMsg);
     }
     
@@ -437,8 +424,6 @@ public class Client extends javax.swing.JFrame {
         lblMaximize_Restore.setText("\u2750");
     }
     
-    
-    
     public void Maximize_Restore(boolean state)
     {
        if (state)
@@ -463,8 +448,6 @@ public class Client extends javax.swing.JFrame {
         pnlAdvanced.clearBrandPanel();
     }
     
-   
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -610,6 +593,13 @@ public class Client extends javax.swing.JFrame {
     }//GEN-LAST:event_lblMaximize_RestoreMouseClicked
 
     private void lblExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblExitMouseClicked
+        try {
+            closeSocket();
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
         System.exit(0);
     }//GEN-LAST:event_lblExitMouseClicked
 
@@ -773,11 +763,11 @@ public class Client extends javax.swing.JFrame {
 //                    } else if (input.equals("2")) {
 //                        String productName = null;
 //                        Long categoryId = 1815L;
-//                        Long brandId = 246045L;
+//                        List<Long> brandIds = List.of(18984L, 246045L);
 //                        Float ratingAverage = 4f;
 //                        Long minPrice = 0L;
 //                        Long maxPrice = 300000L;
-//                        clientGUI.filterProducts(productName, categoryId, brandId, ratingAverage, minPrice, maxPrice);
+//                        client.filterProducts(productName, categoryId, brandIds, ratingAverage, minPrice, maxPrice);
 //                    } else if (input.equals("3")) {
 //                        clientGUI.getConfigurableProducts(249953L);
 //                    } else if (input.equals("4")) {

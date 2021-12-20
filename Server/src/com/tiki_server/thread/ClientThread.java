@@ -19,6 +19,7 @@ import java.io.*;
 import java.net.Socket;
 import java.security.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ClientThread implements Runnable {
     private boolean isRunning = true;
@@ -101,13 +102,18 @@ public class ClientThread implements Runnable {
                             } else {
                                 String productName = requestContent.containsKey("productName") ? (String) requestContent.get("productName") : null;
                                 Long categoryId = requestContent.containsKey("categoryId") ? Long.valueOf((int) requestContent.get("categoryId")) : null;
-                                Long brandId = requestContent.containsKey("brandId") ? Long.valueOf((int) requestContent.get("brandId")) : null;
+
+                                List<Integer> brandIdsInInteger = requestContent.containsKey("brandIds") ? (List<Integer>) requestContent.get("brandIds") : null;
+                                List<Long> brandIds = brandIdsInInteger == null ? null : brandIdsInInteger.stream()
+                                                                                                        .mapToLong(Integer::longValue)
+                                                                                                        .boxed().collect(Collectors.toList());
+
                                 Float ratingAverage = requestContent.containsKey("ratingAverage") ? ((Double) requestContent.get("ratingAverage")).floatValue() : null;
                                 Long minPrice = requestContent.containsKey("minPrice") ? Long.valueOf((int) requestContent.get("minPrice")) : null;
                                 Long maxPrice = requestContent.containsKey("maxPrice") ? Long.valueOf((int) requestContent.get("maxPrice")) : null;
 
                                 productBLL = new ProductBLL();
-                                List<ProductDTO> products = productBLL.filter(productName, categoryId, brandId, ratingAverage, minPrice, maxPrice);
+                                List<ProductDTO> products = productBLL.filter(productName, categoryId, brandIds, ratingAverage, minPrice, maxPrice);
 
                                 responseContent = new HashMap<>();
 
@@ -276,46 +282,6 @@ public class ClientThread implements Runnable {
 
                             responseContent.put("brands", brands);
                             response = new Message(responseContent, MessageType.BRANDS_BY_CATEGORY_ID);
-                            sendMessage(response);
-                            break;
-
-                        case GET_ADVANCE_PRODUCTS:
-                            productBLL = new ProductBLL();
-                            requestContent = (Map<String, Object>) decryptContent(secretKey, Base64.getDecoder().decode(encryptedRequestContent));
-
-                            System.out.println(requestContent);
-
-                            categoryId = requestContent.containsKey("categoryId") ? Long.valueOf((int) requestContent.get("categoryId")) : null;
-                            String productName = requestContent.containsKey("productName") ? (String) requestContent.get("productName") : null;
-                            float ratingAverage = requestContent.containsKey("ratingAverage") ? Float.valueOf((String) requestContent.get("ratingAverage")) : null;
-                            Long minPrice = requestContent.containsKey("minPrice") ? Long.valueOf((String) requestContent.get("minPrice")) : null;
-                            Long maxPrice = requestContent.containsKey("maxPrice") ? Long.valueOf((String) requestContent.get("maxPrice")) : null;
-                            String listBrands = requestContent.containsKey("brands") ? (String) requestContent.get("brands") : null;
-
-                            List<List<ProductDTO>> listAdvanceProduct = new ArrayList<>();
-
-                            if(listBrands == null) {
-                                Long brandId = null;
-                                List<ProductDTO> productAdvance = productBLL.filter(productName, categoryId, brandId, ratingAverage, minPrice, maxPrice);
-                                if(productAdvance != null)
-                                    listAdvanceProduct.add(productAdvance);
-                            } else {
-                                StringTokenizer tokenizer = new StringTokenizer(listBrands, "-");
-                                List<Long> brandIds = new ArrayList<>();
-                                while (tokenizer.hasMoreTokens())
-                                    brandIds.add(Long.valueOf(tokenizer.nextToken()));
-                                for (Long brandId : brandIds) {
-                                    List<ProductDTO> productAdvance = productBLL.filter(productName, categoryId, brandId, ratingAverage, minPrice, maxPrice);
-                                    if(productAdvance != null)
-                                        listAdvanceProduct.add(productAdvance);
-                                }
-                            }
-                            if(listAdvanceProduct.size()==0)
-                                listAdvanceProduct = null;
-
-                            responseContent = new HashMap<>();
-                            responseContent.put("list_advance_products", listAdvanceProduct);
-                            response = new Message(responseContent, MessageType.ADVANCE_PRODUCTS);
                             sendMessage(response);
                             break;
 

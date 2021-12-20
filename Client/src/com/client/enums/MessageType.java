@@ -29,7 +29,6 @@ public enum MessageType {
     GET_REVIEWS_BY_PRODUCT_ID,
     GET_CATEGORIES,
     GET_BRANDS_BY_CATEGORY_ID,
-    GET_ADVANCE_PRODUCTS,
     GET_TIMELINE_BY_REVIEWID,
 
 //    Connection state
