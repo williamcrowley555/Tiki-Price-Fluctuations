@@ -261,7 +261,9 @@ public class panelTimTheoURL extends javax.swing.JPanel {
             String optionName1 = String.valueOf(configurableOptionsName.get("optionName1"));
         
             for(LinkedHashMap<String, Object> cp : configurableProducts) {  
+                if(cp.get("option1") != null){
                 option1Values.add(String.valueOf(cp.get("option1")));
+                }
             }
             
             setConfigurableProductRadioButtons(optionName1, new ArrayList<>(option1Values), pnlOptionName1, pnlOptions1, 1);
@@ -272,7 +274,9 @@ public class panelTimTheoURL extends javax.swing.JPanel {
             String name2 = String.valueOf(configurableOptionsName.get("optionName2"));
             
             for(LinkedHashMap<String, Object> cp : configurableProducts) {  
+                if(cp.get("option2") != null){
                 option2Values.add(String.valueOf(cp.get("option2")));
+                }
             }
             
             setConfigurableProductRadioButtons(name2, new ArrayList<>(option2Values), pnlOptionName2, pnlOptions2, 2);
@@ -283,7 +287,9 @@ public class panelTimTheoURL extends javax.swing.JPanel {
             String name3 = String.valueOf(configurableOptionsName.get("optionName3"));
              
             for(LinkedHashMap<String, Object> cp : configurableProducts) {  
+                if(cp.get("option3") != null){
                 option3Values.add(String.valueOf(cp.get("option3")));
+                }
             }
             
             setConfigurableProductRadioButtons(name3, new ArrayList<>(option3Values), pnlOptionName3, pnlOptions3, 3);
@@ -308,7 +314,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
                         if (e.getStateChange() == ItemEvent.SELECTED)
                         {
                             selectedOption1 = radioButton.getText();
-                            System.out.println(selectedOption1);
+                            //System.out.println(selectedOption1);
                         } else {
                             selectedOption1 = "";
                         }                 
@@ -322,7 +328,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
                         if (e.getStateChange() == ItemEvent.SELECTED)
                         {
                             selectedOption2 = radioButton.getText();
-                            System.out.println(selectedOption2);
+                            //System.out.println(selectedOption2);
                         } else {
                             selectedOption2 = "";
                         }                 
@@ -336,7 +342,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
                         if (e.getStateChange() == ItemEvent.SELECTED)
                         {
                             selectedOption3 = radioButton.getText();
-                             System.out.println(selectedOption3);
+                            //System.out.println(selectedOption3);
                         } else {
                             selectedOption3 = "";
                         }                 
@@ -432,6 +438,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         colorGroup = new javax.swing.ButtonGroup();
         sizeGroup = new javax.swing.ButtonGroup();
@@ -461,6 +468,10 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         txtMota = new javax.swing.JTextArea();
         pnlOption = new javax.swing.JPanel();
+        pnlButton = new javax.swing.JPanel();
+        btnTimKiem1 = new javax.swing.JButton();
+        scrollPaneOptions = new javax.swing.JScrollPane();
+        pnlOptionRadio = new javax.swing.JPanel();
         pnlOption1 = new javax.swing.JPanel();
         pnlOptions1 = new javax.swing.JPanel();
         pnlOptionName1 = new javax.swing.JPanel();
@@ -520,7 +531,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnTimKiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnXemReview, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addContainerGap(60, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -700,21 +711,50 @@ public class panelTimTheoURL extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pnlLeft.add(jPanel2, java.awt.BorderLayout.LINE_START);
 
         pnlOption.setBackground(new java.awt.Color(255, 255, 255));
-        pnlOption.setPreferredSize(new java.awt.Dimension(150, 475));
-        pnlOption.setLayout(new java.awt.GridLayout(3, 1));
+        pnlOption.setPreferredSize(new java.awt.Dimension(180, 475));
+        pnlOption.setLayout(new java.awt.BorderLayout());
+
+        pnlButton.setBackground(new java.awt.Color(255, 255, 255));
+        pnlButton.setPreferredSize(new java.awt.Dimension(150, 50));
+        pnlButton.setLayout(new java.awt.GridBagLayout());
+
+        btnTimKiem1.setBackground(new java.awt.Color(77, 77, 77));
+        btnTimKiem1.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        btnTimKiem1.setForeground(new java.awt.Color(255, 255, 255));
+        btnTimKiem1.setText("Lọc");
+        btnTimKiem1.setContentAreaFilled(false);
+        btnTimKiem1.setOpaque(true);
+        btnTimKiem1.setPreferredSize(new java.awt.Dimension(130, 32));
+        btnTimKiem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimKiem1ActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 29;
+        gridBagConstraints.ipady = 9;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(26, 10, 36, 10);
+        pnlButton.add(btnTimKiem1, gridBagConstraints);
+
+        pnlOption.add(pnlButton, java.awt.BorderLayout.PAGE_END);
+
+        pnlOptionRadio.setLayout(new java.awt.GridLayout(3, 1));
 
         pnlOption1.setBackground(new java.awt.Color(255, 255, 255));
         pnlOption1.setLayout(new java.awt.BorderLayout());
 
         pnlOptions1.setBackground(new java.awt.Color(255, 255, 255));
-        pnlOptions1.setPreferredSize(new java.awt.Dimension(150, 120));
+        pnlOptions1.setPreferredSize(new java.awt.Dimension(150, 100));
         pnlOptions1.setLayout(new java.awt.GridLayout(5, 1));
         pnlOption1.add(pnlOptions1, java.awt.BorderLayout.PAGE_END);
 
@@ -724,27 +764,27 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         pnlOptionName1.setLayout(new java.awt.GridBagLayout());
         pnlOption1.add(pnlOptionName1, java.awt.BorderLayout.CENTER);
 
-        pnlOption.add(pnlOption1);
+        pnlOptionRadio.add(pnlOption1);
 
         pnlOption2.setBackground(new java.awt.Color(255, 255, 255));
         pnlOption2.setLayout(new java.awt.BorderLayout());
 
         pnlOptions2.setBackground(new java.awt.Color(255, 255, 255));
-        pnlOptions2.setPreferredSize(new java.awt.Dimension(150, 120));
-        pnlOptions2.setLayout(new java.awt.GridLayout());
+        pnlOptions2.setPreferredSize(new java.awt.Dimension(150, 100));
+        pnlOptions2.setLayout(new java.awt.GridLayout(1, 0));
         pnlOption2.add(pnlOptions2, java.awt.BorderLayout.PAGE_END);
 
         pnlOptionName2.setBackground(new java.awt.Color(255, 255, 255));
         pnlOptionName2.setLayout(new java.awt.GridBagLayout());
         pnlOption2.add(pnlOptionName2, java.awt.BorderLayout.CENTER);
 
-        pnlOption.add(pnlOption2);
+        pnlOptionRadio.add(pnlOption2);
 
         pnlOption3.setBackground(new java.awt.Color(255, 255, 255));
         pnlOption3.setLayout(new java.awt.BorderLayout());
 
         pnlOptions3.setBackground(new java.awt.Color(255, 255, 255));
-        pnlOptions3.setPreferredSize(new java.awt.Dimension(150, 120));
+        pnlOptions3.setPreferredSize(new java.awt.Dimension(150, 100));
         pnlOptions3.setLayout(new java.awt.GridBagLayout());
         pnlOption3.add(pnlOptions3, java.awt.BorderLayout.PAGE_END);
 
@@ -752,7 +792,11 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         pnlOptionName3.setLayout(new java.awt.GridBagLayout());
         pnlOption3.add(pnlOptionName3, java.awt.BorderLayout.CENTER);
 
-        pnlOption.add(pnlOption3);
+        pnlOptionRadio.add(pnlOption3);
+
+        scrollPaneOptions.setViewportView(pnlOptionRadio);
+
+        pnlOption.add(scrollPaneOptions, java.awt.BorderLayout.CENTER);
 
         pnlLeft.add(pnlOption, java.awt.BorderLayout.LINE_END);
 
@@ -790,7 +834,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
             }
         } else 
             JOptionPane.showMessageDialog(this, "URL không hợp lệ", "Thông báo", JOptionPane.ERROR_MESSAGE);
-        
+     
     }//GEN-LAST:event_btnTimKiemActionPerformed
 
     private void btnXemReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXemReviewActionPerformed
@@ -825,9 +869,22 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTimTheoURLFocusGained
 
+    private void btnTimKiem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimKiem1ActionPerformed
+        if(currentproduct.get("id") == null){
+            JOptionPane.showMessageDialog(this, "Bạn chưa tìm kiếm sản phẩm", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
+            return;
+        }
+        try {
+            main.getConfigurableProductHistories(Long.valueOf((int) currentproduct.get("id")), selectedOption1, selectedOption2, selectedOption3, monthChooser.getMonth()+1, yearChooser.getYear());
+        } catch (IOException ex) {
+            Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnTimKiem1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnTimKiem;
+    private javax.swing.JButton btnTimKiem1;
     private javax.swing.JButton btnXemReview;
     private javax.swing.ButtonGroup colorGroup;
     private javax.swing.JLabel jLabel3;
@@ -846,6 +903,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     private javax.swing.JLabel lblPrice;
     private javax.swing.JLabel lblPrice1;
     private com.toedter.calendar.JMonthChooser monthChooser;
+    private javax.swing.JPanel pnlButton;
     private javax.swing.JPanel pnlChart;
     private javax.swing.JPanel pnlLeft;
     private javax.swing.JPanel pnlOption;
@@ -855,11 +913,13 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     private javax.swing.JPanel pnlOptionName1;
     private javax.swing.JPanel pnlOptionName2;
     private javax.swing.JPanel pnlOptionName3;
+    private javax.swing.JPanel pnlOptionRadio;
     private javax.swing.JPanel pnlOptions1;
     private javax.swing.JPanel pnlOptions2;
     private javax.swing.JPanel pnlOptions3;
     private javax.swing.JPanel pnlPic;
     private javax.swing.JPanel pnlSearch;
+    private javax.swing.JScrollPane scrollPaneOptions;
     private javax.swing.ButtonGroup sizeGroup;
     private javax.swing.JTextArea txtMota;
     private javax.swing.JTextArea txtTenSP;

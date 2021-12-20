@@ -349,8 +349,8 @@ public class panelTimNangCao extends javax.swing.JPanel {
 //        domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
         renderer1.setDefaultItemLabelGenerator(new StandardCategoryItemLabelGenerator("{2}", NumberFormat.getNumberInstance()));
         renderer1.setDefaultPositiveItemLabelPosition(new ItemLabelPosition( 
-             ItemLabelAnchor.CENTER, TextAnchor.BASELINE_LEFT, TextAnchor.BASELINE_LEFT, 
-             - Math.PI / 4)); 
+             ItemLabelAnchor.CENTER, TextAnchor.BASELINE_RIGHT, TextAnchor.BASELINE_RIGHT, 
+             - Math.PI / 8)); 
         
         renderer1.setDefaultItemLabelsVisible(true);
         
@@ -771,31 +771,60 @@ public class panelTimNangCao extends javax.swing.JPanel {
 //                JOptionPane.showMessageDialog(this, "Bạn phải nhập cả giá từ và giá đến", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 //               return;
 //            }
-        if(!minPrice.equals("") && !maxPrice.equals(""))
-        {
-            String message = validator.isValidMoney(minPrice);
-            if(!message.equals(""))
-            {
-                JOptionPane.showMessageDialog(this, message, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
-            
-            message = validator.isValidMoney(minPrice);
-            if(!message.equals(""))
-            {
-                JOptionPane.showMessageDialog(this, message, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
-            if(Long.parseLong(minPrice) > Long.parseLong(maxPrice))
-            {
-                JOptionPane.showMessageDialog(this, "Giá từ phải bé hơn giá đến", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
-        }
-        if(minPrice.equals("") && minPrice.equals(""))
+//        if(!minPrice.equals("") && !maxPrice.equals(""))
+//        {
+//            String message = validator.isValidMoney(minPrice);
+//            if(!message.equals(""))
+//            {
+//                JOptionPane.showMessageDialog(this, message, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+//                return;
+//            }
+//            
+//            message = validator.isValidMoney(minPrice);
+//            if(!message.equals(""))
+//            {
+//                JOptionPane.showMessageDialog(this, message, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+//                return;
+//            }
+//            if(Long.parseLong(minPrice) > Long.parseLong(maxPrice))
+//            {
+//                JOptionPane.showMessageDialog(this, "Giá từ phải bé hơn giá đến", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+//                return;
+//            }
+//        }
+        if(minPrice.equals("") && maxPrice.equals(""))
         {
             minPrice = null;
             maxPrice = null;
+        } else if(minPrice.equals("") && !maxPrice.equals("")){
+             minPrice = null;
+             if (!validator.isValidMoney(maxPrice).isEmpty()){
+                  JOptionPane.showMessageDialog(this, "Nhập giá đến không hợp lệ", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                  return;
+             }                
+        } else if(!minPrice.equals("") && maxPrice.equals("")){
+            maxPrice  = null;
+            if (!validator.isValidMoney(minPrice).isEmpty()){
+                  JOptionPane.showMessageDialog(this, "Nhập giá từ không hợp lệ", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                  return;
+             }
+        } else {
+        if (!validator.isValidMoney(minPrice).isEmpty() || !validator.isValidMoney(maxPrice).isEmpty())
+        {
+                  JOptionPane.showMessageDialog(this, "Nhập giá từ hoặc giá đến không hợp lệ", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                  return;
+        }
+          
+        if (Long.valueOf(minPrice) == Long.valueOf(maxPrice)){
+                  JOptionPane.showMessageDialog(this, "Nhập giá từ và giá đến phải khác nhau", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                  return;
+        } else if (Long.valueOf(maxPrice) < Long.valueOf(minPrice)){
+                  JOptionPane.showMessageDialog(this, "Nhập giá đến phải lớn hơn giá từ", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                  return;
+        } else {
+              
+        }
+              
         }
         
         String brands = "";

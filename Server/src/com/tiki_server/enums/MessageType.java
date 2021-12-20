@@ -32,6 +32,7 @@ public enum MessageType {
     GET_BRANDS_BY_CATEGORY_ID,
     GET_ADVANCE_PRODUCTS,
     GET_TIMELINE_BY_REVIEWID,
+    GET_OPTION,
 
 //    Connection state
     USER_DISCONNECT
