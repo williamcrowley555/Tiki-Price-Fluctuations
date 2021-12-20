@@ -183,7 +183,6 @@ public class InputValidatorUtil {
     
     public static String isValidMoney(String money)
     {
-        if (money.isEmpty()) return " không được để trống";
         String regex = "[^0-9]";
         boolean result = money.matches(regex);
         if(result) {

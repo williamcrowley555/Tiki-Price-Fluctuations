@@ -9,11 +9,12 @@ import com.client.gui.others.MyComboBoxEditor;
 import com.client.gui.others.MyComboBoxRenderer;
 import com.client.gui.others.MyScrollBarUI;
 import com.client.main.Client;
-import com.client.model.BrandComboItem;
+import com.client.model.BrandCheckboxItem;
 import com.client.model.CategoryComboItem;
 import com.client.thread.ReadThread;
 import com.client.thread.WriteThread;
 import com.client.util.InputValidatorUtil;
+import com.client.util.MapUtil;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -75,17 +76,17 @@ public class panelTimNangCao extends javax.swing.JPanel {
      */
     String searchData;
     String json;
-    BrandComboItem[] listBrands;
+    Map<Long, String> currentBrands = new HashMap<>();
     HashMap<Long, String> brandIdAndName;
-    ArrayList<String> brandList = new ArrayList<>();
-    ArrayList<String> selectedBrands = new ArrayList<>();
-    ArrayList<String> dates = new ArrayList<String>();
-    ArrayList<Integer> prices = new ArrayList<Integer>();
+    List<String> brandList = new ArrayList<>();
+    List<String> selectedBrands = new ArrayList<>();
+    List<String> dates = new ArrayList<String>();
+    List<Integer> prices = new ArrayList<Integer>();
     InputValidatorUtil validator = new InputValidatorUtil();
     String productName = "Laptop A";
     int month = 11;
     int year = 2021;
-    ArrayList<String> name = new ArrayList<String>();
+    List<String> name = new ArrayList<String>();
     Long categoryId = 2L; //2L là id của Root - toàn bộ danh mục
     Client main;
     public panelTimNangCao(Client main) {
@@ -98,6 +99,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         for (int i = 1; i < 31; i++){
             prices.add(i +100 );
         }
+        
         showLineChart(productName, month, year, dates, prices);
         comboboxCategory = myComboBox(comboboxCategory, new Color(14,142,233));
         scrollPaneBrands.getVerticalScrollBar().setUI(new MyScrollBarUI());
@@ -154,28 +156,17 @@ public class panelTimNangCao extends javax.swing.JPanel {
         table.setFont(new Font("Tahoma", Font.PLAIN, 16));
     }
     
-    public String selectedButtonGroupStar()
+    public float selectedButtonGroupStar()
     {
         if(jRadioButton1.isSelected())
-            return "5";
+            return 5f;
         if(jRadioButton2.isSelected())
-            return "4";
+            return 4f;
         if(jRadioButton3.isSelected())
-            return "3";
+            return 3f;
         if(jRadioButton5.isSelected())
-            return "2";
-        return "1";
-    }
-    
-    public void listNameBrand (ArrayList<String> brandNames, ArrayList<Integer> brandIds)
-    {
-        listBrands = new BrandComboItem[brandNames.size()];
-        BrandComboItem b;
-        for (int i=0;i<brandNames.size();i++)
-        {
-            b = new BrandComboItem(brandIds.get(i),brandNames.get(i));
-            listBrands[i] = b;
-        }
+            return 2f;
+        return 1f;
     }
             
     public void listNameCategory(ArrayList<String> name, ArrayList<Integer> idCate) {
@@ -203,28 +194,27 @@ public class panelTimNangCao extends javax.swing.JPanel {
         comboBox.setModel(new DefaultComboBoxModel<>(listItems));
     }
     
-    
-    public void setTable(List<List<LinkedHashMap<String, Object>>> listAdvanceProducts)
+    public void setTable(List<LinkedHashMap<String, Object>> products)
     {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Id");
         model.addColumn("Tên");
         model.addColumn("Số lượng đã bán");
         model.addColumn("Giá");
+        
         List<Integer> id = new ArrayList<>();
         List<String> name = new ArrayList<>();
-        for(List<LinkedHashMap<String, Object>> advanceProduct : listAdvanceProducts)
+        
+        for(LinkedHashMap<String, Object> product : products)
         {
-            for(LinkedHashMap<String, Object> product : advanceProduct)
-            {
-                Vector row = new Vector();
-                row.add(product.get("id"));
-                row.add(product.get("name"));
-                row.add(product.get("all_time_quantity_sold"));
-                row.add(product.get("price"));
-                model.addRow(row);
-            }
+            Vector row = new Vector();
+            row.add(product.get("id"));
+            row.add(product.get("name"));
+            row.add(product.get("all_time_quantity_sold"));
+            row.add(product.get("price"));
+            model.addRow(row);
         }
+        
         advanceProductTable.setModel(model);
         headerColor(77,77,77, advanceProductTable);
     }
@@ -260,32 +250,28 @@ public class panelTimNangCao extends javax.swing.JPanel {
        return box;
     } 
      
-    public void updateBrandCheckbox()
+    public void updateBrandCheckbox(Map<Long, String> brands)
     {
         selectedBrands.clear();
+        
+        currentBrands.clear();
+        currentBrands.putAll(brands);
+        
         pnlBrands.removeAll();
         pnlBrands.revalidate();
         pnlBrands.repaint();
+        
         int checkBoxWidth = 200;
         int checkBoxHeight = 40;
         int xColumn1 = 10;
         int xColumn2 = xColumn1 + checkBoxWidth + 40;
         int y1 = 15;
         int numberOfBrands = 0;
+        
         HashMap<Integer, Object> brandNames = new HashMap();
-//        for(int i=0;i<listBrands.length;i++)
-//        {
-//            if(!brandNames.containsValue(listBrands[i].getName()))
-//            {
-//                brandNames.put(numberOfBrands, listBrands[i].getName());
-//                numberOfBrands++;
-//            }
-//        }        
-        for(int i=0;i<listBrands.length;i++)
-        {
-            System.out.println("ID = " + listBrands[i].getId() + " Name = " + listBrands[i].getName());
-            JCheckBox checkBox = new JCheckBox(String.valueOf(listBrands[i].getName()));
-           // checkBox.setBounds(xColumn1, y1, checkBoxWidth, checkBoxHeight); 
+        
+        for (Map.Entry<Long, String> brand : currentBrands.entrySet()) {
+            JCheckBox checkBox = new JCheckBox(brand.getValue()); 
             checkBox.addItemListener(new ItemListener() {
 
             @Override
@@ -298,6 +284,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
                 }                 
             }
             });
+            
             pnlBrands.add(checkBox);
             pnlBrands.revalidate();
             y1 += 25;
@@ -326,8 +313,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         }
     }
     
-    
-     public void showLineChart(String productName, int month, int year, ArrayList<String> dates, ArrayList<Integer> prices ){
+     public void showLineChart(String productName, int month, int year, List<String> dates, List<Integer> prices ){
         
         //create dataset for the graph
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
@@ -349,8 +335,8 @@ public class panelTimNangCao extends javax.swing.JPanel {
 //        domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
         renderer1.setDefaultItemLabelGenerator(new StandardCategoryItemLabelGenerator("{2}", NumberFormat.getNumberInstance()));
         renderer1.setDefaultPositiveItemLabelPosition(new ItemLabelPosition( 
-             ItemLabelAnchor.CENTER, TextAnchor.BASELINE_LEFT, TextAnchor.BASELINE_LEFT, 
-             - Math.PI / 4)); 
+             ItemLabelAnchor.CENTER, TextAnchor.BASELINE_RIGHT, TextAnchor.BASELINE_RIGHT, 
+             - Math.PI / 8)); 
         
         renderer1.setDefaultItemLabelsVisible(true);
         
@@ -736,7 +722,6 @@ public class panelTimNangCao extends javax.swing.JPanel {
         
         if(categoryId != 2L)  //2 là id của root
         {
-            System.out.println(categoryId);
             try {
                 main.getBrandsByCategoryId(categoryId);
             } catch (IOException ex) {
@@ -748,99 +733,59 @@ public class panelTimNangCao extends javax.swing.JPanel {
     }//GEN-LAST:event_comboboxCategoryActionPerformed
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
-        String productName = txtSearch.getText();
-        if(productName.equals(""))
-            productName = null;
+        String productName = txtSearch.getText().isEmpty() ? null : txtSearch.getText();
         
         CategoryComboItem selectedCategory = (CategoryComboItem)comboboxCategory.getSelectedItem(); 
         categoryId = Long.valueOf((int)selectedCategory.getId());
         
-        String ratingAverage = selectedButtonGroupStar();
+        List<Long> brandIds = null;
+        if(selectedBrands.size() != 0) {
+            brandIds = new ArrayList<>();
+            
+            for(String brandName : selectedBrands) {
+                brandIds.add(MapUtil.getKey(currentBrands, brandName));
+            }
+        }
         
-        String minPrice = jTextField3.getText();
-        String maxPrice = jTextField4.getText();
-//        if(!minPrice.equals(""))
-//            if(maxPrice.equals(""))
-//            {
-//               JOptionPane.showMessageDialog(this, "Bạn phải nhập cả giá từ và giá đến", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-//               return;
-//            }
-//        if(!maxPrice.equals(""))
-//            if(minPrice.equals(""))
-//            {
-//                JOptionPane.showMessageDialog(this, "Bạn phải nhập cả giá từ và giá đến", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-//               return;
-//            }
-        if(!minPrice.equals("") && !maxPrice.equals(""))
-        {
-            String message = validator.isValidMoney(minPrice);
-            if(!message.equals(""))
+        float ratingAverage = selectedButtonGroupStar();
+        
+        String errorMsg;
+        Long minPrice = 0L;
+        Long maxPrice = null;
+        String txtMinPrice = jTextField3.getText();
+        String txtMaxPrice = jTextField4.getText();
+        
+        if(!txtMinPrice.equals("")) {
+            errorMsg = validator.isValidMoney(txtMinPrice);
+            
+            if(!errorMsg.equals(""))
             {
-                JOptionPane.showMessageDialog(this, message, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, errorMsg, "Thông báo", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+                
+            minPrice = Long.valueOf(txtMinPrice);
+        }
+        
+        if (!txtMaxPrice.equals("")) {
+            errorMsg = validator.isValidMoney(txtMaxPrice);
+            
+            if(!errorMsg.equals(""))
+            {
+                JOptionPane.showMessageDialog(this, errorMsg, "Thông báo", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             
-            message = validator.isValidMoney(minPrice);
-            if(!message.equals(""))
-            {
-                JOptionPane.showMessageDialog(this, message, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
-            if(Long.parseLong(minPrice) > Long.parseLong(maxPrice))
-            {
-                JOptionPane.showMessageDialog(this, "Giá từ phải bé hơn giá đến", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            maxPrice = Long.valueOf(txtMaxPrice);
+                
+            if(minPrice >= maxPrice) {
+                JOptionPane.showMessageDialog(this, "Khoảng giá không hợp lệ!", "Thông báo", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
-        if(minPrice.equals("") && minPrice.equals(""))
-        {
-            minPrice = null;
-            maxPrice = null;
-        }
-        
-        String brands = "";
-        if(selectedBrands.size() == 0)
-            brands = null;
-        else if(selectedBrands.size() == 1)
-        {
-            for(int i=0;i<listBrands.length;i++)
-            {
-                if(listBrands[i].getName().equals(selectedBrands.get(0)))
-                {
-                    brands += listBrands[i].getId();
-                    i = listBrands.length;
-                }
-            }
-        } else
-        {
-            
-            for(int i=0;i<selectedBrands.size();i++)
-            {
-               
-                String selectedBrandName = selectedBrands.get(i);
-//                System.out.println("selected brand name: " +selectedBrandName);
-                for(int j=0;j<listBrands.length;j++)
-                {
-                    String brandInList = listBrands[j].getName();
-                    if(brandInList.equals(selectedBrandName))
-                    {
-//                        System.out.println("Brand in list: " + brandInList);
-                        if(i==selectedBrands.size()-1)
-                            brands += listBrands[j].getId();
-                            
-                        else
-                            brands += listBrands[j].getId() + "-";
-                        
-                        j = listBrands.length;
-                    }
-                }
-                    
-            }
-        }
-        System.out.println(brands);
 
         try {
-            main.sendRequestAdvanceProducts(productName, categoryId, brands, ratingAverage, minPrice, maxPrice);
+            main.filterProducts(productName, categoryId, brandIds, ratingAverage, minPrice, maxPrice);
         } catch (IOException ex) {
             Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
         }
