@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -159,10 +160,20 @@ public class panelTimTheoURL extends javax.swing.JPanel {
      
     public void showLineChart(String productName, int month, int year, ArrayList<String> dates, ArrayList<Integer> prices ){
         
+        // update lại tháng, năm cho trường hợp nếu tháng đó không có lịch sử nhưng những tháng,năm kề có ls giá
+        
+        boolean flag = false;
+        if (month != monthChooser.getMonth()+1 || year != yearChooser.getYear()){
+            month = monthChooser.getMonth()+1;
+            year = yearChooser.getYear();
+            flag = true;
+        }
+
         //create dataset for the graph
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+         LocalDate today = LocalDate.now();
         for (int i = 0; i < prices.size(); i++){
-            dataset.setValue(prices.get(i), "Giá", dates.get(i).toString());
+            dataset.setValue(prices.get(i), "Giá", flag ? String.valueOf(today.getDayOfMonth()) : dates.get(i).toString());
         }
         //create chart
         JFreeChart linechart = ChartFactory.createLineChart("Lịch sử giá " + productName + " tháng "
@@ -541,6 +552,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
+        txtTimTheoURL.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtTimTheoURL.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), javax.swing.BorderFactory.createEmptyBorder(1, 5, 1, 1)));
         txtTimTheoURL.setMargin(new java.awt.Insets(2, 30, 2, 2));
         txtTimTheoURL.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -594,7 +606,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(monthChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(yearChooser, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         pnlSearch.add(jPanel3, java.awt.BorderLayout.CENTER);
@@ -734,7 +746,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
 
         pnlOptions2.setBackground(new java.awt.Color(255, 255, 255));
         pnlOptions2.setPreferredSize(new java.awt.Dimension(150, 120));
-        pnlOptions2.setLayout(new java.awt.GridLayout());
+        pnlOptions2.setLayout(new java.awt.GridLayout(1, 0));
         pnlOption2.add(pnlOptions2, java.awt.BorderLayout.PAGE_END);
 
         pnlOptionName2.setBackground(new java.awt.Color(255, 255, 255));

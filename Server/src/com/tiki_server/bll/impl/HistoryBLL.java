@@ -27,7 +27,10 @@ public class HistoryBLL implements IHistoryBLL {
         List<HistoryDTO> histories = historyDAL.findByProductId(productId, month, year);
 
         if (histories != null && histories.isEmpty())
-            return List.of(findLatestByProductIdBefore(productId, month, year));
+        {
+            HistoryDTO latestHistory = findLatestByProductIdBefore(productId, month, year);
+            return latestHistory == null ? null : List.of(latestHistory);
+        }
         return histories;
     }
 
