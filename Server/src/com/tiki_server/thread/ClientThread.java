@@ -1,7 +1,6 @@
 package com.tiki_server.thread;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.tiki_server.bll.*;
 import com.tiki_server.bll.impl.*;
 import com.tiki_server.dto.*;
@@ -42,8 +41,11 @@ public class ClientThread implements Runnable {
         Message clientRequest;
 
         try {
-            this.in = new ObjectInputStream(new BufferedInputStream(clientSocket.getInputStream()));
             this.out = new ObjectOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
+            this.out.flush();
+            this.in = new ObjectInputStream(new BufferedInputStream(clientSocket.getInputStream()));
+
+            sendPublicKey();
 
             while (isRunning) {
                 json = (String) in.readObject();
@@ -67,10 +69,6 @@ public class ClientThread implements Runnable {
                     IBrandBLL brandBLL = null;
 
                     switch (clientRequest.getMessageType()) {
-                        case GET_PUBLIC_KEY:
-                            sendPublicKey();
-                            break;
-
                         case SEND_SECRET_KEY:
                             byte[] msgContentInBytes = RSAUtil.decrypt(privateKey, Base64.getDecoder().decode(encryptedRequestContent));
                             String msgContentInJSON = (String) BytesUtil.encode(msgContentInBytes);
@@ -177,7 +175,7 @@ public class ClientThread implements Runnable {
                             }
 
                             responseContent.put("productHistories", histories);
-                            response = new Message(responseContent, MessageType.PRODUCT_HISTORIES_BY_ID);
+                            response = new Message(responseContent, MessageType.PRODUCT_HISTORIES_BY_PRODUCT_ID);
                             sendMessage(response);
                             break;
 

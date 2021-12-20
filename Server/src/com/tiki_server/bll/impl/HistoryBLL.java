@@ -24,7 +24,16 @@ public class HistoryBLL implements IHistoryBLL {
 
     @Override
     public List<HistoryDTO> findByProductId(Long productId, int month, int year) {
-        return historyDAL.findByProductId(productId, month, year);
+        List<HistoryDTO> histories = historyDAL.findByProductId(productId, month, year);
+
+        if (histories != null && histories.isEmpty())
+            return List.of(findLatestByProductIdBefore(productId, month, year));
+        return histories;
+    }
+
+    @Override
+    public HistoryDTO findLatestByProductIdBefore(Long productId, int month, int year) {
+        return historyDAL.findLatestByProductIdBefore(productId, month, year);
     }
 
     @Override

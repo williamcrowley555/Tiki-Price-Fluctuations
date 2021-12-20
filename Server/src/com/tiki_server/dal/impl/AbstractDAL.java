@@ -247,9 +247,11 @@ public class AbstractDAL<T> implements GenericDAL<T>{
             callableStatement = connection.prepareCall(sql);
             setParameters(callableStatement, parameters);
             resultSet = callableStatement.executeQuery();
+
             while (resultSet.next()) {                
                 results.add(rowMapper.mapRow(resultSet));
             }
+
             return results;
         } catch (SQLException e) {
             return null;

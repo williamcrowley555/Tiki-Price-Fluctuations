@@ -21,6 +21,13 @@ public class ConfigurableProductHistoryDAL extends AbstractDAL<HistoryDTO> imple
     }
 
     @Override
+    public ConfigurableProductHistoryDTO findLatestByProductIdBefore(Long productId, int month, int year) {
+        String sql = "{CALL usp_configurable_product_history_getLatestByProductIdBefore(?, ?, ?)}";
+        List<ConfigurableProductHistoryDTO> cps = callQueryProc(sql, new ConfigurableProductHistoryMapper(), productId, month, year);
+        return cps.isEmpty() ? null : cps.get(0);
+    }
+
+    @Override
     public List<ConfigurableProductHistoryDTO> findByProductIdAndConfigurableProductId(Long productId, Long cpChildId, int month, int year) {
         String sql = "{CALL usp_configurable_product_history_getByProductIdAndCPChildId(?, ?, ?, ?)}";
         return callQueryProc(sql, new ConfigurableProductHistoryMapper(), productId, cpChildId, month, year);

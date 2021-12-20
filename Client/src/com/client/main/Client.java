@@ -105,7 +105,7 @@ public class Client extends javax.swing.JFrame {
     }
     
     public void updateLineChartURL(List<LinkedHashMap<String, Object>> productHistories, String productName){
-        if (productHistories == null) {
+        if (productHistories == null || productHistories.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Không có dữ liệu lịch sử giá", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
             return;
         } 
@@ -130,7 +130,7 @@ public class Client extends javax.swing.JFrame {
     }
     
     public void updateLineChartAdvance(List<LinkedHashMap<String, Object>> productHistories, String productName){
-        if (productHistories == null) {
+        if (productHistories == null || productHistories.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Không có dữ liệu lịch sử giá", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
             return;
         } 
@@ -185,6 +185,7 @@ public class Client extends javax.swing.JFrame {
         try {
             socket = new Socket(hostname, port);
             out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            out.flush();
 
             readThread = new Thread(new ReadThread(this, this.socket));
             readThread.start();
@@ -215,11 +216,6 @@ public class Client extends javax.swing.JFrame {
         } catch (InterruptedException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    public void sendPublicKeyRequest() throws IOException {
-        Message requestMsg = new Message(null, MessageType.GET_PUBLIC_KEY);
-        sendMessage(requestMsg);
     }
     
     public void setTable(List<List<LinkedHashMap<String, Object>>> listAdvanceProducts)
@@ -739,20 +735,14 @@ public class Client extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                Client clientGUI = new Client(hostname, port);
-                
-                clientGUI.run();
-            if (clientGUI.getPublicKey() == null)
-                try {
-                    clientGUI.sendPublicKeyRequest();
-                } catch (IOException ex) {
-                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            Client clientGUI = new Client(hostname, port);
+            clientGUI.run();
 
             System.out.println("Connecting ...");
             while (clientGUI.getSecretKey() == null) {
                 System.out.print("");
             }
+            
             System.out.println("connected");
             clientGUI.setVisible(true);
             String input = "";

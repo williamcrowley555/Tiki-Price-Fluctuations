@@ -7,6 +7,7 @@ import java.util.List;
 public interface IHistoryBLL {
     List<HistoryDTO> findAll();
     List<HistoryDTO> findByProductId(Long productId, int month, int year);
+    HistoryDTO findLatestByProductIdBefore(Long productId, int month, int year);
     List<HistoryDTO> findByProductPageUrl(String url, int month, int year);
     HistoryDTO findById(Long id);
     Long save(HistoryDTO history);

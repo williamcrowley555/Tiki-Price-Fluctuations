@@ -133,7 +133,7 @@ public class ReadThread implements Runnable {
                             client.updateLineChartURL(recvProductHistories, "");
                             break;
                             
-                        case PRODUCT_HISTORIES_BY_ID:
+                        case PRODUCT_HISTORIES_BY_PRODUCT_ID:
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
                             List<LinkedHashMap<String, Object>> recvProductHistoriesById = (List<LinkedHashMap<String, Object>>) responseContent.get("productHistories");
                             
