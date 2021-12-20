@@ -785,11 +785,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         pnlOption2.setLayout(new java.awt.BorderLayout());
 
         pnlOptions2.setBackground(new java.awt.Color(255, 255, 255));
-<<<<<<< HEAD
-        pnlOptions2.setPreferredSize(new java.awt.Dimension(150, 120));
-=======
         pnlOptions2.setPreferredSize(new java.awt.Dimension(150, 100));
->>>>>>> c2a2e78f02ba6d45f76658419869067cd42defd4
         pnlOptions2.setLayout(new java.awt.GridLayout(1, 0));
         pnlOption2.add(pnlOptions2, java.awt.BorderLayout.PAGE_END);
 
