@@ -213,6 +213,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
             Long id =  Long.valueOf((int) recvProduct.get("id"));
             URL url = null;
             Image image = null;
+            
             try {
                 url = new URL(path);
                 image = ImageIO.read(url);
@@ -266,7 +267,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     public void setConfigurableProducts(LinkedHashMap<String, Object> configurableOptionsName, List<LinkedHashMap<String, Object>> configurableProducts){
         removeComponents(Arrays.asList(pnlOptionName1, pnlOptionName2, pnlOptionName3));
         removeComponents(Arrays.asList(pnlOptions1, pnlOptions2, pnlOptions3));
-        
+       
         Set<String> option1Values = new HashSet<String>();
         Set<String> option2Values = new HashSet<String>();
         Set<String> option3Values = new HashSet<String>();

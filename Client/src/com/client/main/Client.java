@@ -68,17 +68,21 @@ public class Client extends javax.swing.JFrame {
 
     private PublicKey publicKey;
     private SecretKey secretKey;
-    
+
     private boolean menuHided = false;
     private boolean maximized = false;
     ImageIcon iconShowMenu = new ImageIcon(getClass().getResource("/com/client/img/show_menu_icon.png"));
     ImageIcon iconHideMenu = new ImageIcon(getClass().getResource("/com/client/img/hide_menu_icon.png"));
     ImageIcon iconRestoreDown = new ImageIcon(getClass().getResource("/com/client/img/restore_down.png"));
-  
+    
+    public boolean isPnlAdvancedCall = false;
+
     panelTimTheoURL pnlURL;
     panelTimNangCao pnlAdvanced;
-    
-    public Client(){}
+
+    public Client() {
+    }
+
     public Client(String hostname, int port) {
         initComponents();
         invisibleMenuScrollBar(8);
@@ -86,112 +90,122 @@ public class Client extends javax.swing.JFrame {
         this.port = port;
         panelBody.repaint();
         panelBody.revalidate();
-        
+
         initCardLayout();
         CustomWindow();
         addWindowClosingListener(this);
     }
-    
+
     public void addWindowClosingListener(Client client) {
         client.addWindowListener(new java.awt.event.WindowAdapter() {
-        @Override
-        public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-            try {
-                client.closeSocket();
-            } catch (IOException ex) {
-                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                try {
+                    client.closeSocket();
+                } catch (IOException ex) {
+                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                System.exit(0);
             }
-            System.exit(0);
-        }
         });
     }
     
-    public void setReviewsList(ArrayList<LinkedHashMap<String, Object>> reviewsList){
+    public void pnlAcvancedCallClient()
+    {
+        this.isPnlAdvancedCall = true;
+    }
+
+    public void setReviewsList(ArrayList<LinkedHashMap<String, Object>> reviewsList) {
         this.pnlURL.setReviewsList(reviewsList);
     }
-    
-    public void setTimelineList(ArrayList<LinkedHashMap<String, Object>> timelinesList){
+
+    public void setTimelineList(ArrayList<LinkedHashMap<String, Object>> timelinesList) {
         this.pnlURL.setTimelinesList(timelinesList);
     }
-    
-    public void setCurrentProduct(LinkedHashMap<String, Object> product){
+
+    public void setCurrentProduct(LinkedHashMap<String, Object> product) {
         this.pnlURL.setCurrentProduct(product);
         this.pnlAdvanced.setCurrentProduct(product);
     }
-    
-    public void updateLineChartURL(List<LinkedHashMap<String, Object>> productHistories, String productName){
+
+    public void updateLineChartURL(List<LinkedHashMap<String, Object>> productHistories, String productName) {
         if (productHistories == null || productHistories.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Không có dữ liệu lịch sử giá", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
+            JOptionPane.showMessageDialog(this, "Không có dữ liệu lịch sử giá", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             return;
-        } 
+        }
 
         ArrayList<String> dates = new ArrayList<String>();
         ArrayList<Integer> prices = new ArrayList<Integer>();
         int month = 1;
         int year = 2000;
-        for (LinkedHashMap<String, Object> history : productHistories) 
-        {   
-            LinkedHashMap<String, Object> dateObj= (LinkedHashMap<String, Object>) history.get("date");
+        for (LinkedHashMap<String, Object> history : productHistories) {
+            LinkedHashMap<String, Object> dateObj = (LinkedHashMap<String, Object>) history.get("date");
             dates.add(String.valueOf(dateObj.get("dayOfMonth")));
             month = (int) dateObj.get("monthValue");
-            year = (int)  dateObj.get("year");
+            year = (int) dateObj.get("year");
             prices.add((int) history.get("price"));
         }
         this.pnlURL.showLineChart(productName, month, year, dates, prices);
     }
-    
-     public void setOption(LinkedHashMap<String, Object> name, List<LinkedHashMap<String, Object>> option) throws IOException {
-        this.pnlURL.setConfigurableProducts(name, option);
+
+    public void setOption(LinkedHashMap<String, Object> name, List<LinkedHashMap<String, Object>> option) throws IOException {
+        if(isPnlAdvancedCall)
+            this.pnlAdvanced.setConfigurableProducts(name, option);
+        else
+        {
+            this.pnlURL.setConfigurableProducts(name, option);
+            this.isPnlAdvancedCall = false;
+        }
+        
     }
-    
-    public void updateLineChartAdvance(List<LinkedHashMap<String, Object>> productHistories, String productName){
+
+    public void updateLineChartAdvance(List<LinkedHashMap<String, Object>> productHistories, String productName) {
         if (productHistories == null || productHistories.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Không có dữ liệu lịch sử giá", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
+            JOptionPane.showMessageDialog(this, "Không có dữ liệu lịch sử giá", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             return;
-        } 
+        }
 
         ArrayList<String> dates = new ArrayList<String>();
         ArrayList<Integer> prices = new ArrayList<Integer>();
         int month = 1;
         int year = 2000;
-        for (LinkedHashMap<String, Object> history : productHistories) 
-        {   
-            LinkedHashMap<String, Object> dateObj= (LinkedHashMap<String, Object>) history.get("date");
+        for (LinkedHashMap<String, Object> history : productHistories) {
+            LinkedHashMap<String, Object> dateObj = (LinkedHashMap<String, Object>) history.get("date");
             dates.add(String.valueOf(dateObj.get("dayOfMonth")));
             month = (int) dateObj.get("monthValue");
-            year = (int)  dateObj.get("year");
+            year = (int) dateObj.get("year");
             prices.add((int) history.get("price"));
         }
         this.pnlAdvanced.showLineChart(productName, month, year, dates, prices);
     }
-    
-    public void updateBrands(List<LinkedHashMap<String, Object>> recvBrands) {  
+
+    public void updateBrands(List<LinkedHashMap<String, Object>> recvBrands) {
         Map<Long, String> brands = new HashMap<>();
-        
-        for (LinkedHashMap<String, Object> brand : recvBrands)
+
+        for (LinkedHashMap<String, Object> brand : recvBrands) {
             brands.put(Long.valueOf((Integer) brand.get("id")), brand.get("name").toString());
-        
+        }
+
         pnlAdvanced.updateBrandCheckbox(brands);
     }
-    
-    public void updateComboboxCategory(List<LinkedHashMap<String, Object>> categories){
+
+    public void updateComboboxCategory(List<LinkedHashMap<String, Object>> categories) {
         ArrayList<String> name = new ArrayList<String>();
         ArrayList<Integer> idCate = new ArrayList<Integer>();
-        for (LinkedHashMap<String, Object> category : categories) 
-        {   
+        for (LinkedHashMap<String, Object> category : categories) {
             name.add(String.valueOf(category.get("name")));
             idCate.add((Integer) (category.get("id")));
         }
-       // System.out.println(name);
-        this.pnlAdvanced.listNameCategory(name,idCate);
+        // System.out.println(name);
+        this.pnlAdvanced.listNameCategory(name, idCate);
     }
-    
-    public void updateProductInfoURL(LinkedHashMap<String, Object> recvProduct){
-       this.pnlURL.updateProductInfo(recvProduct);
+
+    public void updateProductInfoURL(LinkedHashMap<String, Object> recvProduct) {
+        this.pnlURL.updateProductInfo(recvProduct);
     }
-    
+
     public void run() {
         try {
             socket = new Socket(hostname, port);
@@ -200,13 +214,13 @@ public class Client extends javax.swing.JFrame {
 
             readThread = new Thread(new ReadThread(this, this.socket));
             readThread.start();
-        } catch (ConnectException conEx){
+        } catch (ConnectException conEx) {
             System.err.println("Can't connect to server");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
     public void closeSocket() throws IOException, InterruptedException {
         Message message = new Message(null, MessageType.USER_DISCONNECT);
         sendMessage(message);
@@ -220,20 +234,20 @@ public class Client extends javax.swing.JFrame {
     public void sendMessage(Message message) throws IOException {
         Thread writeThread = new Thread(new WriteThread(this, this.socket, this.out, message));
         writeThread.start();
-        
+
         try {
             writeThread.join();
         } catch (InterruptedException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void setTable(List<LinkedHashMap<String, Object>> products)
-    {   
-        
-        if(products.size() == 1 && products.get(0).isEmpty())
+
+    public void setTable(List<LinkedHashMap<String, Object>> products) {
+
+        if (products.size() == 1 && products.get(0).isEmpty()) {
             JOptionPane.showMessageDialog(this, "Không tìm thấy bất kì sản phẩm nào", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-        
+        }
+
         try {
             pnlAdvanced.setTable(products);
         } catch (Exception e) {
@@ -249,12 +263,11 @@ public class Client extends javax.swing.JFrame {
         Message requestMsg = new Message(request, MessageType.GET_PRODUCT);
         sendMessage(requestMsg);
     }
-    
-    public void getBrandsByCategoryId(Long categoryId) throws IOException
-    {
+
+    public void getBrandsByCategoryId(Long categoryId) throws IOException {
         Map<String, Object> request = new HashMap<>();
         request.put("categoryId", categoryId);
-        
+
         Message requestMsg = new Message(request, MessageType.GET_BRANDS_BY_CATEGORY_ID);
         sendMessage(requestMsg);
     }
@@ -265,10 +278,12 @@ public class Client extends javax.swing.JFrame {
         request.put("categoryId", categoryId);
         request.put("brandIds", brandIds);
         request.put("ratingAverage", ratingAverage);
-        if (minPrice != null)
+        if (minPrice != null) {
             request.put("minPrice", minPrice);
-        if (maxPrice != null)
+        }
+        if (maxPrice != null) {
             request.put("maxPrice", maxPrice);
+        }
 
         Message requestMsg = new Message(request, MessageType.FILTER_PRODUCTS);
         sendMessage(requestMsg);
@@ -281,13 +296,13 @@ public class Client extends javax.swing.JFrame {
         Message requestMsg = new Message(request, MessageType.GET_CONFIGURABLE_PRODUCTS);
         sendMessage(requestMsg);
     }
-    
+
     public void getCategories() throws IOException {
         Map<String, Object> request = new HashMap<>();
         Message requestMsg = new Message(request, MessageType.GET_CATEGORIES);
         sendMessage(requestMsg);
     }
-    
+
     public void getProductHistories(String url, int month, int year) throws IOException {
         Map<String, Object> request = new HashMap<>();
         request.put("url", url);
@@ -297,11 +312,11 @@ public class Client extends javax.swing.JFrame {
         Message requestMsg = new Message(request, MessageType.GET_PRODUCT_HISTORIES_BY_URL);
         sendMessage(requestMsg);
     }
-    
+
     public void getConfigurableOptionById(Long productId) throws IOException {
         Map<String, Object> request = new HashMap<>();
         request.put("productId", productId);
-        
+
         Message requestMsg = new Message(request, MessageType.GET_CONFIGURABLE_OPTION_BY_PRODUCT_ID);
         sendMessage(requestMsg);
     }
@@ -336,15 +351,15 @@ public class Client extends javax.swing.JFrame {
         Message requestMsg = new Message(request, MessageType.GET_REVIEWS_BY_PRODUCT_ID);
         sendMessage(requestMsg);
     }
-    
+
     public void getTimeLineByReviewId(Long reviewId) throws IOException {
         Map<String, Object> request = new HashMap<>();
         request.put("reviewId", reviewId);
         Message requestMsg = new Message(request, MessageType.GET_TIMELINE_BY_REVIEWID);
-       
+
         sendMessage(requestMsg);
     }
-    
+
     public SecretKey getSecretKey() {
         return secretKey;
     }
@@ -360,97 +375,90 @@ public class Client extends javax.swing.JFrame {
     public void setPublicKey(PublicKey publicKey) {
         this.publicKey = publicKey;
     }
-    
-    public void initCardLayout(){
+
+    public void initCardLayout() {
         panelTimTheoURL pnlURL = new panelTimTheoURL(this);
         panelTimNangCao pnlAdvanced = new panelTimNangCao(this);
-        
+
         this.pnlURL = pnlURL;
         this.pnlAdvanced = pnlAdvanced;
-        
+
         pnlTabContent.add("url", pnlURL);
         pnlTabContent.add("advanced", pnlAdvanced);
         switchCard("url");
         setTabSelection(btnUrlTab);
     }
-    
-    public void switchCard(String name){
+
+    public void switchCard(String name) {
         CardLayout card = (CardLayout) (pnlTabContent.getLayout());
         card.show(pnlTabContent, name);
     }
-    
-    public void setTabSelection(JButton button){
+
+    public void setTabSelection(JButton button) {
         resetSelection();
-        button.setBackground(new Color(77,77,77));
+        button.setBackground(new Color(77, 77, 77));
         button.setForeground(Color.white);
-        
+
     }
-    
-    public void resetSelection(){
+
+    public void resetSelection() {
         btnUrlTab.setBorder(new LineBorder(Color.BLACK));
         btnUrlTab.setBackground(Color.white);
         btnUrlTab.setForeground(Color.BLACK);
-        
+
         btnAdvancedTab.setBorder(new LineBorder(Color.BLACK));
         btnAdvancedTab.setBackground(Color.white);
         btnAdvancedTab.setForeground(Color.BLACK);
     }
-    
-    
-    public void invisibleMenuScrollBar(int speed)
-    {
-          JScrollBar scrollBar = new JScrollBar(JScrollBar.VERTICAL) {
 
-                    @Override
-                    public boolean isVisible() {
-                        return true;
-                    }
-                };
+    public void invisibleMenuScrollBar(int speed) {
+        JScrollBar scrollBar = new JScrollBar(JScrollBar.VERTICAL) {
+
+            @Override
+            public boolean isVisible() {
+                return true;
+            }
+        };
 //        menuScroll.setVerticalScrollBar(scrollBar);
 //        menuScroll.setVerticalScrollBarPolicy(menuScroll.VERTICAL_SCROLLBAR_NEVER);
 //        menuScroll.getVerticalScrollBar().setUnitIncrement(speed);
     }
-    public void center()
-    {
+
+    public void center() {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+        this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
     }
-    public void CustomWindow()
-    {   
-        Color flatBlack = new Color(77,77,77);//Border
-        this.setMinimumSize(new Dimension(1280,720));
+
+    public void CustomWindow() {
+        Color flatBlack = new Color(77, 77, 77);//Border
+        this.setMinimumSize(new Dimension(1280, 720));
         //this.setSize(new Dimension(1280,720));
-        this.getRootPane().setBorder(BorderFactory.createMatteBorder(0,2,2,2, flatBlack));   
+        this.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 2, 2, 2, flatBlack));
         center();
         lblMinimize.setText("\u2014");
         lblExit.setText("X");
         lblMaximize_Restore.setText("\u2750");
     }
-    
-    public void Maximize_Restore(boolean state)
-    {
-       if (state)
-       {
+
+    public void Maximize_Restore(boolean state) {
+        if (state) {
             lblMaximize_Restore.setText("\u2750");
             lblMaximize_Restore.setIcon(null);
             maximized = false;
-            this.setPreferredSize(new Dimension(800,600));
+            this.setPreferredSize(new Dimension(800, 600));
             this.setExtendedState(JFrame.NORMAL);
-       }
-       else 
-       {
-           lblMaximize_Restore.setIcon(iconRestoreDown);
-           lblMaximize_Restore.setText("");
-           this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-           maximized = true;   
-       }
+        } else {
+            lblMaximize_Restore.setIcon(iconRestoreDown);
+            lblMaximize_Restore.setText("");
+            this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            maximized = true;
+        }
     }
-    
-    public void clearBrandPanel()
-    {
+
+    public void clearBrandPanel() {
         pnlAdvanced.clearBrandPanel();
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -611,7 +619,7 @@ public class Client extends javax.swing.JFrame {
     }//GEN-LAST:event_lblMinimizeMouseClicked
 
     private void panelHeaderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelHeaderMouseDragged
-           setLocation (evt.getXOnScreen()-(getWidth()/2),evt.getYOnScreen()-10);
+        setLocation(evt.getXOnScreen() - (getWidth() / 2), evt.getYOnScreen() - 10);
     }//GEN-LAST:event_panelHeaderMouseDragged
 
     private void lblShow_HideMenuMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblShow_HideMenuMousePressed
@@ -632,7 +640,7 @@ public class Client extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_btnAdvancedTabActionPerformed
 
     /**
@@ -728,28 +736,28 @@ public class Client extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-            Client clientGUI = new Client(hostname, port);
-            clientGUI.run();
+                Client clientGUI = new Client(hostname, port);
+                clientGUI.run();
 
-            System.out.println("Connecting ...");
-            while (clientGUI.getSecretKey() == null) {
-                System.out.print("");
-            }
-            
-            System.out.println("connected");
-            clientGUI.setVisible(true);
-            String input = "";
-            Scanner stdIn;
-            stdIn = new Scanner(System.in);
+                System.out.println("Connecting ...");
+                while (clientGUI.getSecretKey() == null) {
+                    System.out.print("");
+                }
 
-            System.out.println("CHOOSE AN OPTION");
-            System.out.println("1/ Get product with id = 249953");
-            System.out.println("2/ Filter products");
-            System.out.println("3/ Get configurable products with product id = 249953");
-            System.out.println("4/ Get product histories by URL in 11/2021");
-            System.out.println("5/ Get product histories with product id = 249953 in 11/2021");
-            System.out.println("6/ Get configurable product histories with product id = 249953 & cpId = 511074 in 11/2021");
-            System.out.println("7/ Get reviews with product id = 249953");
+                System.out.println("connected");
+                clientGUI.setVisible(true);
+                String input = "";
+                Scanner stdIn;
+                stdIn = new Scanner(System.in);
+
+                System.out.println("CHOOSE AN OPTION");
+                System.out.println("1/ Get product with id = 249953");
+                System.out.println("2/ Filter products");
+                System.out.println("3/ Get configurable products with product id = 249953");
+                System.out.println("4/ Get product histories by URL in 11/2021");
+                System.out.println("5/ Get product histories with product id = 249953 in 11/2021");
+                System.out.println("6/ Get configurable product histories with product id = 249953 & cpId = 511074 in 11/2021");
+                System.out.println("7/ Get reviews with product id = 249953");
 
 //            while (true) {
 //                System.out.print("Client input: ");

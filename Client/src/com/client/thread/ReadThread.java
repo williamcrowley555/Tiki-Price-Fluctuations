@@ -148,6 +148,7 @@ public class ReadThread implements Runnable {
                             List<LinkedHashMap<String, Object>> recvCPHistories = (List<LinkedHashMap<String, Object>>) responseContent.get("configurableProductHistories");
                             System.out.println("Client receive: ");
                             client.updateLineChartURL(recvCPHistories, "");
+                            client.updateLineChartAdvance(recvCPHistories, "");
                             break;   
 
                         case REVIEWS:

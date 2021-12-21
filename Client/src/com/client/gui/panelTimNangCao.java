@@ -21,6 +21,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
@@ -28,19 +29,25 @@ import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
@@ -76,25 +83,37 @@ public class panelTimNangCao extends javax.swing.JPanel {
     /**
      * Creates new form panelTimNangCao
      */
-    String searchData;
     String json;
-    Map<Long, String> currentBrands = new HashMap<>();
-    HashMap<Long, String> brandIdAndName;
-    List<String> brandList = new ArrayList<>();
-    List<String> selectedBrands = new ArrayList<>();
-    List<String> dates = new ArrayList<String>();
-    List<Integer> prices = new ArrayList<Integer>();
-    LinkedHashMap<String, Object> currentproduct;
-    InputValidatorUtil validator = new InputValidatorUtil();
+    String searchData;
     String productName = "";
+    String selectedOption1;
+    String selectedOption2;
+    String selectedOption3;
+    
+    
+    List<String> brandList = new ArrayList<>();
+    List<String> name = new ArrayList<String>();
+    List<String> dates = new ArrayList<String>();
+    List<String> selectedBrands = new ArrayList<>();
+    List<Integer> prices = new ArrayList<Integer>();
+    
+    
+    HashMap<Long, String> brandIdAndName;
+    LinkedHashMap<String, Object> currentproduct;
+    Map<Long, String> currentBrands = new HashMap<>();
+    
+    Long categoryId = 2L; //2L là id của Root - toàn bộ danh mục
     Long selectedProductId;
+    
     boolean found = false;
+    
     int month = 11;
     int year = 2021;
-    List<String> name = new ArrayList<String>();
-    Long categoryId = 2L; //2L là id của Root - toàn bộ danh mục
+    
     Client main;
     productDetail popup;
+    InputValidatorUtil validator = new InputValidatorUtil();
+    
     public panelTimNangCao(Client main) {
        
         initComponents();
@@ -185,6 +204,131 @@ public class panelTimNangCao extends javax.swing.JPanel {
             // System.out.println(c.getId());
         }
          setComboBox(comboboxCategory, list);
+    }
+    
+    public void removeComponent(JPanel panel) {
+        panel.removeAll();
+        panel.revalidate();
+        panel.repaint();
+    }
+    
+    public void removeComponents(List<JPanel> panels) {
+        for (JPanel panel : panels)
+            removeComponent(panel);
+    }
+    
+    public void setConfigurableProducts(LinkedHashMap<String, Object> configurableOptionsName, List<LinkedHashMap<String, Object>> configurableProducts){
+        removeComponents(Arrays.asList(pnlOptionName1, pnlOptionName2, pnlOptionName3));
+        removeComponents(Arrays.asList(pnlOptions1, pnlOptions2, pnlOptions3));
+       
+        Set<String> option1Values = new HashSet<String>();
+        Set<String> option2Values = new HashSet<String>();
+        Set<String> option3Values = new HashSet<String>();
+        
+        if (configurableOptionsName == null || configurableOptionsName.isEmpty()) return;
+        if (configurableOptionsName.get("optionName1") != null) {
+            String optionName1 = String.valueOf(configurableOptionsName.get("optionName1"));
+        
+            for(LinkedHashMap<String, Object> cp : configurableProducts) {  
+                if(cp.get("option1") != null){
+                option1Values.add(String.valueOf(cp.get("option1")));
+                }
+            }
+            
+            setConfigurableProductRadioButtons(optionName1, new ArrayList<>(option1Values), pnlOptionName1, pnlOptions1, 1);
+        }
+        
+        if (configurableOptionsName.get("optionName2") != null)
+        {
+            String name2 = String.valueOf(configurableOptionsName.get("optionName2"));
+            
+            for(LinkedHashMap<String, Object> cp : configurableProducts) {  
+                if(cp.get("option2") != null){
+                option2Values.add(String.valueOf(cp.get("option2")));
+                }
+            }
+            
+            setConfigurableProductRadioButtons(name2, new ArrayList<>(option2Values), pnlOptionName2, pnlOptions2, 2);
+        }
+        
+        if (configurableOptionsName.get("optionName3") != null)
+        {
+            String name3 = String.valueOf(configurableOptionsName.get("optionName3"));
+             
+            for(LinkedHashMap<String, Object> cp : configurableProducts) {  
+                if(cp.get("option3") != null){
+                option3Values.add(String.valueOf(cp.get("option3")));
+                }
+            }
+            
+            setConfigurableProductRadioButtons(name3, new ArrayList<>(option3Values), pnlOptionName3, pnlOptions3, 3);
+        }
+    }
+    
+    public void setConfigurableProductRadioButtons(String name, List<String> options, JPanel pnlOptionName,JPanel pnlOption, int stateVariable) {
+        JLabel optionName = new JLabel(name);
+        Font myFont = new Font("Arial", Font.BOLD, 14);
+        optionName.setFont(myFont);
+        
+        pnlOptionName.add(optionName);
+        ButtonGroup buttonGroup = new ButtonGroup();
+        GridLayout gridLayout = new GridLayout(options.size(),1);
+        pnlOption.setLayout(gridLayout);
+        
+        for(int i = 0; i < options.size(); i++)
+        {   
+            JRadioButton radioButton = new JRadioButton(options.get(i));
+            switch (stateVariable){
+                case 1:
+                    radioButton.addItemListener(new ItemListener() {
+                    @Override
+                    public void itemStateChanged(ItemEvent e) {
+                        if (e.getStateChange() == ItemEvent.SELECTED)
+                        {
+                            selectedOption1 = radioButton.getText();
+                            //System.out.println(selectedOption1);
+                        } else {
+                            selectedOption1 = "";
+                        }                 
+                    }
+                    });
+                    break;
+                case 2:
+                    radioButton.addItemListener(new ItemListener() {
+                    @Override
+                    public void itemStateChanged(ItemEvent e) {
+                        if (e.getStateChange() == ItemEvent.SELECTED)
+                        {
+                            selectedOption2 = radioButton.getText();
+                            //System.out.println(selectedOption2);
+                        } else {
+                            selectedOption2 = "";
+                        }                 
+                    }
+                    });
+                    break;
+                case 3:
+                    radioButton.addItemListener(new ItemListener() {
+                    @Override
+                    public void itemStateChanged(ItemEvent e) {
+                        if (e.getStateChange() == ItemEvent.SELECTED)
+                        {
+                            selectedOption3 = radioButton.getText();
+                            //System.out.println(selectedOption3);
+                        } else {
+                            selectedOption3 = "";
+                        }                 
+                    }
+                    });
+                    break;
+                default:
+                    System.out.println("not supported yet");
+                    break;
+            }
+            buttonGroup.add(radioButton);
+            pnlOption.add(radioButton);
+            pnlOption.revalidate();
+        }  
     }
     
     public void clearBrandPanel()
@@ -935,6 +1079,8 @@ public class panelTimNangCao extends javax.swing.JPanel {
             int year = yearChooser.getYear();
             main.getProductHistoriesById(id, month, year);
             main.getProduct(id);
+            main.pnlAcvancedCallClient();
+            main.getConfigurableProducts(id);
             System.out.println(currentproduct);
             found = true;
         } catch (IOException ex) {
@@ -999,15 +1145,15 @@ public class panelTimNangCao extends javax.swing.JPanel {
     }//GEN-LAST:event_itemViewDetailActionPerformed
 
     private void btnCPFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCPFilterActionPerformed
-//        if(currentproduct.get("id") == null){
-//            JOptionPane.showMessageDialog(this, "Bạn chưa tìm kiếm sản phẩm", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-//            return;
-//        }
-//        try {
-//            main.getConfigurableProductHistories(Long.valueOf((int) currentproduct.get("id")), selectedOption1, selectedOption2, selectedOption3, monthChooser.getMonth()+1, yearChooser.getYear());
-//        } catch (IOException ex) {
-//            Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        if(currentproduct.get("id") == null){
+            JOptionPane.showMessageDialog(this, "Bạn chưa tìm kiếm sản phẩm", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        try {
+            main.getConfigurableProductHistories(Long.valueOf((int) currentproduct.get("id")), selectedOption1, selectedOption2, selectedOption3, monthChooser.getMonth()+1, yearChooser.getYear());
+        } catch (IOException ex) {
+            Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnCPFilterActionPerformed
 
 
