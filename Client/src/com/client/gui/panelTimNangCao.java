@@ -133,13 +133,8 @@ public class panelTimNangCao extends javax.swing.JPanel {
        
         initComponents();
         this.main = main;
-        for(int i = 1; i < 31; i ++){
-            dates.add(String.valueOf(i));
-        }
-        for (int i = 1; i < 31; i++){
-            prices.add(i +100 );
-        }
-        
+        month = monthChooser.getMonth() + 1;
+        year = yearChooser.getYear();
         showLineChart(productName, month, year, dates, prices);
         comboboxCategory = myComboBox(comboboxCategory, new Color(14,142,233));
         scrollPaneBrands.getVerticalScrollBar().setUI(new MyScrollBarUI());
