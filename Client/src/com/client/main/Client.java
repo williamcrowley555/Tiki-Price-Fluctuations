@@ -241,6 +241,7 @@ public class Client extends javax.swing.JFrame {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+<<<<<<< HEAD
 
     public void setTable(List<LinkedHashMap<String, Object>> products) {
 
@@ -248,6 +249,15 @@ public class Client extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Không tìm thấy bất kì sản phẩm nào", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         }
 
+=======
+    
+    public void setTable(List<LinkedHashMap<String, Object>> products)
+    {   
+        if(products == null || products.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Không tìm thấy bất kì sản phẩm nào", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        }
+        
+>>>>>>> 52d1b0a85eba4912ab64575d5e043eeed192d94a
         try {
             pnlAdvanced.setTable(products);
         } catch (Exception e) {
