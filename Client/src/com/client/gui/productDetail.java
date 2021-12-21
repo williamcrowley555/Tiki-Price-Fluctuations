@@ -70,7 +70,10 @@ public class productDetail extends javax.swing.JFrame {
             // Remove old image
             pnlPic.removeAll();
             pnlPic.revalidate();
-            
+            if (recvProduct == null){
+                this.dispose();
+                return;
+            }
             txtTenSP.setText((String) recvProduct.get("name"));
             String path = (String) recvProduct.get("imageUrl");
             Long id =  Long.valueOf((int) recvProduct.get("id"));

@@ -252,6 +252,8 @@ public class panelTimTheoURL extends javax.swing.JPanel {
             txtMota.setText((String) recvProduct.get("description"));
     }
     
+    
+    
     public void removeComponent(JPanel panel) {
         panel.removeAll();
         panel.revalidate();
