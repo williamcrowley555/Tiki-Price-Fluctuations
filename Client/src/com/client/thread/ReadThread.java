@@ -25,6 +25,7 @@ import java.util.*;
 
 public class ReadThread implements Runnable {
     private volatile boolean isRunning = true;
+    private boolean isPnlAdvance = false;
 
     private Client client;
     private Socket socket;
@@ -238,5 +239,10 @@ public class ReadThread implements Runnable {
         String contentInJSON = (String) BytesUtil.encode(decryptedContent);
 
         return new ObjectMapper().readValue(contentInJSON, Map.class);
+    }
+    
+    public void PnlAdvancedGetReadThread()
+    {
+        this.isPnlAdvance = true;
     }
 }

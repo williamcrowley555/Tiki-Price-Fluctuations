@@ -241,15 +241,6 @@ public class Client extends javax.swing.JFrame {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-<<<<<<< HEAD
-
-    public void setTable(List<LinkedHashMap<String, Object>> products) {
-
-        if (products.size() == 1 && products.get(0).isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Không tìm thấy bất kì sản phẩm nào", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-        }
-
-=======
     
     public void setTable(List<LinkedHashMap<String, Object>> products)
     {   
@@ -257,7 +248,7 @@ public class Client extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Không tìm thấy bất kì sản phẩm nào", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         }
         
->>>>>>> 52d1b0a85eba4912ab64575d5e043eeed192d94a
+    
         try {
             pnlAdvanced.setTable(products);
         } catch (Exception e) {
@@ -284,8 +275,10 @@ public class Client extends javax.swing.JFrame {
 
     public void filterProducts(String productName, Long categoryId, List<Long> brandIds, float ratingAverage, Long minPrice, Long maxPrice) throws IOException {
         Map<String, Object> request = new HashMap<>();
-        request.put("productName", productName);
-        request.put("categoryId", categoryId);
+        if(productName != null)
+            request.put("productName", productName);
+        if(categoryId != null)
+            request.put("categoryId", categoryId);
         request.put("brandIds", brandIds);
         request.put("ratingAverage", ratingAverage);
         if (minPrice != null) {
@@ -647,6 +640,7 @@ public class Client extends javax.swing.JFrame {
         setTabSelection(btnAdvancedTab);
         try {
             this.getCategories();
+            pnlAdvanced.clearBrandPanel();
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }

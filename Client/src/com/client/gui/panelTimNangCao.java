@@ -195,11 +195,16 @@ public class panelTimNangCao extends javax.swing.JPanel {
     }
             
     public void listNameCategory(ArrayList<String> name, ArrayList<Integer> idCate) {
-        CategoryComboItem[] list = new CategoryComboItem[name.size()];
-        
+        CategoryComboItem[] list = new CategoryComboItem[name.size()+1];
         CategoryComboItem c;
-        for(int i = 0 ; i < name.size(); i++) {
-             c = new CategoryComboItem(idCate.get(i), name.get(i).equals("Root") ? "-- Chọn danh mục --" : name.get(i));
+        
+        c = new CategoryComboItem(0, "-- Chọn danh mục --");
+        list[0] = c;
+//        c = new CategoryComboItem(2, "Root");
+        
+        for(int i = 1 ; i < name.size()+1; i++) {
+             c = new CategoryComboItem(idCate.get(i-1), name.get(i-1));
+             //name.get(i).equals("Root") ? "-- Chọn danh mục --" : name.get(i-1));
              list[i] = c;
             // System.out.println(c.getId());
         }
@@ -337,7 +342,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         pnlBrands.removeAll();
         pnlBrands.revalidate();
         pnlBrands.repaint();
-        JOptionPane.showMessageDialog(this, "Danh mục bạn chọn không có thương hiệu nào", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        //JOptionPane.showMessageDialog(this, "Danh mục bạn chọn không có thương hiệu nào", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
     }
     
     public void setComboBox(JComboBox<CategoryComboItem> comboBox, CategoryComboItem[] listItems) {
@@ -997,15 +1002,19 @@ public class panelTimNangCao extends javax.swing.JPanel {
         CategoryComboItem selectedCategory = (CategoryComboItem)comboboxCategory.getSelectedItem(); 
         categoryId = Long.valueOf((int)selectedCategory.getId());
         
-        if(categoryId != 2L)  //2 là id của root
+        if(categoryId != 2L && categoryId != 0L)  //2 là id của root
         {
             try {
                 main.getBrandsByCategoryId(categoryId);
             } catch (IOException ex) {
                 Logger.getLogger(panelTimNangCao.class.getName()).log(Level.SEVERE, null, ex);
             }
+        } else if(categoryId == 2L){
+            System.out.println("Chọn root");
+            clearBrandPanel();
         } else {
             System.out.println("Chọn tất cả danh mục");
+            clearBrandPanel();
         }
     }//GEN-LAST:event_comboboxCategoryActionPerformed
 
@@ -1014,6 +1023,8 @@ public class panelTimNangCao extends javax.swing.JPanel {
         
         CategoryComboItem selectedCategory = (CategoryComboItem)comboboxCategory.getSelectedItem(); 
         categoryId = Long.valueOf((int)selectedCategory.getId());
+        if(categoryId == 0L)
+            categoryId = null;
         
         List<Long> brandIds = null;
         if(selectedBrands.size() != 0) {
