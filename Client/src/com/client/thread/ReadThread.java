@@ -101,6 +101,7 @@ public class ReadThread implements Runnable {
                             List<LinkedHashMap<String, Object>> recvProducts = (List<LinkedHashMap<String, Object>>) responseContent.get("products");
                             
                             client.setTable(recvProducts);
+                            
                             break;
 
                         case CONFIGURABLE_PRODUCTS:

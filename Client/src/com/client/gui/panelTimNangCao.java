@@ -8,6 +8,7 @@ package com.client.gui;
 import com.client.gui.others.MyComboBoxEditor;
 import com.client.gui.others.MyComboBoxRenderer;
 import com.client.gui.others.MyScrollBarUI;
+import com.client.gui.others.MyTableModel;
 import com.client.main.Client;
 import com.client.model.BrandCheckboxItem;
 import com.client.model.CategoryComboItem;
@@ -24,6 +25,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
@@ -40,6 +42,8 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.ButtonModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -59,7 +63,9 @@ import javax.swing.plaf.basic.BasicSpinnerUI;
 import javax.swing.plaf.basic.ComboPopup;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -103,6 +109,8 @@ public class panelTimNangCao extends javax.swing.JPanel {
     Map<Long, String> currentBrands = new HashMap<>();
     
     Long categoryId = 2L; //2L là id của Root - toàn bộ danh mục
+    List<LinkedHashMap<String, Object>> products;
+    InputValidatorUtil validator = new InputValidatorUtil();
     Long selectedProductId;
     
     boolean found = false;
@@ -112,8 +120,15 @@ public class panelTimNangCao extends javax.swing.JPanel {
     
     Client main;
     productDetail popup;
-    InputValidatorUtil validator = new InputValidatorUtil();
     
+    int rowLimit = 5, pages = 0, currentPages = 0;
+    String[] colNames = {
+        "Stt",
+        "Id",
+        "Tên",
+        "Số lượng bán",
+        "Giá"
+    };
     public panelTimNangCao(Client main) {
        
         initComponents();
@@ -130,6 +145,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         scrollPaneBrands.getVerticalScrollBar().setUI(new MyScrollBarUI());
         initNullTable();
         customMonthYearChooser();
+        
     }
     
     public void customMonthYearChooser(){
@@ -142,16 +158,42 @@ public class panelTimNangCao extends javax.swing.JPanel {
     
     public void initNullTable()
     {
-        DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("Id");
-        model.addColumn("Tên");
-        model.addColumn("Số lượng đã bán");
-        model.addColumn("Giá");
-        
+        MyTableModel model = new MyTableModel(colNames);
         tableScrollPane.getVerticalScrollBar().setUI(new MyScrollBarUI());
         advanceProductTable.setModel(model);
         headerColor(77,77,77, advanceProductTable);
+        advanceProductTable.setShowHorizontalLines(false);
+        advanceProductTable.setShowVerticalLines(false);
         
+        txtCurrentPage.setText(String.valueOf(currentPages));
+        lblPage.setText("/" + pages);
+        
+        //Paganition text field event
+        Action action = new AbstractAction()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {   
+               if (pages == 0) 
+               {
+                   JOptionPane.showMessageDialog(null, "Bảng rỗng", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                   return;
+               }
+               
+               String validate =  validator.isVailidNumber(txtCurrentPage.getText(), 1, pages);
+               if (validate.isEmpty()) 
+               {
+                    currentPages = Integer.parseInt(txtCurrentPage.getText());
+                    updateTableModel(currentPages, products);
+                    txtCurrentPage.setText(String.valueOf(currentPages));
+                    lblPage.setText("/" + pages);
+               }
+               else 
+                    JOptionPane.showMessageDialog(null, validate, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            }
+        };
+        
+        txtCurrentPage.addActionListener(action);
     }
     
      public void hideSpinnerArrow(JSpinner spinner) {
@@ -355,26 +397,50 @@ public class panelTimNangCao extends javax.swing.JPanel {
     
     public void setTable(List<LinkedHashMap<String, Object>> products)
     {
-        DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("Id");
-        model.addColumn("Tên");
-        model.addColumn("Số lượng đã bán");
-        model.addColumn("Giá");
         
+        this.products = products;
+        this.rowLimit = Integer.parseInt( comboBoxRowLimit.getSelectedItem().toString());
+        MyTableModel model = new MyTableModel(colNames);
         if (products != null) {
-            for(LinkedHashMap<String, Object> product : products)
+            if (products.size() % rowLimit == 0)
+                pages = products.size() / rowLimit;
+            else 
+                 pages = products.size() / rowLimit + 1;
+            this.currentPages = 1;
+        }
+        updateTableModel(this.currentPages, products);
+        txtCurrentPage.setText(String.valueOf(currentPages));
+        lblPage.setText("/" + pages);
+    }
+    
+    public void updateTableModel(int page, List<LinkedHashMap<String, Object>> products){
+        MyTableModel model = new MyTableModel(colNames);
+        if (products != null) {
+            for(int i = (currentPages - 1) * rowLimit; i < currentPages * rowLimit ; i++)
             {
-                Vector row = new Vector();
-                row.add(product.get("id"));
-                row.add(product.get("name"));
-                row.add(product.get("all_time_quantity_sold"));
-                row.add(product.get("price"));
-                model.addRow(row);
+                if (i < products.size())
+                {
+                    Vector row = new Vector();
+                    row.add(i+1);
+                    row.add(products.get(i).get("id"));
+                    row.add(products.get(i).get("name"));
+                    row.add(products.get(i).get("all_time_quantity_sold"));
+                    row.add(products.get(i).get("price"));
+                    model.addRow(row);
+                }
             }
         }
         
+        
         advanceProductTable.setModel(model);
+        resizeColumnWidth(advanceProductTable);
         headerColor(77,77,77, advanceProductTable);
+        advanceProductTable.setShowGrid(false);
+    }
+    
+    public void resizeColumnWidth(JTable table) {
+        final TableColumnModel columnModel = table.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(30);
     }
      
     public JComboBox myComboBox(JComboBox box, Color color)
@@ -576,6 +642,16 @@ public class panelTimNangCao extends javax.swing.JPanel {
         jLabel10 = new javax.swing.JLabel();
         monthChooser = new com.toedter.calendar.JMonthChooser();
         yearChooser = new com.toedter.calendar.JYearChooser();
+        pnlPagination = new javax.swing.JPanel();
+        btnFirst = new javax.swing.JButton();
+        btnPrevious = new javax.swing.JButton();
+        lblPage = new javax.swing.JLabel();
+        btnNext = new javax.swing.JButton();
+        btnLast = new javax.swing.JButton();
+        comboBoxRowLimit = new javax.swing.JComboBox<>();
+        lblPage1 = new javax.swing.JLabel();
+        txtCurrentPage = new javax.swing.JTextField();
+        pnlTableMid = new javax.swing.JPanel();
         pnlTableBottom = new javax.swing.JPanel();
         tableScrollPane = new javax.swing.JScrollPane();
         advanceProductTable = new javax.swing.JTable();
@@ -615,7 +691,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         pnlLeft.setLayout(new java.awt.BorderLayout());
 
         pnlSearchAndFilter.setBackground(new java.awt.Color(255, 255, 255));
-        pnlSearchAndFilter.setPreferredSize(new java.awt.Dimension(400, 350));
+        pnlSearchAndFilter.setPreferredSize(new java.awt.Dimension(400, 300));
         pnlSearchAndFilter.setLayout(new java.awt.BorderLayout());
 
         pnlSearch.setBackground(new java.awt.Color(255, 255, 255));
@@ -669,6 +745,8 @@ public class panelTimNangCao extends javax.swing.JPanel {
 
         pnlSearchAndFilter.add(pnlSearch, java.awt.BorderLayout.PAGE_START);
 
+        pnlFilter.setPreferredSize(new java.awt.Dimension(550, 220));
+        pnlFilter.setRequestFocusEnabled(false);
         pnlFilter.setLayout(new java.awt.BorderLayout());
 
         pnlCategory.setBackground(new java.awt.Color(255, 255, 255));
@@ -687,7 +765,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         scrollPaneBrands.setViewportView(pnlBrands);
 
         pnlCategory.add(scrollPaneBrands);
-        scrollPaneBrands.setBounds(10, 30, 180, 210);
+        scrollPaneBrands.setBounds(10, 30, 180, 180);
 
         pnlFilter.add(pnlCategory, java.awt.BorderLayout.LINE_START);
 
@@ -707,9 +785,13 @@ public class panelTimNangCao extends javax.swing.JPanel {
         jSeparator1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 5));
         jSeparator1.setPreferredSize(new java.awt.Dimension(50, 4));
 
+        jButton1.setBackground(new java.awt.Color(204, 204, 204));
         jButton1.setText("Xem review");
+        jButton1.setOpaque(false);
 
+        jButton2.setBackground(new java.awt.Color(204, 204, 204));
         jButton2.setText("Tìm kiếm");
+        jButton2.setOpaque(false);
         jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton2MouseClicked(evt);
@@ -739,30 +821,29 @@ public class panelTimNangCao extends javax.swing.JPanel {
                                 .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel8))))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(87, 87, 87)
+                        .addGap(85, 85, 85)
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(8, 8, 8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
+                .addGap(4, 4, 4)
                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
-                .addGap(26, 26, 26))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         pnlFilter.add(jPanel6, java.awt.BorderLayout.LINE_END);
@@ -795,12 +876,12 @@ public class panelTimNangCao extends javax.swing.JPanel {
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jRadioButton5)
                     .addComponent(jRadioButton2)
                     .addComponent(jRadioButton1)
                     .addComponent(jLabel6)
+                    .addComponent(jRadioButton3)
                     .addComponent(jRadioButton4)
-                    .addComponent(jRadioButton3))
+                    .addComponent(jRadioButton5))
                 .addContainerGap(59, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
@@ -810,15 +891,15 @@ public class panelTimNangCao extends javax.swing.JPanel {
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jRadioButton1)
-                .addGap(14, 14, 14)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jRadioButton2)
-                .addGap(14, 14, 14)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jRadioButton3)
-                .addGap(14, 14, 14)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jRadioButton4)
-                .addGap(14, 14, 14)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jRadioButton5)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         pnlFilter.add(jPanel7, java.awt.BorderLayout.CENTER);
@@ -831,7 +912,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         pnlTable.setLayout(new java.awt.BorderLayout());
 
         pnlTableTop.setBackground(new java.awt.Color(255, 255, 255));
-        pnlTableTop.setPreferredSize(new java.awt.Dimension(574, 60));
+        pnlTableTop.setPreferredSize(new java.awt.Dimension(574, 50));
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         jLabel10.setText("Xem lịch sử giá :");
@@ -866,11 +947,118 @@ public class panelTimNangCao extends javax.swing.JPanel {
                     .addComponent(yearChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(monthChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pnlTable.add(pnlTableTop, java.awt.BorderLayout.PAGE_START);
 
+        pnlPagination.setBackground(new java.awt.Color(255, 255, 255));
+        pnlPagination.setPreferredSize(new java.awt.Dimension(550, 50));
+
+        btnFirst.setBackground(new java.awt.Color(204, 204, 204));
+        btnFirst.setText("<<");
+        btnFirst.setOpaque(false);
+        btnFirst.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFirstActionPerformed(evt);
+            }
+        });
+
+        btnPrevious.setBackground(new java.awt.Color(204, 204, 204));
+        btnPrevious.setText("<");
+        btnPrevious.setOpaque(false);
+        btnPrevious.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPreviousActionPerformed(evt);
+            }
+        });
+
+        lblPage.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        lblPage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPage.setText("/10");
+
+        btnNext.setBackground(new java.awt.Color(204, 204, 204));
+        btnNext.setText(">");
+        btnNext.setOpaque(false);
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
+
+        btnLast.setBackground(new java.awt.Color(204, 204, 204));
+        btnLast.setText(">>");
+        btnLast.setOpaque(false);
+        btnLast.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLastActionPerformed(evt);
+            }
+        });
+
+        comboBoxRowLimit.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        comboBoxRowLimit.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "10", "20", "50", "100" }));
+        comboBoxRowLimit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxRowLimitActionPerformed(evt);
+            }
+        });
+
+        lblPage1.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        lblPage1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPage1.setText("Hiển thị:");
+
+        txtCurrentPage.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        txtCurrentPage.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtCurrentPage.setText("1");
+
+        javax.swing.GroupLayout pnlPaginationLayout = new javax.swing.GroupLayout(pnlPagination);
+        pnlPagination.setLayout(pnlPaginationLayout);
+        pnlPaginationLayout.setHorizontalGroup(
+            pnlPaginationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlPaginationLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(btnFirst)
+                .addGap(6, 6, 6)
+                .addComponent(btnPrevious)
+                .addGap(18, 18, 18)
+                .addComponent(txtCurrentPage, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(lblPage, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnNext)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnLast)
+                .addGap(33, 33, 33)
+                .addComponent(lblPage1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(comboBoxRowLimit, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        pnlPaginationLayout.setVerticalGroup(
+            pnlPaginationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlPaginationLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlPaginationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(comboBoxRowLimit)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlPaginationLayout.createSequentialGroup()
+                        .addComponent(btnFirst, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(1, 1, 1))
+                    .addComponent(btnNext, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnLast, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlPaginationLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(lblPage1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnPrevious, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblPage, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtCurrentPage))
+                .addContainerGap())
+        );
+
+        pnlTable.add(pnlPagination, java.awt.BorderLayout.PAGE_END);
+
+        pnlTableMid.setLayout(new java.awt.BorderLayout());
+
+        pnlTableBottom.setPreferredSize(new java.awt.Dimension(452, 430));
         pnlTableBottom.setLayout(new java.awt.BorderLayout());
 
         advanceProductTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -896,7 +1084,9 @@ public class panelTimNangCao extends javax.swing.JPanel {
 
         pnlTableBottom.add(tableScrollPane, java.awt.BorderLayout.CENTER);
 
-        pnlTable.add(pnlTableBottom, java.awt.BorderLayout.CENTER);
+        pnlTableMid.add(pnlTableBottom, java.awt.BorderLayout.CENTER);
+
+        pnlTable.add(pnlTableMid, java.awt.BorderLayout.CENTER);
 
         pnlLeft.add(pnlTable, java.awt.BorderLayout.CENTER);
 
@@ -957,7 +1147,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
 
         pnlOptions2.setBackground(new java.awt.Color(255, 255, 255));
         pnlOptions2.setPreferredSize(new java.awt.Dimension(150, 180));
-        pnlOptions2.setLayout(new java.awt.GridLayout());
+        pnlOptions2.setLayout(new java.awt.GridLayout(1, 0));
         pnlOption2.add(pnlOptions2, java.awt.BorderLayout.PAGE_END);
 
         pnlOptionName2.setBackground(new java.awt.Color(255, 255, 255));
@@ -1082,7 +1272,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
     private void advanceProductTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_advanceProductTableMouseClicked
 
         int row = advanceProductTable.getSelectedRow();
-        Long id = Long.parseLong(advanceProductTable.getModel().getValueAt(row, 0).toString());
+        Long id = Long.parseLong(advanceProductTable.getModel().getValueAt(row, 1).toString());
         this.selectedProductId = id;
         try {
             int month = monthChooser.getMonth()+1;
@@ -1166,11 +1356,70 @@ public class panelTimNangCao extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnCPFilterActionPerformed
 
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+       if (currentPages < pages && pages != 0)
+       {
+        this.currentPages++;
+        updateTableModel(currentPages, products);
+        txtCurrentPage.setText(String.valueOf(currentPages));
+        lblPage.setText("/" + pages);
+       } 
+    }//GEN-LAST:event_btnNextActionPerformed
+
+    private void btnPreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreviousActionPerformed
+       if (currentPages > 1 && pages != 0)
+       {
+        this.currentPages--;
+        updateTableModel(currentPages, products);
+        txtCurrentPage.setText(String.valueOf(currentPages));
+        lblPage.setText("/" + pages);
+       }
+    }//GEN-LAST:event_btnPreviousActionPerformed
+
+    private void btnFirstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFirstActionPerformed
+       if (pages != 0){
+            this.currentPages = 1;
+            updateTableModel(currentPages, products);
+            txtCurrentPage.setText(String.valueOf(currentPages));
+            lblPage.setText("/" + pages);
+       }
+       
+    }//GEN-LAST:event_btnFirstActionPerformed
+
+    private void btnLastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLastActionPerformed
+       if (pages != 0){
+            this.currentPages = pages;
+            updateTableModel(currentPages, products);
+            txtCurrentPage.setText(String.valueOf(currentPages));
+            lblPage.setText("/" + pages);
+       }
+    }//GEN-LAST:event_btnLastActionPerformed
+
+    private void comboBoxRowLimitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxRowLimitActionPerformed
+       this.rowLimit = Integer.parseInt(comboBoxRowLimit.getSelectedItem().toString());
+       
+       if (products != null) {
+            if (products.size() % rowLimit == 0)
+                pages = products.size() / rowLimit;
+            else 
+                 pages = products.size() / rowLimit + 1;
+            this.currentPages = 1;
+        }
+       updateTableModel(currentPages, products);
+       txtCurrentPage.setText(String.valueOf(currentPages));
+       lblPage.setText("/" + pages);
+    }//GEN-LAST:event_comboBoxRowLimitActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable advanceProductTable;
     private javax.swing.JButton btnCPFilter;
+    private javax.swing.JButton btnFirst;
+    private javax.swing.JButton btnLast;
+    private javax.swing.JButton btnNext;
+    private javax.swing.JButton btnPrevious;
     private javax.swing.ButtonGroup buttonGroupStar;
+    private javax.swing.JComboBox<String> comboBoxRowLimit;
     private javax.swing.JComboBox<CategoryComboItem> comboboxCategory;
     private javax.swing.JMenuItem itemViewDetail;
     private javax.swing.JButton jButton1;
@@ -1193,6 +1442,8 @@ public class panelTimNangCao extends javax.swing.JPanel {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
+    private javax.swing.JLabel lblPage;
+    private javax.swing.JLabel lblPage1;
     private javax.swing.JLabel lblTitleTenSanPham;
     private com.toedter.calendar.JMonthChooser monthChooser;
     private javax.swing.JPanel pnlBrands;
@@ -1212,15 +1463,18 @@ public class panelTimNangCao extends javax.swing.JPanel {
     private javax.swing.JPanel pnlOptions1;
     private javax.swing.JPanel pnlOptions2;
     private javax.swing.JPanel pnlOptions3;
+    private javax.swing.JPanel pnlPagination;
     private javax.swing.JPanel pnlSearch;
     private javax.swing.JPanel pnlSearchAndFilter;
     private javax.swing.JPanel pnlTable;
     private javax.swing.JPanel pnlTableBottom;
+    private javax.swing.JPanel pnlTableMid;
     private javax.swing.JPanel pnlTableTop;
     private javax.swing.JPopupMenu rightClickMenu;
     private javax.swing.JScrollPane scrollPaneBrands;
     private javax.swing.JScrollPane scrollPaneOptions;
     private javax.swing.JScrollPane tableScrollPane;
+    private javax.swing.JTextField txtCurrentPage;
     private javax.swing.JTextField txtSearch;
     private com.toedter.calendar.JYearChooser yearChooser;
     // End of variables declaration//GEN-END:variables

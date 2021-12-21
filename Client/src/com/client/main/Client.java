@@ -58,7 +58,7 @@ public class Client extends javax.swing.JFrame {
      * Creates new form Main
      */
     private static String hostname = "localhost";
-    private static int port = 5002;
+    private static int port = 5003;
 
     private Socket socket;
 
@@ -245,7 +245,7 @@ public class Client extends javax.swing.JFrame {
     public void setTable(List<LinkedHashMap<String, Object>> products)
     {   
         if(products == null || products.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Không tìm thấy bất kì sản phẩm nào", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Không tìm thấy bất kì sản phẩm nào", "Thông báo", JOptionPane.INFORMATION_MESSAGE);  
         }
         
     
@@ -378,16 +378,16 @@ public class Client extends javax.swing.JFrame {
     public void setPublicKey(PublicKey publicKey) {
         this.publicKey = publicKey;
     }
-
-    public void initCardLayout() {
-        panelTimTheoURL pnlURL = new panelTimTheoURL(this);
-        panelTimNangCao pnlAdvanced = new panelTimNangCao(this);
-
-        this.pnlURL = pnlURL;
-        this.pnlAdvanced = pnlAdvanced;
-
-        pnlTabContent.add("url", pnlURL);
-        pnlTabContent.add("advanced", pnlAdvanced);
+    
+    public void initCardLayout(){
+        panelTimTheoURL pnlURL1 = new panelTimTheoURL(this);
+        panelTimNangCao pnlAdvancedURL1 = new panelTimNangCao(this);
+        
+        this.pnlURL = pnlURL1;
+        this.pnlAdvanced = pnlAdvancedURL1;
+        
+        pnlTabContent.add("url", pnlURL1);
+        pnlTabContent.add("advanced", pnlAdvancedURL1);
         switchCard("url");
         setTabSelection(btnUrlTab);
     }
