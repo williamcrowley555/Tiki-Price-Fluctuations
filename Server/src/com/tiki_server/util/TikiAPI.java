@@ -309,7 +309,7 @@ public class TikiAPI {
 
     public static void main(String[] args) {
         try {
-//            updateProducts();
+            updateProducts();
             updateReviews();
         } catch (IOException e) {
             e.printStackTrace();
