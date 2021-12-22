@@ -34,11 +34,12 @@ public class reviewComponent extends javax.swing.JPanel {
     String timeUsed;
     String reviewDate;
     String imageUrl;
+    String fullName;
     /**
      * Creates new form reviewComponent
      */
     
-    public reviewComponent(String title, float rating, String content, String timeUsed, String reviewDate, String imageUrl) {
+    public reviewComponent(String title, float rating, String content, String timeUsed, String reviewDate, String imageUrl, String fullName) {
         
         initComponents();
         
@@ -48,6 +49,7 @@ public class reviewComponent extends javax.swing.JPanel {
         this.timeUsed = timeUsed;
         this.reviewDate = reviewDate;
         this.imageUrl = imageUrl;
+        this.fullName = fullName;
         setReviewData();
     }   
     
@@ -55,7 +57,10 @@ public class reviewComponent extends javax.swing.JPanel {
     {
         lblTitle.setText(this.title);
         lblRating.setText(String.valueOf(this.rating));
-        
+        if (fullName != null && !fullName.isEmpty()){
+            lblReviewBy.setText("Đánh giá bởi: " + fullName);
+        } else 
+            lblReviewBy.setVisible(false);
         if (!content.trim().isEmpty())
         {
             JTextArea content = new JTextArea(this.content);
@@ -83,6 +88,7 @@ public class reviewComponent extends javax.swing.JPanel {
         }
         else
             pnlPic.setVisible(false);
+        
     }
     
     public void setPicture(String imageUrl){
@@ -134,6 +140,7 @@ public class reviewComponent extends javax.swing.JPanel {
         lblReviewDate = new javax.swing.JLabel();
         pnlPic = new javax.swing.JPanel();
         pnlContent = new javax.swing.JPanel();
+        lblReviewBy = new javax.swing.JLabel();
 
         contentScrollPane.setBorder(new javax.swing.border.MatteBorder(null));
 
@@ -172,10 +179,18 @@ public class reviewComponent extends javax.swing.JPanel {
         pnlContent.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         pnlContent.setLayout(new java.awt.BorderLayout());
 
+        lblReviewBy.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        lblReviewBy.setText("Đánh giá bởi: Nguyễn văn A");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblReviewDate, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pnlContent, javax.swing.GroupLayout.PREFERRED_SIZE, 766, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -186,18 +201,16 @@ public class reviewComponent extends javax.swing.JPanel {
                         .addComponent(jLabel3)
                         .addGap(18, 18, 18)
                         .addComponent(lblTimeUsed, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 824, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblReviewDate, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pnlContent, javax.swing.GroupLayout.PREFERRED_SIZE, 766, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 824, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblReviewBy, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblReviewBy, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
@@ -208,7 +221,7 @@ public class reviewComponent extends javax.swing.JPanel {
                 .addComponent(pnlContent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlPic, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(61, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         add(jPanel2, java.awt.BorderLayout.CENTER);
@@ -220,6 +233,7 @@ public class reviewComponent extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel lblRating;
+    private javax.swing.JLabel lblReviewBy;
     private javax.swing.JLabel lblReviewDate;
     private javax.swing.JLabel lblTimeUsed;
     private javax.swing.JLabel lblTitle;

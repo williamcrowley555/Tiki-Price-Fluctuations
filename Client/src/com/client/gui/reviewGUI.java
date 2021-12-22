@@ -56,7 +56,8 @@ public class reviewGUI extends javax.swing.JFrame {
         for (LinkedHashMap<String, Object> review : reviewList)
         {   
             if (review != null)
-            {
+            {   
+                System.out.println(review);
                 for(LinkedHashMap<String, Object> timeline : timelineList){
                     if (timeline != null && review.get("id").equals(timeline.get("reviewId")))
                     {
@@ -64,14 +65,14 @@ public class reviewGUI extends javax.swing.JFrame {
                         review.put("date_used", timeline.get("content"));
                     }
                 }
-                
                 reviewComponent reviewComp = new reviewComponent(
                     (String) review.get("title"), 
                      Float.valueOf((int) review.get("rating")), 
                     (String) review.get("content"), 
                     (String) review.get("date_used"),
                     (String) review.get("review_created_date"),
-                    (String) review.get("imageUrl")
+                    (String) review.get("imageUrl"),
+                    (String) review.get("fullName")   
                 );
                 reviews.add(reviewComp);
                 reviews.revalidate();
@@ -126,7 +127,8 @@ public class reviewGUI extends javax.swing.JFrame {
                     (String) review.get("content"), 
                     (String) review.get("date_used"),
                     (String) review.get("review_created_date"), 
-                    (String) review.get("imageUrl")
+                    (String) review.get("imageUrl"),
+                    (String) review.get("fullName")
                 );
                 reviews.add(reviewComp);
                 reviews.revalidate();
