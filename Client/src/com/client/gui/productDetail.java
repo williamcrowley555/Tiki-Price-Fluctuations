@@ -103,17 +103,16 @@ public class productDetail extends javax.swing.JFrame {
             
             if ((int) recvProduct.get("discount_rate") == 0)
             {
-                lblPrice1.setText(String.valueOf(recvProduct.get("price")) + " Đ");
+                lblPrice.setText(String.valueOf(recvProduct.get("price")) + " Đ");
+                lblOriginalPrice.setVisible(false);
             } else {
-                Font font = new Font("helvetica", Font.PLAIN, 12);
+                Font font = new Font("Arial", Font.PLAIN, 16);
                 Map  attributes = font.getAttributes();
                 attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);
                 Font newFont = new Font(attributes); 
-                
-                lblPrice.setFont(newFont);
-                lblPrice.setText(String.valueOf(recvProduct.get("original_price")) + " Đ");
-                
-                lblPrice1.setText(String.valueOf(recvProduct.get("price")) + " Đ");
+                lblOriginalPrice.setFont(newFont);
+                lblOriginalPrice.setText(String.valueOf(recvProduct.get("original_price")) + " Đ");
+                lblPrice.setText(String.valueOf(recvProduct.get("price")) + " Đ");
             }
             
             txtMota.setText((String) recvProduct.get("description"));
@@ -143,19 +142,18 @@ public class productDetail extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         pnlPic = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
-        lblPrice = new javax.swing.JLabel();
-        lblPrice1 = new javax.swing.JLabel();
         descriptionScrollPane = new javax.swing.JScrollPane();
         txtMota = new javax.swing.JTextArea();
         jLabel8 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
         productNameScrollPane = new javax.swing.JScrollPane();
         txtTenSP = new javax.swing.JTextArea();
+        jPanel5 = new javax.swing.JPanel();
+        lblPrice = new javax.swing.JLabel();
+        lblOriginalPrice = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(670, 300));
+        setPreferredSize(new java.awt.Dimension(787, 360));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(848, 40));
@@ -194,7 +192,7 @@ public class productDetail extends javax.swing.JFrame {
         panelHeaderLayout.setHorizontalGroup(
             panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelHeaderLayout.createSequentialGroup()
-                .addContainerGap(580, Short.MAX_VALUE)
+                .addContainerGap(689, Short.MAX_VALUE)
                 .addComponent(lblMinimize, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(lblExit, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -212,7 +210,7 @@ public class productDetail extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setLayout(new java.awt.BorderLayout());
 
-        jPanel3.setPreferredSize(new java.awt.Dimension(250, 250));
+        jPanel3.setPreferredSize(new java.awt.Dimension(300, 300));
         jPanel3.setLayout(new java.awt.BorderLayout());
 
         pnlPic.setBackground(new java.awt.Color(255, 255, 255));
@@ -225,91 +223,72 @@ public class productDetail extends javax.swing.JFrame {
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel5.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
-        jLabel5.setText("Giá:");
-
-        lblPrice.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
-        lblPrice.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-
-        lblPrice1.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
-        lblPrice1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-
         descriptionScrollPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         txtMota.setEditable(false);
         txtMota.setColumns(20);
-        txtMota.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtMota.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         txtMota.setLineWrap(true);
         txtMota.setRows(5);
         txtMota.setWrapStyleWord(true);
         txtMota.setFocusable(false);
         descriptionScrollPane.setViewportView(txtMota);
 
-        jLabel8.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel8.setText("Mô tả:");
 
-        jLabel6.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
-        jLabel6.setText("Tên sản phẩm:");
-
-        productNameScrollPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        productNameScrollPane.setBorder(null);
         productNameScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         txtTenSP.setEditable(false);
         txtTenSP.setColumns(20);
-        txtTenSP.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtTenSP.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         txtTenSP.setLineWrap(true);
         txtTenSP.setRows(5);
         txtTenSP.setText("abc");
         txtTenSP.setFocusable(false);
         productNameScrollPane.setViewportView(txtTenSP);
 
+        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel5.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 5, 15));
+
+        lblPrice.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
+        lblPrice.setForeground(new java.awt.Color(255, 51, 51));
+        lblPrice.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblPrice.setText("80000 Đ");
+        jPanel5.add(lblPrice);
+
+        lblOriginalPrice.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
+        lblOriginalPrice.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblOriginalPrice.setText("80000Đ");
+        jPanel5.add(lblOriginalPrice);
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(descriptionScrollPane)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addGap(0, 135, Short.MAX_VALUE))
-                            .addComponent(productNameScrollPane))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lblPrice, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addGap(120, 120, 120))
-                            .addComponent(lblPrice1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(productNameScrollPane)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel8)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(descriptionScrollPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblPrice1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(productNameScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(5, 5, 5)
-                        .addComponent(jLabel8)))
+                .addContainerGap()
+                .addComponent(productNameScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(descriptionScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(descriptionScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -370,17 +349,16 @@ public class productDetail extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane descriptionScrollPane;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JLabel lblExit;
     private javax.swing.JLabel lblMinimize;
+    private javax.swing.JLabel lblOriginalPrice;
     private javax.swing.JLabel lblPrice;
-    private javax.swing.JLabel lblPrice1;
     private javax.swing.JPanel panelHeader;
     private javax.swing.JPanel pnlPic;
     private javax.swing.JScrollPane productNameScrollPane;
