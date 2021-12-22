@@ -35,6 +35,8 @@ public class ReviewDTO implements Serializable {
 
     private String imageUrl;
 
+    private String fullName;
+
     @JsonProperty("product_id")
     private Long productId;
 
@@ -42,7 +44,7 @@ public class ReviewDTO implements Serializable {
     }
 
     @JsonProperty("images")
-    public void unpackNested(List<Map<String,Object>> images)
+    public void unpackNestedImages(List<Map<String,Object>> images)
     {
         try {
             this.imageUrl = (String)images.get(0).get("full_path");
@@ -52,11 +54,22 @@ public class ReviewDTO implements Serializable {
         }
     }
 
+    @JsonProperty("created_by")
+    public void unpackNestedCreatedBy(Map<String,Object> createdBy)
+    {
+        try {
+            this.fullName = (String) createdBy.get("full_name");
+        } catch (Exception e)
+        {
+            this.fullName = null;
+        }
+    }
+
     public ReviewDTO(Long id) {
         this.id = id;
     }
 
-    public ReviewDTO(Long id, String title, String content, String status, Long commentCount, int rating, String imageUrl, Long productId) {
+    public ReviewDTO(Long id, String title, String content, String status, Long commentCount, int rating, String imageUrl, String fullName, Long productId) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -64,6 +77,7 @@ public class ReviewDTO implements Serializable {
         this.commentCount = commentCount;
         this.rating = rating;
         this.imageUrl = imageUrl;
+        this.fullName = fullName;
         this.productId = productId;
     }
 
@@ -123,6 +137,14 @@ public class ReviewDTO implements Serializable {
         this.imageUrl = imageUrl;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
     public Long getProductId() {
         return productId;
     }
@@ -136,12 +158,12 @@ public class ReviewDTO implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ReviewDTO reviewDTO = (ReviewDTO) o;
-        return rating == reviewDTO.rating && Objects.equals(id, reviewDTO.id) && Objects.equals(title, reviewDTO.title) && Objects.equals(content, reviewDTO.content) && Objects.equals(status, reviewDTO.status) && Objects.equals(commentCount, reviewDTO.commentCount) && Objects.equals(imageUrl, reviewDTO.imageUrl) && Objects.equals(productId, reviewDTO.productId);
+        return rating == reviewDTO.rating && Objects.equals(id, reviewDTO.id) && Objects.equals(title, reviewDTO.title) && Objects.equals(content, reviewDTO.content) && Objects.equals(status, reviewDTO.status) && Objects.equals(commentCount, reviewDTO.commentCount) && Objects.equals(imageUrl, reviewDTO.imageUrl) && Objects.equals(fullName, reviewDTO.fullName) && Objects.equals(productId, reviewDTO.productId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, content, status, commentCount, rating, imageUrl, productId);
+        return Objects.hash(id, title, content, status, commentCount, rating, imageUrl, fullName, productId);
     }
 
     @Override
@@ -154,6 +176,7 @@ public class ReviewDTO implements Serializable {
                 ", commentCount=" + commentCount +
                 ", rating=" + rating +
                 ", imageUrl='" + imageUrl + '\'' +
+                ", fullName='" + fullName + '\'' +
                 ", productId=" + productId +
                 '}';
     }

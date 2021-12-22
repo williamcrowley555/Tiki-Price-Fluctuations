@@ -31,15 +31,15 @@ public class ReviewDAL extends AbstractDAL<ReviewDTO> implements IReviewDAL {
 
     @Override
     public Long save(ReviewDTO review) {
-        String sql = "SET NAMES utf8mb4; INSERT INTO review(id, comment_count, content, image_url, rating, status, title, product_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
-        return insert(sql, review.getId(), review.getCommentCount(), review.getContent(), review.getImageUrl(), review.getRating(), review.getStatus(),
+        String sql = "SET NAMES utf8mb4; INSERT INTO review(id, comment_count, content, image_url, full_name, rating, status, title, product_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        return insert(sql, review.getId(), review.getCommentCount(), review.getContent(), review.getImageUrl(), review.getFullName(), review.getRating(), review.getStatus(),
                 review.getTitle(), review.getProductId());
     }
 
     @Override
     public void update(ReviewDTO review) {
-        String sql = "SET NAMES utf8mb4; UPDATE review SET comment_count = ?, content = ?, image_url = ?, rating = ?, status = ?, title = ?, product_id = ? WHERE id = ?";
-        update(sql, review.getCommentCount(), review.getContent(), review.getImageUrl(), review.getRating(), review.getStatus(), review.getTitle(), review.getProductId(), review.getId());
+        String sql = "SET NAMES utf8mb4; UPDATE review SET comment_count = ?, content = ?, image_url = ?, full_name = ?, rating = ?, status = ?, title = ?, product_id = ? WHERE id = ?";
+        update(sql, review.getCommentCount(), review.getContent(), review.getImageUrl(), review.getFullName(), review.getRating(), review.getStatus(), review.getTitle(), review.getProductId(), review.getId());
     }
 
     @Override

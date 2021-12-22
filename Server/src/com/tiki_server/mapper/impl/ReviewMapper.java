@@ -20,6 +20,7 @@ public class ReviewMapper implements RowMapper<ReviewDTO> {
             review.setCommentCount(rs.getLong("comment_count"));
             review.setRating(rs.getInt("rating"));
             review.setImageUrl(rs.getString("image_url"));
+            review.setFullName(rs.getString("full_name"));
             review.setProductId(rs.getLong("product_id"));
 
             return review;

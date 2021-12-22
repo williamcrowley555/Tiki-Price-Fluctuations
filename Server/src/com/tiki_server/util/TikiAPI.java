@@ -214,6 +214,7 @@ public class TikiAPI {
                             || (review.getImageUrl() == null ? "" : review.getImageUrl()).compareTo(oldReview.getImageUrl() == null ? "" : oldReview.getImageUrl()) != 0
                             || review.getRating() != oldReview.getRating()
                             || review.getTitle().compareTo(oldReview.getTitle()) != 0) {
+                        System.out.println(review);
                         reviewBLL.update(review);
                         System.out.println("Update thành công review_id = " + review.getId());
                     }
@@ -308,7 +309,7 @@ public class TikiAPI {
 
     public static void main(String[] args) {
         try {
-            updateProducts();
+//            updateProducts();
             updateReviews();
         } catch (IOException e) {
             e.printStackTrace();

@@ -29,6 +29,9 @@ public class ReviewEntity {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Column(name = "full_name")
+    private String fullName;
+
     @ManyToOne
     @JoinColumn(name = "product_id")
     private ProductEntity product;
