@@ -119,10 +119,12 @@ public class Client extends javax.swing.JFrame {
 
     public void setReviewsList(ArrayList<LinkedHashMap<String, Object>> reviewsList) {
         this.pnlURL.setReviewsList(reviewsList);
+        this.pnlAdvanced.setReviewsList(reviewsList);
     }
 
     public void setTimelineList(ArrayList<LinkedHashMap<String, Object>> timelinesList) {
         this.pnlURL.setTimelinesList(timelinesList);
+        this.pnlAdvanced.setTimelinesList(timelinesList);
     }
 
     public void setCurrentProduct(LinkedHashMap<String, Object> product) {
