@@ -56,16 +56,23 @@ public class reviewComponent extends javax.swing.JPanel {
         lblTitle.setText(this.title);
         lblRating.setText(String.valueOf(this.rating));
         
-        JTextArea content = new JTextArea(this.content);
-        content.setLineWrap(true);
-        content.setWrapStyleWord(true);
-        content.setEditable(false);
-        content.setFocusable(false);
-        content.setBorder(new EmptyBorder(10,10,10,10));
-        Font contentFont =  new Font("Arial", Font.PLAIN, 14);
-        content.setFont(contentFont);
-        pnlContent.add(content);
-        pnlContent.revalidate();
+        if (!content.trim().isEmpty())
+        {
+            JTextArea content = new JTextArea(this.content);
+            content.setLineWrap(true);
+            content.setWrapStyleWord(true);
+            content.setEditable(false);
+            content.setFocusable(false);
+            content.setBorder(new EmptyBorder(10,10,10,10));
+            Font contentFont =  new Font("Arial", Font.PLAIN, 14);
+            content.setFont(contentFont);
+            pnlContent.add(content);
+            pnlContent.revalidate();
+        } else {
+            System.out.println("run");
+            pnlContent.setBorder(new EmptyBorder(1,1,1,1));
+        }
+       
         
         lblTimeUsed.setText(this.timeUsed);
         lblReviewDate.setText(this.reviewDate == null ? "Ngày đánh giá: Không có dữ liệu" : "Ngày đánh giá: " + this.reviewDate);

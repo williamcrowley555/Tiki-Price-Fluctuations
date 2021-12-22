@@ -1325,8 +1325,13 @@ public class panelTimNangCao extends javax.swing.JPanel {
         int rowindex = advanceProductTable.getSelectedRow();
         Long id = Long.parseLong(advanceProductTable.getValueAt(rowindex,0).toString());
         if (this.popup == null) {
-            popup = new productDetail(currentproduct);
-            popup.setVisible(true);
+            if (currentproduct != null)
+            {
+                popup = new productDetail(currentproduct);
+                popup.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(null, "Dữ liệu đang tải, vui lòng chờ một lát và thử lại", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            }
         } else {
             this.popup.toFront();
             this.popup.center();
