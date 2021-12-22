@@ -38,6 +38,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -48,6 +49,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
+import javax.swing.SwingWorker;
 import javax.swing.border.MatteBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
 import javax.swing.plaf.basic.BasicComboBoxUI;
@@ -130,7 +132,18 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         hideSpinnerArrow((javax.swing.JSpinner) yearChooser.getSpinner());
     }
     
-    
+    static void disable(final AbstractButton b, final long ms) {
+        b.setEnabled(false);
+        new SwingWorker() {
+            @Override protected Object doInBackground() throws Exception {
+                Thread.sleep(ms);
+                return null;
+            }
+            @Override protected void done() {
+                b.setEnabled(true);
+            }
+        }.execute();
+    }
     
     public void customChart( JFreeChart linechart){
         StandardChartTheme theme = new StandardChartTheme(linechart.toString());
@@ -850,6 +863,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
             }
         } else 
             JOptionPane.showMessageDialog(this, "URL không hợp lệ", "Thông báo", JOptionPane.ERROR_MESSAGE);
+        disable(btnTimKiem, 2000);
      
     }//GEN-LAST:event_btnTimKiemActionPerformed
 
@@ -873,7 +887,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
                 });
             } else  JOptionPane.showMessageDialog(this, "Bạn chưa tìm kiếm sản phẩm hoặc sản phẩm không có review", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
         }
-        
+        disable(btnXemReview, 2000);
         
     }//GEN-LAST:event_btnXemReviewActionPerformed
 
@@ -895,6 +909,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         } catch (IOException ex) {
             Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
         }
+        disable(btnCPFilter, 2000);
     }//GEN-LAST:event_btnCPFilterActionPerformed
 
 

@@ -26,6 +26,7 @@ import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
@@ -43,6 +44,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
 import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.ButtonModel;
 import javax.swing.DefaultComboBoxModel;
@@ -55,6 +57,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.SwingWorker;
 import javax.swing.border.MatteBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
 import javax.swing.plaf.basic.BasicComboBoxUI;
@@ -135,6 +138,20 @@ public class panelTimNangCao extends javax.swing.JPanel {
         "Số lượng bán",
         "Giá"
     };
+    
+    static void disable(final AbstractButton b, final long ms) {
+        b.setEnabled(false);
+        new SwingWorker() {
+            @Override protected Object doInBackground() throws Exception {
+                Thread.sleep(ms);
+                return null;
+            }
+            @Override protected void done() {
+                b.setEnabled(true);
+            }
+        }.execute();
+    }
+    
     public panelTimNangCao(Client main) {
        
         initComponents();
@@ -1290,6 +1307,8 @@ public class panelTimNangCao extends javax.swing.JPanel {
         } catch (IOException ex) {
             Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        disable(jButton2,2000);
     }//GEN-LAST:event_jButton2MouseClicked
     
     private void advanceProductTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_advanceProductTableMouseClicked
@@ -1382,6 +1401,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         } catch (IOException ex) {
             Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
         }
+         disable(btnCPFilter,2000);
     }//GEN-LAST:event_btnCPFilterActionPerformed
 
     private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
@@ -1459,6 +1479,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
                 });
             } else  JOptionPane.showMessageDialog(this, "Bạn chưa tìm kiếm sản phẩm hoặc sản phẩm không có review", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
         }
+         disable(jButton1,2000);
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
