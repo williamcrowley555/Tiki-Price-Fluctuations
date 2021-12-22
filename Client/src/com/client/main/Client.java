@@ -200,7 +200,7 @@ public class Client extends javax.swing.JFrame {
             name.add(String.valueOf(category.get("name")));
             idCate.add((Integer) (category.get("id")));
         }
-        // System.out.println(name);
+        
         this.pnlAdvanced.listNameCategory(name, idCate);
     }
 
@@ -254,7 +254,6 @@ public class Client extends javax.swing.JFrame {
         try {
             pnlAdvanced.setTable(products);
         } catch (Exception e) {
-            System.out.println("catched");
             JOptionPane.showMessageDialog(this, "Thao tác quá nhanh, hệ thống không kịp cập nhật", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         }
     }
@@ -653,11 +652,7 @@ public class Client extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+        
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -674,71 +669,7 @@ public class Client extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Client.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
+       
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -750,71 +681,8 @@ public class Client extends javax.swing.JFrame {
                     System.out.print("");
                 }
 
-                System.out.println("connected");
+                System.out.println("Connected");
                 clientGUI.setVisible(true);
-                String input = "";
-                Scanner stdIn;
-                stdIn = new Scanner(System.in);
-
-                System.out.println("CHOOSE AN OPTION");
-                System.out.println("1/ Get product with id = 249953");
-                System.out.println("2/ Filter products");
-                System.out.println("3/ Get configurable products with product id = 249953");
-                System.out.println("4/ Get product histories by URL in 11/2021");
-                System.out.println("5/ Get product histories with product id = 249953 in 11/2021");
-                System.out.println("6/ Get configurable product histories with product id = 249953 & cpId = 511074 in 11/2021");
-                System.out.println("7/ Get reviews with product id = 249953");
-
-//            while (true) {
-//                System.out.print("Client input: ");
-//                input = stdIn.nextLine();
-//
-//                try {
-//                    if(input.equals("bye")) {
-//                        stdIn.close();
-//                        clientGUI.closeSocket();
-//                        break;
-//                    } else if (input.equals("1")) {
-//                        Long productId = 249953L;
-//                        clientGUI.getProduct(productId);
-//                    } else if (input.equals("2")) {
-//                        String productName = null;
-//                        Long categoryId = 1815L;
-//                        List<Long> brandIds = List.of(18984L, 246045L);
-//                        Float ratingAverage = 4f;
-//                        Long minPrice = 0L;
-//                        Long maxPrice = 300000L;
-//                        client.filterProducts(productName, categoryId, brandIds, ratingAverage, minPrice, maxPrice);
-//                    } else if (input.equals("3")) {
-//                        clientGUI.getConfigurableProducts(249953L);
-//                    } else if (input.equals("4")) {
-//                        String url = "https://tiki.vn/day-cap-sac-micro-usb-anker-powerline-0-9m-a8132-hang-chinh-hang-p249953.html?spid=249956";
-//                        int month = 11;
-//                        int year = 2021;
-//                        clientGUI.getProductHistories(url, month, year);
-//                    } else if (input.equals("5")) {
-//                        Long productId = 249953L;
-//                        int month = 11;
-//                        int year = 2021;
-//                        clientGUI.getProductHistories(productId, month, year);
-//                    } else if (input.equals("6")) {
-//                        Long productId = 249953L;
-//                        String option1 = "Xám";
-//                        String option2 = null;
-//                        String option3 = null;
-//                        int month = 11;
-//                        int year = 2021;
-//                        clientGUI.getConfigurableProductHistories(productId, option1, option2, option3, month, year);
-//                    } else if (input.equals("7")) {
-//                        Long productId = 249953L;
-//                        clientGUI.getReviews(productId);
-//                    } else {
-//                        clientGUI.getProduct(-5L);
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            } 
             }
         });
     }

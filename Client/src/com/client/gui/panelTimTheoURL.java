@@ -348,7 +348,6 @@ public class panelTimTheoURL extends javax.swing.JPanel {
                         if (e.getStateChange() == ItemEvent.SELECTED)
                         {
                             selectedOption1 = radioButton.getText();
-                            //System.out.println(selectedOption1);
                         } else {
                             selectedOption1 = "";
                         }                 
@@ -362,7 +361,6 @@ public class panelTimTheoURL extends javax.swing.JPanel {
                         if (e.getStateChange() == ItemEvent.SELECTED)
                         {
                             selectedOption2 = radioButton.getText();
-                            //System.out.println(selectedOption2);
                         } else {
                             selectedOption2 = "";
                         }                 
@@ -376,7 +374,6 @@ public class panelTimTheoURL extends javax.swing.JPanel {
                         if (e.getStateChange() == ItemEvent.SELECTED)
                         {
                             selectedOption3 = radioButton.getText();
-                            //System.out.println(selectedOption3);
                         } else {
                             selectedOption3 = "";
                         }                 
