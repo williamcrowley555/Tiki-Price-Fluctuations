@@ -89,6 +89,8 @@ public class panelTimNangCao extends javax.swing.JPanel {
     /**
      * Creates new form panelTimNangCao
      */
+    private reviewGUI popUp = null;
+    
     String json;
     String searchData;
     String productName = "";
@@ -104,12 +106,16 @@ public class panelTimNangCao extends javax.swing.JPanel {
     List<Integer> prices = new ArrayList<Integer>();
     
     
+    
     HashMap<Long, String> brandIdAndName;
     LinkedHashMap<String, Object> currentproduct;
     Map<Long, String> currentBrands = new HashMap<>();
     
     Long categoryId = 2L; //2L là id của Root - toàn bộ danh mục
     List<LinkedHashMap<String, Object>> products;
+    ArrayList<LinkedHashMap<String, Object>> reviewsList;
+    ArrayList<LinkedHashMap<String, Object>> timelinesList;
+    
     InputValidatorUtil validator = new InputValidatorUtil();
     Long selectedProductId;
     
@@ -191,7 +197,15 @@ public class panelTimNangCao extends javax.swing.JPanel {
         txtCurrentPage.addActionListener(action);
     }
     
-     public void hideSpinnerArrow(JSpinner spinner) {
+    public void setReviewsList(ArrayList<LinkedHashMap<String, Object>> reviewsList){
+        this.reviewsList = reviewsList;
+    }
+    
+    public void setTimelinesList(ArrayList<LinkedHashMap<String, Object>> timelinesList){
+        this.timelinesList = timelinesList;
+    }
+    
+    public void hideSpinnerArrow(JSpinner spinner) {
         spinner.setUI(new BasicSpinnerUI() {
             protected Component createNextButton() {
                 return null;
@@ -228,7 +242,9 @@ public class panelTimNangCao extends javax.swing.JPanel {
             return 3f;
         if(jRadioButton4.isSelected())
             return 2f;
-        return 1f;
+        if(jRadioButton5.isSelected())
+            return 1f;
+        return 0f;
     }
             
     public void listNameCategory(ArrayList<String> name, ArrayList<Integer> idCate) {
@@ -609,7 +625,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         pnlSearch = new javax.swing.JPanel();
         lblTitleTenSanPham = new javax.swing.JLabel();
         txtSearch = new javax.swing.JTextField();
-        comboboxCategory = new javax.swing.JComboBox<>();
+        comboboxCategory = new javax.swing.JComboBox<CategoryComboItem>();
         jLabel4 = new javax.swing.JLabel();
         pnlFilter = new javax.swing.JPanel();
         pnlCategory = new javax.swing.JPanel();
@@ -632,6 +648,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         jRadioButton3 = new javax.swing.JRadioButton();
         jRadioButton5 = new javax.swing.JRadioButton();
         jRadioButton4 = new javax.swing.JRadioButton();
+        jRadioButton6 = new javax.swing.JRadioButton();
         pnlTable = new javax.swing.JPanel();
         pnlTableTop = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
@@ -643,7 +660,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         lblPage = new javax.swing.JLabel();
         btnNext = new javax.swing.JButton();
         btnLast = new javax.swing.JButton();
-        comboBoxRowLimit = new javax.swing.JComboBox<>();
+        comboBoxRowLimit = new javax.swing.JComboBox<String>();
         lblPage1 = new javax.swing.JLabel();
         txtCurrentPage = new javax.swing.JTextField();
         pnlTableMid = new javax.swing.JPanel();
@@ -783,6 +800,11 @@ public class panelTimNangCao extends javax.swing.JPanel {
         jButton1.setBackground(new java.awt.Color(204, 204, 204));
         jButton1.setText("Xem review");
         jButton1.setOpaque(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setBackground(new java.awt.Color(204, 204, 204));
         jButton2.setText("Tìm kiếm");
@@ -864,6 +886,9 @@ public class panelTimNangCao extends javax.swing.JPanel {
         buttonGroupStar.add(jRadioButton4);
         jRadioButton4.setText("Từ 2 sao");
 
+        buttonGroupStar.add(jRadioButton6);
+        jRadioButton6.setText("Từ 0 sao");
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
@@ -876,8 +901,9 @@ public class panelTimNangCao extends javax.swing.JPanel {
                     .addComponent(jLabel6)
                     .addComponent(jRadioButton3)
                     .addComponent(jRadioButton4)
-                    .addComponent(jRadioButton5))
-                .addContainerGap(59, Short.MAX_VALUE))
+                    .addComponent(jRadioButton5)
+                    .addComponent(jRadioButton6))
+                .addContainerGap(73, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -894,7 +920,9 @@ public class panelTimNangCao extends javax.swing.JPanel {
                 .addComponent(jRadioButton4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jRadioButton5)
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jRadioButton6)
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         pnlFilter.add(jPanel7, java.awt.BorderLayout.CENTER);
@@ -991,7 +1019,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         });
 
         comboBoxRowLimit.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        comboBoxRowLimit.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "10", "20", "50", "100" }));
+        comboBoxRowLimit.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "10", "20", "50", "100" }));
         comboBoxRowLimit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboBoxRowLimitActionPerformed(evt);
@@ -1410,6 +1438,29 @@ public class panelTimNangCao extends javax.swing.JPanel {
        lblPage.setText("/" + pages);
     }//GEN-LAST:event_comboBoxRowLimitActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if(this.currentproduct == null) JOptionPane.showMessageDialog(this, "Bạn chưa tìm kiếm sản phẩm", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
+        else{
+            
+            if ((this.reviewsList != null && this.reviewsList.size() > 0))
+            {   
+                Float rating = Float.valueOf(((Double) this.currentproduct.get("rating_average")).floatValue());
+                if (this.popUp == null) {
+                    this.popUp = new reviewGUI(rating, this.reviewsList, this.timelinesList);
+                } else {
+                    this.popUp.toFront();
+                    this.popUp.center();
+                }
+                popUp.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                        popUp = null;
+                    }
+                });
+            } else  JOptionPane.showMessageDialog(this, "Bạn chưa tìm kiếm sản phẩm hoặc sản phẩm không có review", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable advanceProductTable;
@@ -1439,6 +1490,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
     private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JRadioButton jRadioButton5;
+    private javax.swing.JRadioButton jRadioButton6;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
