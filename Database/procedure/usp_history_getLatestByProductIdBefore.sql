@@ -23,7 +23,7 @@ BEGIN
 	START TRANSACTION;
         SELECT h.*
         FROM history AS h JOIN product AS p ON h.product_id = p.id
-		WHERE h.product_id = product_id_in AND MONTH(date) < month_in AND YEAR(date) = year_in
+		WHERE h.product_id = product_id_in AND MONTH(date) < month_in AND YEAR(date) <= year_in
         ORDER BY date DESC LIMIT 1;
 	COMMIT;
 
