@@ -143,7 +143,7 @@ public class Client extends javax.swing.JFrame {
             this.pnlAdvanced.setCurrentProduct(product);
     }
 
-    public void updateLineChart(List<LinkedHashMap<String, Object>> productHistories, String productName) {
+    public void updateLineChart(List<LinkedHashMap<String, Object>> productHistories) {
         if (productHistories == null || productHistories.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Không có dữ liệu lịch sử giá", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             return;
@@ -153,6 +153,7 @@ public class Client extends javax.swing.JFrame {
         ArrayList<Integer> prices = new ArrayList<Integer>();
         int month = 1;
         int year = 2000;
+        
         for (LinkedHashMap<String, Object> history : productHistories) {
             LinkedHashMap<String, Object> dateObj = (LinkedHashMap<String, Object>) history.get("date");
             dates.add(String.valueOf(dateObj.get("dayOfMonth")));
@@ -160,10 +161,11 @@ public class Client extends javax.swing.JFrame {
             year = (int) dateObj.get("year");
             prices.add((int) history.get("price"));
         }
+        
         if(isPnlUrl)
-            this.pnlURL.showLineChart(productName, month, year, dates, prices);
+            this.pnlURL.showLineChart(month, year, dates, prices);
         if(!isPnlUrl)
-            this.pnlAdvanced.showLineChart(productName, month, year, dates, prices);
+            this.pnlAdvanced.showLineChart(month, year, dates, prices);
     }
 
     public void setOption(LinkedHashMap<String, Object> name, List<LinkedHashMap<String, Object>> option) throws IOException {
@@ -173,26 +175,6 @@ public class Client extends javax.swing.JFrame {
             this.pnlURL.setConfigurableProducts(name, option);
         
     }
-
-//    public void updateLineChartAdvance(List<LinkedHashMap<String, Object>> productHistories, String productName) {
-//        if (productHistories == null || productHistories.isEmpty()) {
-//            JOptionPane.showMessageDialog(this, "Không có dữ liệu lịch sử giá", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-//            return;
-//        }
-//
-//        ArrayList<String> dates = new ArrayList<String>();
-//        ArrayList<Integer> prices = new ArrayList<Integer>();
-//        int month = 1;
-//        int year = 2000;
-//        for (LinkedHashMap<String, Object> history : productHistories) {
-//            LinkedHashMap<String, Object> dateObj = (LinkedHashMap<String, Object>) history.get("date");
-//            dates.add(String.valueOf(dateObj.get("dayOfMonth")));
-//            month = (int) dateObj.get("monthValue");
-//            year = (int) dateObj.get("year");
-//            prices.add((int) history.get("price"));
-//        }
-//        this.pnlAdvanced.showLineChart(productName, month, year, dates, prices);
-//    }
 
     public void updateBrands(List<LinkedHashMap<String, Object>> recvBrands) {
         Map<Long, String> brands = new HashMap<>();
@@ -262,7 +244,6 @@ public class Client extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Không tìm thấy bất kì sản phẩm nào", "Thông báo", JOptionPane.INFORMATION_MESSAGE);  
         }
         
-    
         try {
             if(!isPnlUrl)
                 pnlAdvanced.setTable(products);

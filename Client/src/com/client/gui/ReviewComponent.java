@@ -77,7 +77,6 @@ public class ReviewComponent extends javax.swing.JPanel {
             pnlContent.setBorder(new EmptyBorder(1,1,1,1));
         }
        
-        
         lblTimeUsed.setText(this.timeUsed);
         lblReviewDate.setText(this.reviewDate == null ? "Ngày đánh giá: Không có dữ liệu" : "Ngày đánh giá: " + this.reviewDate);
         

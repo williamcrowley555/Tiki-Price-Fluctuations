@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -152,7 +153,7 @@ public class PanelTimNangCao extends javax.swing.JPanel {
         this.main = main;
         month = monthChooser.getMonth() + 1;
         year = yearChooser.getYear();
-        showLineChart(productName, month, year, dates, prices);
+        showLineChart(month, year, dates, prices);
         comboboxCategory = myComboBox(comboboxCategory, new Color(14,142,233));
         scrollPaneBrands.getVerticalScrollBar().setUI(new MyScrollBarUI());
         initNullTable();
@@ -339,8 +340,8 @@ public class PanelTimNangCao extends javax.swing.JPanel {
         
         pnlOptionName.add(optionName);
         ButtonGroup buttonGroup = new ButtonGroup();
-        GridLayout gridLayout = new GridLayout(options.size(),1);
-        pnlOption.setLayout(gridLayout);
+//        GridLayout gridLayout = new GridLayout(options.size(),1);
+//        pnlOption.setLayout(gridLayout);
         
         for(int i = 0; i < options.size(); i++)
         {   
@@ -554,7 +555,7 @@ public class PanelTimNangCao extends javax.swing.JPanel {
         }
     }
     
-     public void showLineChart(String productName, int month, int year, List<String> dates, List<Integer> prices ){
+     public void showLineChart(int month, int year, List<String> dates, List<Integer> prices ){
         
         //create dataset for the graph
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
@@ -562,7 +563,7 @@ public class PanelTimNangCao extends javax.swing.JPanel {
             dataset.setValue(prices.get(i), "Giá", dates.get(i).toString());
         }
         //create chart
-        JFreeChart linechart = ChartFactory.createLineChart("Lịch sử giá " + productName + " tháng "
+        JFreeChart linechart = ChartFactory.createLineChart("Lịch sử giá tháng "
                                                             + month + " / " + year ,"Ngày","Giá (vnd)", 
                 dataset, PlotOrientation.VERTICAL, true,true,false);
       
@@ -928,7 +929,7 @@ public class PanelTimNangCao extends javax.swing.JPanel {
                 .addComponent(jRadioButton5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jRadioButton6)
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pnlFilter.add(jPanel7, java.awt.BorderLayout.CENTER);
@@ -1160,7 +1161,7 @@ public class PanelTimNangCao extends javax.swing.JPanel {
 
         pnlOptions1.setBackground(new java.awt.Color(255, 255, 255));
         pnlOptions1.setPreferredSize(new java.awt.Dimension(150, 180));
-        pnlOptions1.setLayout(new java.awt.GridLayout(5, 1));
+        pnlOptions1.setLayout(new javax.swing.BoxLayout(pnlOptions1, javax.swing.BoxLayout.PAGE_AXIS));
         pnlOption1.add(pnlOptions1, java.awt.BorderLayout.PAGE_END);
 
         pnlOptionName1.setBackground(new java.awt.Color(255, 255, 255));
@@ -1176,7 +1177,7 @@ public class PanelTimNangCao extends javax.swing.JPanel {
 
         pnlOptions2.setBackground(new java.awt.Color(255, 255, 255));
         pnlOptions2.setPreferredSize(new java.awt.Dimension(150, 180));
-        pnlOptions2.setLayout(new java.awt.GridLayout(1, 0));
+        pnlOptions2.setLayout(new javax.swing.BoxLayout(pnlOptions2, javax.swing.BoxLayout.PAGE_AXIS));
         pnlOption2.add(pnlOptions2, java.awt.BorderLayout.PAGE_END);
 
         pnlOptionName2.setBackground(new java.awt.Color(255, 255, 255));
@@ -1190,7 +1191,7 @@ public class PanelTimNangCao extends javax.swing.JPanel {
 
         pnlOptions3.setBackground(new java.awt.Color(255, 255, 255));
         pnlOptions3.setPreferredSize(new java.awt.Dimension(150, 180));
-        pnlOptions3.setLayout(new java.awt.GridBagLayout());
+        pnlOptions3.setLayout(new javax.swing.BoxLayout(pnlOptions3, javax.swing.BoxLayout.PAGE_AXIS));
         pnlOption3.add(pnlOptions3, java.awt.BorderLayout.PAGE_END);
 
         pnlOptionName3.setBackground(new java.awt.Color(255, 255, 255));
@@ -1445,7 +1446,7 @@ public class PanelTimNangCao extends javax.swing.JPanel {
             {   
                 Float rating = Float.valueOf(((Double) this.currentproduct.get("rating_average")).floatValue());
                 if (this.popUp == null) {
-                    this.popUp = new ReviewGUI(rating, this.reviewsList, this.timelinesList);
+                    this.popUp = new ReviewGUI((String) this.currentproduct.get("name"), rating, this.reviewsList, this.timelinesList);
                 } else {
                     this.popUp.toFront();
                     this.popUp.center();
@@ -1456,7 +1457,8 @@ public class PanelTimNangCao extends javax.swing.JPanel {
                         popUp = null;
                     }
                 });
-            } else  JOptionPane.showMessageDialog(this, "Bạn chưa chọn sản phẩm hoặc sản phẩm hiện chưa có review", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
+            } else  
+                JOptionPane.showMessageDialog(this, "Bạn chưa chọn sản phẩm hoặc sản phẩm hiện chưa có review", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
         }
          
         disable(jButton1,2000);

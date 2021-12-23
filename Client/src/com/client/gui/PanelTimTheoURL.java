@@ -106,7 +106,7 @@ public class PanelTimTheoURL extends javax.swing.JPanel {
     public PanelTimTheoURL(Client main) {
         initComponents();
         this.main = main;
-        showLineChart(productName, month, year, dates, prices);
+        showLineChart(month, year, dates, prices);
         customMonthYearChooser();
         myTextArea();
         
@@ -171,10 +171,7 @@ public class PanelTimTheoURL extends javax.swing.JPanel {
     }
     
      
-    public void showLineChart(String productName, int month, int year, ArrayList<String> dates, ArrayList<Integer> prices ){
-        
-        // update lại tháng, năm cho trường hợp nếu tháng đó không có lịch sử nhưng những tháng,năm kề có ls giá
-        
+    public void showLineChart(int month, int year, ArrayList<String> dates, ArrayList<Integer> prices ){
         boolean flag = false;
         if (month != monthChooser.getMonth()+1 || year != yearChooser.getYear()){
             month = monthChooser.getMonth()+1;
@@ -188,19 +185,16 @@ public class PanelTimTheoURL extends javax.swing.JPanel {
         for (int i = 0; i < prices.size(); i++){
             dataset.setValue(prices.get(i), "Giá", flag ? String.valueOf(today.getDayOfMonth()) : dates.get(i).toString());
         }
+        
         //create chart
-        JFreeChart linechart = ChartFactory.createLineChart("Lịch sử giá " + productName + " tháng "
+        JFreeChart linechart = ChartFactory.createLineChart("Lịch sử giá tháng "
                                                             + month + " / " + year ,"Ngày","Giá (vnd)", 
                 dataset, PlotOrientation.VERTICAL, true,true,false);
       
- 
-        
         LineAndShapeRenderer renderer1 = new LineAndShapeRenderer(true, false);
         linechart.getCategoryPlot().setRenderer(renderer1);
         
-        // date rotate
-//        CategoryAxis domainAxis = linechart.getCategoryPlot().getDomainAxis();
-//        domainAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+        // Hiện giá các mốc trên biểu đồ
         renderer1.setDefaultItemLabelGenerator(new StandardCategoryItemLabelGenerator("{2}", NumberFormat.getNumberInstance()));
         renderer1.setDefaultPositiveItemLabelPosition(new ItemLabelPosition( 
              ItemLabelAnchor.CENTER, TextAnchor.BASELINE_RIGHT, TextAnchor.BASELINE_RIGHT, 
@@ -210,6 +204,7 @@ public class PanelTimTheoURL extends javax.swing.JPanel {
         
         customChart(linechart); 
         ChartPanel lineChartPanel = new ChartPanel(linechart);
+        
         pnlChart.removeAll();
         pnlChart.add(lineChartPanel, BorderLayout.CENTER);
         pnlChart.validate();
@@ -265,8 +260,6 @@ public class PanelTimTheoURL extends javax.swing.JPanel {
             
             txtMota.setText((String) recvProduct.get("description"));
     }
-    
-    
     
     public void removeComponent(JPanel panel) {
         panel.removeAll();
@@ -405,8 +398,7 @@ public class PanelTimTheoURL extends javax.swing.JPanel {
         }
     }
     
-    public JComboBox myComboBox(JComboBox box, Color color)
-    {   
+    public JComboBox myComboBox(JComboBox box, Color color) {   
         box.setRenderer(new MyComboBoxRenderer());
         box.setEditor(new MyComboBoxEditor());
         
@@ -436,8 +428,7 @@ public class PanelTimTheoURL extends javax.swing.JPanel {
        return box;
     }
     
-    public void myTextArea()
-    {
+    public void myTextArea() {
         txtTenSP.setWrapStyleWord(true);
         txtTenSP.setLineWrap(true);
         jScrollPane1.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
@@ -865,13 +856,18 @@ public class PanelTimTheoURL extends javax.swing.JPanel {
     }//GEN-LAST:event_btnTimKiemActionPerformed
 
     private void btnXemReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXemReviewActionPerformed
+        if (popUp != null){
+            popUp.dispose();
+            popUp = null;
+        }
+        
         if(this.currentproduct == null) JOptionPane.showMessageDialog(this, "Bạn chưa tìm kiếm sản phẩm", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
         else{
             if ((this.reviewsList != null && this.reviewsList.size() > 0))
             {   
                 Float rating = Float.valueOf(((Double) this.currentproduct.get("rating_average")).floatValue());
                 if (this.popUp == null) {
-                    this.popUp = new ReviewGUI(rating, this.reviewsList, this.timelinesList);
+                    this.popUp = new ReviewGUI((String) this.currentproduct.get("name"), rating, this.reviewsList, this.timelinesList);
                 } else {
                     this.popUp.toFront();
                     this.popUp.center();
@@ -906,6 +902,7 @@ public class PanelTimTheoURL extends javax.swing.JPanel {
         } catch (IOException ex) {
             Logger.getLogger(PanelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         disable(btnCPFilter, 2000);
     }//GEN-LAST:event_btnCPFilterActionPerformed
 
