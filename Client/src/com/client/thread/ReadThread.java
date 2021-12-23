@@ -123,14 +123,16 @@ public class ReadThread implements Runnable {
                            
                             if (recvProductHistories != null)
                                 client.getProduct(Long.valueOf((int) recvProductHistories.get(0).get("productId")));
-                            client.updateLineChartURL(recvProductHistories, "");
+                            //client.updateLineChartURL(recvProductHistories, "");
+                            client.updateLineChart(recvProductHistories, "");
                             break;
                             
                         case PRODUCT_HISTORIES_BY_PRODUCT_ID:
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
                             List<LinkedHashMap<String, Object>> recvProductHistoriesById = (List<LinkedHashMap<String, Object>>) responseContent.get("productHistories");
                             
-                            client.updateLineChartAdvance(recvProductHistoriesById, "");
+                            //client.updateLineChartAdvance(recvProductHistoriesById, "");
+                            client.updateLineChart(recvProductHistoriesById, "");
                             break;
 
                         case CONFIGURABLE_PRODUCT_HISTORIES:
@@ -138,8 +140,9 @@ public class ReadThread implements Runnable {
 
                             List<LinkedHashMap<String, Object>> recvCPHistories = (List<LinkedHashMap<String, Object>>) responseContent.get("configurableProductHistories");
                            
-                            client.updateLineChartURL(recvCPHistories, "");
-                            client.updateLineChartAdvance(recvCPHistories, "");
+//                            client.updateLineChartURL(recvCPHistories, "");
+//                            client.updateLineChartAdvance(recvCPHistories, "");
+                            client.updateLineChart(recvCPHistories, "");
                             break;   
 
                         case REVIEWS:

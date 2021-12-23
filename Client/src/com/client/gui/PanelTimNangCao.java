@@ -1305,7 +1305,6 @@ public class PanelTimNangCao extends javax.swing.JPanel {
             int year = yearChooser.getYear();
             main.getProductHistoriesById(id, month, year);
             main.getProduct(id);
-            main.pnlAcvancedCallClient();
             main.getConfigurableProducts(id);
             found = true;
         } catch (IOException ex) {

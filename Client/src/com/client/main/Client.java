@@ -75,7 +75,7 @@ public class Client extends javax.swing.JFrame {
     ImageIcon iconHideMenu = new ImageIcon(getClass().getResource("/com/client/img/hide_menu_icon.png"));
     ImageIcon iconRestoreDown = new ImageIcon(getClass().getResource("/com/client/img/restore_down.png"));
     
-    public boolean isPnlAdvancedCall = false;
+    public boolean isPnlUrl = false;
 
     PanelTimTheoURL pnlURL;
     PanelTimNangCao pnlAdvanced;
@@ -112,27 +112,38 @@ public class Client extends javax.swing.JFrame {
         });
     }
     
-    public void pnlAcvancedCallClient()
+    public void usePnlUrl()
     {
-        this.isPnlAdvancedCall = true;
+        this.isPnlUrl = true;
+    }
+    
+    public void usePnlAdvanced()
+    {
+        this.isPnlUrl = false;
     }
 
     public void setReviewsList(ArrayList<LinkedHashMap<String, Object>> reviewsList) {
-        this.pnlURL.setReviewsList(reviewsList);
-        this.pnlAdvanced.setReviewsList(reviewsList);
+        if(isPnlUrl)
+            this.pnlURL.setReviewsList(reviewsList);
+        if(!isPnlUrl)
+            this.pnlAdvanced.setReviewsList(reviewsList);
     }
 
     public void setTimelineList(ArrayList<LinkedHashMap<String, Object>> timelinesList) {
-        this.pnlURL.setTimelinesList(timelinesList);
-        this.pnlAdvanced.setTimelinesList(timelinesList);
+        if(isPnlUrl)
+            this.pnlURL.setTimelinesList(timelinesList);
+        if(!isPnlUrl)
+            this.pnlAdvanced.setTimelinesList(timelinesList);
     }
 
     public void setCurrentProduct(LinkedHashMap<String, Object> product) {
-        this.pnlURL.setCurrentProduct(product);
-        this.pnlAdvanced.setCurrentProduct(product);
+        if(isPnlUrl)
+            this.pnlURL.setCurrentProduct(product);
+        if(!isPnlUrl)
+            this.pnlAdvanced.setCurrentProduct(product);
     }
 
-    public void updateLineChartURL(List<LinkedHashMap<String, Object>> productHistories, String productName) {
+    public void updateLineChart(List<LinkedHashMap<String, Object>> productHistories, String productName) {
         if (productHistories == null || productHistories.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Không có dữ liệu lịch sử giá", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             return;
@@ -149,39 +160,39 @@ public class Client extends javax.swing.JFrame {
             year = (int) dateObj.get("year");
             prices.add((int) history.get("price"));
         }
-        this.pnlURL.showLineChart(productName, month, year, dates, prices);
+        if(isPnlUrl)
+            this.pnlURL.showLineChart(productName, month, year, dates, prices);
+        if(!isPnlUrl)
+            this.pnlAdvanced.showLineChart(productName, month, year, dates, prices);
     }
 
     public void setOption(LinkedHashMap<String, Object> name, List<LinkedHashMap<String, Object>> option) throws IOException {
-        if(isPnlAdvancedCall)
+        if(!isPnlUrl)
             this.pnlAdvanced.setConfigurableProducts(name, option);
-        else
-        {
+        if(isPnlUrl)
             this.pnlURL.setConfigurableProducts(name, option);
-            this.isPnlAdvancedCall = false;
-        }
         
     }
 
-    public void updateLineChartAdvance(List<LinkedHashMap<String, Object>> productHistories, String productName) {
-        if (productHistories == null || productHistories.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Không có dữ liệu lịch sử giá", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-
-        ArrayList<String> dates = new ArrayList<String>();
-        ArrayList<Integer> prices = new ArrayList<Integer>();
-        int month = 1;
-        int year = 2000;
-        for (LinkedHashMap<String, Object> history : productHistories) {
-            LinkedHashMap<String, Object> dateObj = (LinkedHashMap<String, Object>) history.get("date");
-            dates.add(String.valueOf(dateObj.get("dayOfMonth")));
-            month = (int) dateObj.get("monthValue");
-            year = (int) dateObj.get("year");
-            prices.add((int) history.get("price"));
-        }
-        this.pnlAdvanced.showLineChart(productName, month, year, dates, prices);
-    }
+//    public void updateLineChartAdvance(List<LinkedHashMap<String, Object>> productHistories, String productName) {
+//        if (productHistories == null || productHistories.isEmpty()) {
+//            JOptionPane.showMessageDialog(this, "Không có dữ liệu lịch sử giá", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+//            return;
+//        }
+//
+//        ArrayList<String> dates = new ArrayList<String>();
+//        ArrayList<Integer> prices = new ArrayList<Integer>();
+//        int month = 1;
+//        int year = 2000;
+//        for (LinkedHashMap<String, Object> history : productHistories) {
+//            LinkedHashMap<String, Object> dateObj = (LinkedHashMap<String, Object>) history.get("date");
+//            dates.add(String.valueOf(dateObj.get("dayOfMonth")));
+//            month = (int) dateObj.get("monthValue");
+//            year = (int) dateObj.get("year");
+//            prices.add((int) history.get("price"));
+//        }
+//        this.pnlAdvanced.showLineChart(productName, month, year, dates, prices);
+//    }
 
     public void updateBrands(List<LinkedHashMap<String, Object>> recvBrands) {
         Map<Long, String> brands = new HashMap<>();
@@ -189,8 +200,8 @@ public class Client extends javax.swing.JFrame {
         for (LinkedHashMap<String, Object> brand : recvBrands) {
             brands.put(Long.valueOf((Integer) brand.get("id")), brand.get("name").toString());
         }
-
-        pnlAdvanced.updateBrandCheckbox(brands);
+        if(!isPnlUrl)
+            pnlAdvanced.updateBrandCheckbox(brands);
     }
 
     public void updateComboboxCategory(List<LinkedHashMap<String, Object>> categories) {
@@ -200,12 +211,13 @@ public class Client extends javax.swing.JFrame {
             name.add(String.valueOf(category.get("name")));
             idCate.add((Integer) (category.get("id")));
         }
-        
-        this.pnlAdvanced.listNameCategory(name, idCate);
+        if(!isPnlUrl)
+            this.pnlAdvanced.listNameCategory(name, idCate);
     }
 
     public void updateProductInfoURL(LinkedHashMap<String, Object> recvProduct) {
-        this.pnlURL.updateProductInfo(recvProduct);
+        if(isPnlUrl)
+            this.pnlURL.updateProductInfo(recvProduct);
     }
 
     public void run() {
@@ -252,7 +264,8 @@ public class Client extends javax.swing.JFrame {
         
     
         try {
-            pnlAdvanced.setTable(products);
+            if(!isPnlUrl)
+                pnlAdvanced.setTable(products);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Thao tác quá nhanh, hệ thống không kịp cập nhật", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -389,6 +402,7 @@ public class Client extends javax.swing.JFrame {
         
         pnlTabContent.add("url", pnlURL1);
         pnlTabContent.add("advanced", pnlAdvancedURL1);
+        usePnlUrl();
         switchCard("url");
         setTabSelection(btnUrlTab);
     }
@@ -632,11 +646,13 @@ public class Client extends javax.swing.JFrame {
 
     private void btnUrlTabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUrlTabActionPerformed
         // TODO add your handling code here:
+        usePnlUrl();
         switchCard("url");
         setTabSelection(btnUrlTab);
     }//GEN-LAST:event_btnUrlTabActionPerformed
 
     private void btnAdvancedTabActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdvancedTabActionPerformed
+        usePnlAdvanced();
         switchCard("advanced");
         setTabSelection(btnAdvancedTab);
         try {
