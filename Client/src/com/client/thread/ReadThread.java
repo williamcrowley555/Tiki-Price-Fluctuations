@@ -81,12 +81,10 @@ public class ReadThread implements Runnable {
                         case PRODUCT_INFO:
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
 
-                            //System.out.println(responseContent.get("product"));
                             LinkedHashMap<String, Object> recvProduct;
                             recvProduct = (LinkedHashMap<String, Object>) responseContent.get("product");
                             client.updateProductInfoURL(recvProduct);
-                            this.productName = (String) recvProduct.get("name");
-                            System.out.println("Client receive: " + recvProduct);
+                            
                             client.setCurrentProduct(recvProduct);
                             
                             this.productId = Long.valueOf((int)recvProduct.get("id"));
@@ -107,18 +105,15 @@ public class ReadThread implements Runnable {
                         case CONFIGURABLE_PRODUCTS:
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
                             List<LinkedHashMap<String, Object>> recvCPs = (List<LinkedHashMap<String, Object>>) responseContent.get("configurableProducts");
-                            System.out.println("Client receive: ");
-                            //recvCPs.forEach(System.out::println);
+                            
                             configurableProduct = (List<LinkedHashMap<String, Object>>) responseContent.get("configurableProducts");
                             client.getConfigurableOptionById(this.productId);
-                            //onfigurableProduct.forEach(System.out::println);
                             break;
                         
                         case CONFIGURABLE_OPTION_BY_PRODUCT_ID:
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
                             LinkedHashMap<String, Object> recvConfigurableOption = (LinkedHashMap<String, Object>) responseContent.get("configurableOptionById");
-                            System.out.println("Client receive: ");
-                            //System.out.println(recvConfigurableOption);
+                            
                             client.setOption(recvConfigurableOption, configurableProduct);
                             break; 
 
@@ -126,20 +121,14 @@ public class ReadThread implements Runnable {
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
                             List<LinkedHashMap<String, Object>> recvProductHistories = (List<LinkedHashMap<String, Object>>) responseContent.get("productHistories");
                            
-                            //recvProductHistories.forEach(System.out::println);
-                            
-                            System.out.println("Client receive: ");
-                            
                             if (recvProductHistories != null)
-                            client.getProduct(Long.valueOf((int) recvProductHistories.get(0).get("productId")));
+                                client.getProduct(Long.valueOf((int) recvProductHistories.get(0).get("productId")));
                             client.updateLineChartURL(recvProductHistories, "");
                             break;
                             
                         case PRODUCT_HISTORIES_BY_PRODUCT_ID:
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
                             List<LinkedHashMap<String, Object>> recvProductHistoriesById = (List<LinkedHashMap<String, Object>>) responseContent.get("productHistories");
-                            
-                            System.out.println("Client receive: ");
                             
                             client.updateLineChartAdvance(recvProductHistoriesById, "");
                             break;
@@ -148,7 +137,7 @@ public class ReadThread implements Runnable {
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
 
                             List<LinkedHashMap<String, Object>> recvCPHistories = (List<LinkedHashMap<String, Object>>) responseContent.get("configurableProductHistories");
-                            System.out.println("Client receive: ");
+                           
                             client.updateLineChartURL(recvCPHistories, "");
                             client.updateLineChartAdvance(recvCPHistories, "");
                             break;   
@@ -158,8 +147,7 @@ public class ReadThread implements Runnable {
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));                           
                             List<LinkedHashMap<String, Object>> recvReviews = (List<LinkedHashMap<String, Object>>) responseContent.get("reviews");
                            
-                            if (recvReviews != null)
-                            {   
+                            if (recvReviews != null) {   
                                 for (LinkedHashMap<String, Object> review : recvReviews)
                                 {
                                     client.getTimeLineByReviewId(Long.valueOf((int)review.get("id")));
@@ -170,6 +158,7 @@ public class ReadThread implements Runnable {
                             }    
                             
                             break;
+                            
                         case TIMELINE_BY_REVIEWID:
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
                             LinkedHashMap<String, Object> recvTimeline = (LinkedHashMap<String, Object>) responseContent.get("timeline");
@@ -181,32 +170,20 @@ public class ReadThread implements Runnable {
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
 
                             List<LinkedHashMap<String, Object>> recvCategories = (List<LinkedHashMap<String, Object>>) responseContent.get("categories");
-                            System.out.println("Client receive: ");
-                           // recvCategories.forEach(System.out::println);
+                            
                             client.updateComboboxCategory(recvCategories);
                             break;
                             
                         case BRANDS_BY_CATEGORY_ID:
                             responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
-                            if(responseContent.get("brands")!= null)
-                            {
+                            if(responseContent.get("brands")!= null) {
                                 List<LinkedHashMap<String, Object>> recvBrands = (List<LinkedHashMap<String, Object>>) responseContent.get("brands");
                                 client.updateBrands(recvBrands);
-                            } else
-                            {
+                            } else {
                                 client.clearBrandPanel();
                             }
                             break;
 
-//                        case ADVANCE_CATEGORIES:
-//                            responseContent = (Map<String, Object>) decryptContent(client.getSecretKey(), Base64.getDecoder().decode(encryptedContent));
-//
-//                            List<LinkedHashMap<String, Object>> recvCategories = (List<LinkedHashMap<String, Object>>) responseContent.get("advance_category");
-//                            System.out.println("Client receive: ");
-//                           // recvCategories.forEach(System.out::println);
-//                            client.updateComboboxCategory(recvCategories);
-//                            break;
-                            
                         case USER_DISCONNECT:
                             isRunning = false;
                             in.close();

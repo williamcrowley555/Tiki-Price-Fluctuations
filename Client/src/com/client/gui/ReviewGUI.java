@@ -57,10 +57,8 @@ public class ReviewGUI extends javax.swing.JFrame {
         {   
             if (review != null)
             {   
-                System.out.println(review);
                 for(LinkedHashMap<String, Object> timeline : timelineList){
-                    if (timeline != null && review.get("id").equals(timeline.get("reviewId")))
-                    {
+                    if (timeline != null && review.get("id").equals(timeline.get("reviewId"))) {
                         review.put("review_created_date", timeline.get("review_created_date"));
                         review.put("date_used", timeline.get("content"));
                     }
@@ -74,11 +72,12 @@ public class ReviewGUI extends javax.swing.JFrame {
                     (String) review.get("imageUrl"),
                     (String) review.get("fullName")   
                 );
+                
                 reviews.add(reviewComp);
                 reviews.revalidate();
-               
             }
         }
+        
         this.reviewList = reviewList;
 
         lblReviewsCount.setText("Sản phẩm có: " + reviewList.size() + " đánh giá");
@@ -97,10 +96,7 @@ public class ReviewGUI extends javax.swing.JFrame {
         
         reviewScrollPane.getVerticalScrollBar().setUI(new MyScrollBarUI());
         reviewScrollPane.getVerticalScrollBar().setUnitIncrement(16); //scroll speed
-        this.setVisible(true);
-        
-       
-       
+        this.setVisible(true); 
     }
     
     public ArrayList<LinkedHashMap<String, Object>> filterReview(int selectedStar){
@@ -111,6 +107,7 @@ public class ReviewGUI extends javax.swing.JFrame {
                fiteredReviewList.add(review);
            }
        }
+       
        lblReviewsCount.setText("Sản phẩm có: " + fiteredReviewList.size() + " đánh giá");
        return fiteredReviewList;
     }
@@ -187,7 +184,6 @@ public class ReviewGUI extends javax.swing.JFrame {
         label.setBackground(new Color(240,240,240));
         label.setOpaque(true);
     }
-    
     
     public void center()
     {

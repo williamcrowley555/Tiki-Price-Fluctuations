@@ -74,7 +74,6 @@ public class ReviewComponent extends javax.swing.JPanel {
             pnlContent.add(content);
             pnlContent.revalidate();
         } else {
-            System.out.println("run");
             pnlContent.setBorder(new EmptyBorder(1,1,1,1));
         }
        
@@ -96,16 +95,12 @@ public class ReviewComponent extends javax.swing.JPanel {
             Image image = null;
             try {
                 url = new URL(imageUrl);
-                System.out.println(url);
                 image = ImageIO.read(url);
             } catch (MalformedURLException ex) {
                 System.out.println("Malformed URL");
             } catch (IOException iox) {
                 System.out.println("Can not load file");
             }
-            
-            System.out.println(pnlPic.getHeight());
-            System.out.println(pnlPic.getWidth());
             
             //Resize img to fit jpanel
             Image scaledImage = image.getScaledInstance(

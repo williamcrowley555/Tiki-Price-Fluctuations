@@ -101,20 +101,14 @@ public class PanelTimNangCao extends javax.swing.JPanel {
     String selectedOption2;
     String selectedOption3;
     
-    
-    List<String> brandList = new ArrayList<>();
-    List<String> name = new ArrayList<String>();
     List<String> dates = new ArrayList<String>();
     List<String> selectedBrands = new ArrayList<>();
     List<Integer> prices = new ArrayList<Integer>();
     
-    
-    
-    HashMap<Long, String> brandIdAndName;
     LinkedHashMap<String, Object> currentproduct;
     Map<Long, String> currentBrands = new HashMap<>();
     
-    Long categoryId = 2L; //2L là id của Root - toàn bộ danh mục
+    Long selectedCategoryId = null;
     List<LinkedHashMap<String, Object>> products;
     ArrayList<LinkedHashMap<String, Object>> reviewsList;
     ArrayList<LinkedHashMap<String, Object>> timelinesList;
@@ -274,9 +268,7 @@ public class PanelTimNangCao extends javax.swing.JPanel {
         
         for(int i = 1 ; i < name.size()+1; i++) {
              c = new CategoryComboItem(idCate.get(i-1), name.get(i-1));
-             //name.get(i).equals("Root") ? "-- Chọn danh mục --" : name.get(i-1));
              list[i] = c;
-            // System.out.println(c.getId());
         }
          setComboBox(comboboxCategory, list);
     }
@@ -361,7 +353,6 @@ public class PanelTimNangCao extends javax.swing.JPanel {
                         if (e.getStateChange() == ItemEvent.SELECTED)
                         {
                             selectedOption1 = radioButton.getText();
-                            //System.out.println(selectedOption1);
                         } else {
                             selectedOption1 = "";
                         }                 
@@ -375,7 +366,6 @@ public class PanelTimNangCao extends javax.swing.JPanel {
                         if (e.getStateChange() == ItemEvent.SELECTED)
                         {
                             selectedOption2 = radioButton.getText();
-                            //System.out.println(selectedOption2);
                         } else {
                             selectedOption2 = "";
                         }                 
@@ -389,7 +379,6 @@ public class PanelTimNangCao extends javax.swing.JPanel {
                         if (e.getStateChange() == ItemEvent.SELECTED)
                         {
                             selectedOption3 = radioButton.getText();
-                            //System.out.println(selectedOption3);
                         } else {
                             selectedOption3 = "";
                         }                 
@@ -1229,21 +1218,16 @@ public class PanelTimNangCao extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void comboboxCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboboxCategoryActionPerformed
-        CategoryComboItem selectedCategory = (CategoryComboItem)comboboxCategory.getSelectedItem(); 
-        categoryId = Long.valueOf((int)selectedCategory.getId());
+        CategoryComboItem selectedCategory = (CategoryComboItem) comboboxCategory.getSelectedItem(); 
+        selectedCategoryId = Long.valueOf((int) selectedCategory.getId());
         
-        if(categoryId != 2L && categoryId != 0L)  //2 là id của root
-        {
+        if(selectedCategoryId != null) {
             try {
-                main.getBrandsByCategoryId(categoryId);
+                main.getBrandsByCategoryId(selectedCategoryId);
             } catch (IOException ex) {
                 Logger.getLogger(PanelTimNangCao.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else if(categoryId == 2L){
-            System.out.println("Chọn root");
-            clearBrandPanel();
         } else {
-            System.out.println("Chọn tất cả danh mục");
             clearBrandPanel();
         }
     }//GEN-LAST:event_comboboxCategoryActionPerformed
@@ -1252,9 +1236,9 @@ public class PanelTimNangCao extends javax.swing.JPanel {
         String productName = txtSearch.getText().isEmpty() ? null : txtSearch.getText();
         
         CategoryComboItem selectedCategory = (CategoryComboItem)comboboxCategory.getSelectedItem(); 
-        categoryId = Long.valueOf((int)selectedCategory.getId());
-        if(categoryId == 0L)
-            categoryId = null;
+        selectedCategoryId = Long.valueOf((int)selectedCategory.getId());
+        if(selectedCategoryId == 0L)
+            selectedCategoryId = null;
         
         List<Long> brandIds = null;
         if(selectedBrands.size() != 0) {
@@ -1303,7 +1287,7 @@ public class PanelTimNangCao extends javax.swing.JPanel {
         }
 
         try {
-            main.filterProducts(productName, categoryId, brandIds, ratingAverage, minPrice, maxPrice);
+            main.filterProducts(productName, selectedCategoryId, brandIds, ratingAverage, minPrice, maxPrice);
         } catch (IOException ex) {
             Logger.getLogger(PanelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1323,7 +1307,6 @@ public class PanelTimNangCao extends javax.swing.JPanel {
             main.getProduct(id);
             main.pnlAcvancedCallClient();
             main.getConfigurableProducts(id);
-            System.out.println(currentproduct);
             found = true;
         } catch (IOException ex) {
             Logger.getLogger(PanelTimNangCao.class.getName()).log(Level.SEVERE, null, ex);
@@ -1331,11 +1314,7 @@ public class PanelTimNangCao extends javax.swing.JPanel {
     }//GEN-LAST:event_advanceProductTableMouseClicked
 
     private void comboboxCategoryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_comboboxCategoryMouseClicked
-//        try {
-//            main.getConfigurableOptionById(249953L);
-//        } catch (IOException ex) {
-//            Logger.getLogger(panelTimNangCao.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+
     }//GEN-LAST:event_comboboxCategoryMouseClicked
 
     private void monthChooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_monthChooserPropertyChange
@@ -1453,15 +1432,16 @@ public class PanelTimNangCao extends javax.swing.JPanel {
                  pages = products.size() / rowLimit + 1;
             this.currentPages = 1;
         }
+       
        updateTableModel(currentPages, products);
        txtCurrentPage.setText(String.valueOf(currentPages));
        lblPage.setText("/" + pages);
     }//GEN-LAST:event_comboBoxRowLimitActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if(this.currentproduct == null) JOptionPane.showMessageDialog(this, "Bạn chưa tìm kiếm sản phẩm", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
-        else{
-            
+        if(this.currentproduct == null) 
+            JOptionPane.showMessageDialog(this, "Bạn chưa tìm kiếm sản phẩm", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
+        else {
             if ((this.reviewsList != null && this.reviewsList.size() > 0))
             {   
                 Float rating = Float.valueOf(((Double) this.currentproduct.get("rating_average")).floatValue());
@@ -1477,9 +1457,10 @@ public class PanelTimNangCao extends javax.swing.JPanel {
                         popUp = null;
                     }
                 });
-            } else  JOptionPane.showMessageDialog(this, "Bạn chưa tìm kiếm sản phẩm hoặc sản phẩm không có review", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
+            } else  JOptionPane.showMessageDialog(this, "Bạn chưa chọn sản phẩm hoặc sản phẩm hiện chưa có review", "Thông báo", JOptionPane.INFORMATION_MESSAGE); 
         }
-         disable(jButton1,2000);
+         
+        disable(jButton1,2000);
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
