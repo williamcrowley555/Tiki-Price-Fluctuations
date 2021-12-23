@@ -27,7 +27,7 @@ import javax.swing.border.LineBorder;
  *
  * @author Hi
  */
-public class reviewComponent extends javax.swing.JPanel {
+public class ReviewComponent extends javax.swing.JPanel {
     String title;
     float rating;
     String content;
@@ -39,7 +39,7 @@ public class reviewComponent extends javax.swing.JPanel {
      * Creates new form reviewComponent
      */
     
-    public reviewComponent(String title, float rating, String content, String timeUsed, String reviewDate, String imageUrl, String fullName) {
+    public ReviewComponent(String title, float rating, String content, String timeUsed, String reviewDate, String imageUrl, String fullName) {
         
         initComponents();
         

@@ -29,17 +29,17 @@ import javax.swing.JOptionPane;
  *
  * @author Hi
  */
-public class productDetail extends javax.swing.JFrame {
+public class ProductDetail extends javax.swing.JFrame {
 
     /**
      * Creates new form productDetail
      */
-    public productDetail() {
+    public ProductDetail() {
         initComponents();
         CustomWindow();
     }
     
-     public productDetail(LinkedHashMap<String, Object> recvProduct) {
+     public ProductDetail(LinkedHashMap<String, Object> recvProduct) {
         initComponents();
         CustomWindow();
         updateProductInfo(recvProduct);
@@ -154,7 +154,6 @@ public class productDetail extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(787, 360));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(848, 40));
@@ -335,20 +334,21 @@ public class productDetail extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(productDetail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProductDetail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(productDetail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProductDetail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(productDetail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProductDetail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(productDetail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProductDetail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new productDetail().setVisible(true);
+                new ProductDetail().setVisible(true);
             }
         });
     }

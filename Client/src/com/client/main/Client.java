@@ -58,7 +58,7 @@ public class Client extends javax.swing.JFrame {
      * Creates new form Main
      */
     private static String hostname = "localhost";
-    private static int port = 5003;
+    private static int port = 5004;
 
     private Socket socket;
 
@@ -77,8 +77,8 @@ public class Client extends javax.swing.JFrame {
     
     public boolean isPnlAdvancedCall = false;
 
-    panelTimTheoURL pnlURL;
-    panelTimNangCao pnlAdvanced;
+    PanelTimTheoURL pnlURL;
+    PanelTimNangCao pnlAdvanced;
 
     public Client() {
     }
@@ -382,8 +382,8 @@ public class Client extends javax.swing.JFrame {
     }
     
     public void initCardLayout(){
-        panelTimTheoURL pnlURL1 = new panelTimTheoURL(this);
-        panelTimNangCao pnlAdvancedURL1 = new panelTimNangCao(this);
+        PanelTimTheoURL pnlURL1 = new PanelTimTheoURL(this);
+        PanelTimNangCao pnlAdvancedURL1 = new PanelTimNangCao(this);
         
         this.pnlURL = pnlURL1;
         this.pnlAdvanced = pnlAdvancedURL1;

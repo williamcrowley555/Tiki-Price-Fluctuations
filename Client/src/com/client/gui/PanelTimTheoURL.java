@@ -84,8 +84,8 @@ import org.jfree.data.xy.XYSeriesCollection;
  * @author Hi
  */
 
-public class panelTimTheoURL extends javax.swing.JPanel {
-    private reviewGUI popUp = null;
+public class PanelTimTheoURL extends javax.swing.JPanel {
+    private ReviewGUI popUp = null;
     /**
      * Creates new form panelTimTheoURL
      */
@@ -103,7 +103,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
     ArrayList<LinkedHashMap<String, Object>> reviewsList;
     ArrayList<LinkedHashMap<String, Object>> timelinesList;
     ImageIcon unCheckedRadio = new ImageIcon(getClass().getResource("/com/client/img/unchecked_radio.png"));
-    public panelTimTheoURL(Client main) {
+    public PanelTimTheoURL(Client main) {
         initComponents();
         this.main = main;
         showLineChart(productName, month, year, dates, prices);
@@ -398,7 +398,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         try {
             url = new URL(str);
         } catch (MalformedURLException ex) {
-            Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PanelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
             BufferedImage image = ImageIO.read(url);
@@ -859,7 +859,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
             try {
                 main.getProductHistories(searchURL, monthChooser.getMonth()+1, yearChooser.getYear());
             } catch (IOException ex) {
-                Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(PanelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else 
             JOptionPane.showMessageDialog(this, "URL không hợp lệ", "Thông báo", JOptionPane.ERROR_MESSAGE);
@@ -874,7 +874,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
             {   
                 Float rating = Float.valueOf(((Double) this.currentproduct.get("rating_average")).floatValue());
                 if (this.popUp == null) {
-                    this.popUp = new reviewGUI(rating, this.reviewsList, this.timelinesList);
+                    this.popUp = new ReviewGUI(rating, this.reviewsList, this.timelinesList);
                 } else {
                     this.popUp.toFront();
                     this.popUp.center();
@@ -907,7 +907,7 @@ public class panelTimTheoURL extends javax.swing.JPanel {
         try {
             main.getConfigurableProductHistories(Long.valueOf((int) currentproduct.get("id")), selectedOption1, selectedOption2, selectedOption3, monthChooser.getMonth()+1, yearChooser.getYear());
         } catch (IOException ex) {
-            Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PanelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
         }
         disable(btnCPFilter, 2000);
     }//GEN-LAST:event_btnCPFilterActionPerformed

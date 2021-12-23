@@ -2,7 +2,7 @@ package com.client.thread;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.client.enums.MessageType;
-import com.client.gui.panelTimNangCao;
+import com.client.gui.PanelTimNangCao;
 import com.client.main.Client;
 import com.client.model.Message;
 import com.client.util.AESUtil;
@@ -36,7 +36,7 @@ public class ReadThread implements Runnable {
     private Long productId;
     private List<LinkedHashMap<String, Object>> timelines;
     private List<LinkedHashMap<String, Object>> configurableProduct;
-    public panelTimNangCao panelAdvance = new panelTimNangCao(client);
+    public PanelTimNangCao panelAdvance = new PanelTimNangCao(client);
 
     public ReadThread(Client client, Socket socket) throws IOException {
         this.socket = socket;

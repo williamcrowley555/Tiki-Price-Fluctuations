@@ -39,17 +39,17 @@ import javax.swing.border.LineBorder;
  *
  * @author Hi
  */
-public class reviewGUI extends javax.swing.JFrame {
+public class ReviewGUI extends javax.swing.JFrame {
     private String action;
     private ArrayList<LinkedHashMap<String, Object>> reviewList;
-    public reviewGUI() {
+    public ReviewGUI() {
         initComponents();
         this.action = action;
         CustomWindow();
         
         this.setVisible(true);
     }
-    public reviewGUI(Float averageRating,  ArrayList<LinkedHashMap<String, Object>> reviewList, ArrayList<LinkedHashMap<String, Object>> timelineList) {
+    public ReviewGUI(Float averageRating,  ArrayList<LinkedHashMap<String, Object>> reviewList, ArrayList<LinkedHashMap<String, Object>> timelineList) {
         
         initComponents();
         initFilterIcon();
@@ -65,7 +65,7 @@ public class reviewGUI extends javax.swing.JFrame {
                         review.put("date_used", timeline.get("content"));
                     }
                 }
-                reviewComponent reviewComp = new reviewComponent(
+                ReviewComponent reviewComp = new ReviewComponent(
                     (String) review.get("title"), 
                      Float.valueOf((int) review.get("rating")), 
                     (String) review.get("content"), 
@@ -121,7 +121,7 @@ public class reviewGUI extends javax.swing.JFrame {
         {
             if (review != null)
             {
-               reviewComponent reviewComp = new reviewComponent(
+               ReviewComponent reviewComp = new ReviewComponent(
                     (String) review.get("title"), 
                      Float.valueOf((int) review.get("rating")), 
                     (String) review.get("content"), 
@@ -522,14 +522,78 @@ public class reviewGUI extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(reviewGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ReviewGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(reviewGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ReviewGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(reviewGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ReviewGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(reviewGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ReviewGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -598,7 +662,7 @@ public class reviewGUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new reviewGUI().setVisible(true);
+                new ReviewGUI().setVisible(true);
             }
         });
     }

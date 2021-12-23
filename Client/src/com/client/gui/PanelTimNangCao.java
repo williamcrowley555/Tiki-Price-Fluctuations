@@ -87,12 +87,12 @@ import org.jfree.data.category.DefaultCategoryDataset;
  *
  * @author Hi
  */
-public class panelTimNangCao extends javax.swing.JPanel {
+public class PanelTimNangCao extends javax.swing.JPanel {
 
     /**
      * Creates new form panelTimNangCao
      */
-    private reviewGUI popUp = null;
+    private ReviewGUI popUp = null;
     
     String json;
     String searchData;
@@ -128,7 +128,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
     int year = 2021;
     
     Client main;
-    productDetail popup;
+    ProductDetail popup;
     
     int rowLimit = 5, pages = 0, currentPages = 0;
     String[] colNames = {
@@ -152,7 +152,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         }.execute();
     }
     
-    public panelTimNangCao(Client main) {
+    public PanelTimNangCao(Client main) {
        
         initComponents();
         this.main = main;
@@ -642,7 +642,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         pnlSearch = new javax.swing.JPanel();
         lblTitleTenSanPham = new javax.swing.JLabel();
         txtSearch = new javax.swing.JTextField();
-        comboboxCategory = new javax.swing.JComboBox<CategoryComboItem>();
+        comboboxCategory = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         pnlFilter = new javax.swing.JPanel();
         pnlCategory = new javax.swing.JPanel();
@@ -677,7 +677,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         lblPage = new javax.swing.JLabel();
         btnNext = new javax.swing.JButton();
         btnLast = new javax.swing.JButton();
-        comboBoxRowLimit = new javax.swing.JComboBox<String>();
+        comboBoxRowLimit = new javax.swing.JComboBox<>();
         lblPage1 = new javax.swing.JLabel();
         txtCurrentPage = new javax.swing.JTextField();
         pnlTableMid = new javax.swing.JPanel();
@@ -1036,7 +1036,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         });
 
         comboBoxRowLimit.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        comboBoxRowLimit.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "10", "20", "50", "100" }));
+        comboBoxRowLimit.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "10", "20", "50", "100" }));
         comboBoxRowLimit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboBoxRowLimitActionPerformed(evt);
@@ -1237,7 +1237,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
             try {
                 main.getBrandsByCategoryId(categoryId);
             } catch (IOException ex) {
-                Logger.getLogger(panelTimNangCao.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(PanelTimNangCao.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if(categoryId == 2L){
             System.out.println("Chọn root");
@@ -1305,7 +1305,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         try {
             main.filterProducts(productName, categoryId, brandIds, ratingAverage, minPrice, maxPrice);
         } catch (IOException ex) {
-            Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PanelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         disable(jButton2,2000);
@@ -1326,7 +1326,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
             System.out.println(currentproduct);
             found = true;
         } catch (IOException ex) {
-            Logger.getLogger(panelTimNangCao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PanelTimNangCao.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_advanceProductTableMouseClicked
 
@@ -1346,7 +1346,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
                 int year = yearChooser.getYear();
                 main.getProductHistoriesById(selectedProductId, month, year);
             } catch (IOException ex) {
-                Logger.getLogger(panelTimNangCao.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(PanelTimNangCao.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if (found)
             JOptionPane.showMessageDialog(this, "Vui lòng chọn một sản phẩm", "Thông báo", JOptionPane.ERROR_MESSAGE);
@@ -1374,7 +1374,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         if (this.popup == null) {
             if (currentproduct != null)
             {
-                popup = new productDetail(currentproduct);
+                popup = new ProductDetail(currentproduct);
                 popup.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(null, "Dữ liệu đang tải, vui lòng chờ một lát và thử lại", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
@@ -1399,7 +1399,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
         try {
             main.getConfigurableProductHistories(Long.valueOf((int) currentproduct.get("id")), selectedOption1, selectedOption2, selectedOption3, monthChooser.getMonth()+1, yearChooser.getYear());
         } catch (IOException ex) {
-            Logger.getLogger(panelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PanelTimTheoURL.class.getName()).log(Level.SEVERE, null, ex);
         }
          disable(btnCPFilter,2000);
     }//GEN-LAST:event_btnCPFilterActionPerformed
@@ -1466,7 +1466,7 @@ public class panelTimNangCao extends javax.swing.JPanel {
             {   
                 Float rating = Float.valueOf(((Double) this.currentproduct.get("rating_average")).floatValue());
                 if (this.popUp == null) {
-                    this.popUp = new reviewGUI(rating, this.reviewsList, this.timelinesList);
+                    this.popUp = new ReviewGUI(rating, this.reviewsList, this.timelinesList);
                 } else {
                     this.popUp.toFront();
                     this.popUp.center();
