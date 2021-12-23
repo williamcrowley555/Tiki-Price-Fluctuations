@@ -98,7 +98,7 @@ public class TikiAPI {
 
             for (ProductDTO product : products) {
                 String url = urlPrefix + product.getId() + urlPostfix;
-                String json = JSON.get(url + product.getId());
+                String json = JSON.get(url);
                 System.out.println(product.getId());
                 if (json == null || json.isEmpty())
                     System.out.println("Product ID: " + product.getId() + " has empty JSON: " + json);
@@ -200,6 +200,7 @@ public class TikiAPI {
             String content = matcher.replaceAll("");
             content = content.replaceAll("\\xF0\\x9D\\x99\\xBA\\xE1\\xBA...","");
             review.setContent(content);
+            System.out.println(review);
             try {
                 if (reviewBLL.findById(review.getId()) == null) {
                     if (productBLL.findById(review.getProductId()) != null) {
@@ -209,12 +210,7 @@ public class TikiAPI {
                         System.out.println("Không tìm thấy product_id = " + review.getProductId() + " để lưu review");
                 } else {
                     ReviewDTO oldReview = reviewBLL.findById(review.getId());
-                    if (review.getCommentCount().compareTo(oldReview.getCommentCount()) != 0
-                            || review.getStatus().compareTo(oldReview.getStatus()) != 0
-                            || (review.getImageUrl() == null ? "" : review.getImageUrl()).compareTo(oldReview.getImageUrl() == null ? "" : oldReview.getImageUrl()) != 0
-                            || review.getRating() != oldReview.getRating()
-                            || review.getTitle().compareTo(oldReview.getTitle()) != 0) {
-                        System.out.println(review);
+                    if (!review.equals(oldReview)) {
                         reviewBLL.update(review);
                         System.out.println("Update thành công review_id = " + review.getId());
                     }
