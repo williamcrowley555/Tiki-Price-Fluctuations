@@ -29,11 +29,7 @@ public class ConfigurableProductHistoryBLL implements IConfigurableProductHistor
 
     @Override
     public List<ConfigurableProductHistoryDTO> findByProductId(Long productId, int month, int year) {
-        List<ConfigurableProductHistoryDTO> cps = cpHistoryDAL.findByProductId(productId, month, year);
-
-        if (cps!= null && cps.isEmpty())
-            return List.of(findLatestByProductIdBefore(productId, month, year));
-        return cps;
+        return cpHistoryDAL.findByProductId(productId, month, year);
     }
 
     @Override
@@ -42,8 +38,8 @@ public class ConfigurableProductHistoryBLL implements IConfigurableProductHistor
     }
 
     @Override
-    public ConfigurableProductHistoryDTO findLatestByProductIdBefore(Long productId, int month, int year) {
-        return cpHistoryDAL.findLatestByProductIdBefore(productId, month, year);
+    public ConfigurableProductHistoryDTO findLatestByCPIdBefore(Long cpId, int month, int year) {
+        return cpHistoryDAL.findLatestByCPIdBefore(cpId, month, year);
     }
 
     @Override
@@ -52,8 +48,15 @@ public class ConfigurableProductHistoryBLL implements IConfigurableProductHistor
 
         if (cp == null)
             return null;
-        else
-            return findByProductIdAndConfigurableProductId(productId, cp.getChildId(), month, year);
+        else {
+            List<ConfigurableProductHistoryDTO> cpHistories = findByProductIdAndConfigurableProductId(productId, cp.getChildId(), month, year);
+            if (cpHistories != null && cpHistories.isEmpty()) {
+                ConfigurableProductHistoryDTO latestCPHistory = findLatestByCPIdBefore(cp.getChildId(), month, year);
+                return latestCPHistory == null ? null : List.of(latestCPHistory);
+            }
+
+            return cpHistories;
+        }
     }
 
     @Override
