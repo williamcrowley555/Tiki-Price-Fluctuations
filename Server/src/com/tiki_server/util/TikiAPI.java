@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 import com.tiki_server.bll.*;
 import com.tiki_server.bll.impl.*;
 import com.tiki_server.dto.*;
@@ -45,6 +46,8 @@ public class TikiAPI {
                     ProductDTO newProduct = mapper.readValue(json, ProductDTO.class);
                     String descriptionText = Jsoup.parse(newProduct.getDescription()).text();
                     newProduct.setDescription(descriptionText);
+                    ProductDTO oldProduct = productBLL.findById(newProduct.getId());
+                    if (oldProduct == null) continue;
 
 //                    Update Brand
                     TikiAPI.updateBrand(rootNode, newProduct);
@@ -59,7 +62,7 @@ public class TikiAPI {
                     TikiAPI.updateConfigurableProduct(rootNode, newProduct);
 
 //                    Update Product & its history
-                    ProductDTO oldProduct = productBLL.findById(newProduct.getId());
+                    //ProductDTO oldProduct = productBLL.findById(newProduct.getId());
                     if (!oldProduct.equals(newProduct)) {
                         productBLL.update(newProduct);
 
@@ -148,12 +151,24 @@ public class TikiAPI {
 
         ConfigurableOptionDTO oldCO = configurableOptionBLL.findByProductId(product.getId());
         ConfigurableOptionDTO newCO = mapper.readValue(rootNode.toString(), ConfigurableOptionDTO.class);
-
+        System.out.println(oldCO);
+        System.out.println("----------------");
+        System.out.println(newCO);
         if (oldCO != null) {
             if (!oldCO.equals(newCO))
-                configurableOptionBLL.update(newCO);
+            {
+                if(product.getId().equals(newCO.getProductId()))
+                    configurableOptionBLL.update(newCO);
+            }
         } else {
-            configurableOptionBLL.save(newCO);
+            if(product.getId().equals(newCO.getProductId()))
+            {
+                System.out.println("xxxxxxxx");
+                System.out.println(product.getId());
+                System.out.println(newCO.getProductId());
+                configurableOptionBLL.save(newCO);
+            }
+
         }
     }
 
