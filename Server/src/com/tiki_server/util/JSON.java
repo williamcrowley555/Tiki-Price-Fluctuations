@@ -7,7 +7,7 @@ import org.jsoup.Jsoup;
 import java.io.IOException;
 
 public class JSON {
-    public static String get(String url) {
+    public static String get(String url) throws InterruptedException {
         String json = null;
 
         try {
@@ -22,7 +22,8 @@ public class JSON {
             if (node.has("status"))
                 return null;
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Sleep for 10s");
+            Thread.sleep(10000);
             return null;
         }
 

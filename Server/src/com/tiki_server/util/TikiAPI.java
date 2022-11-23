@@ -24,7 +24,7 @@ public class TikiAPI {
     public TikiAPI() throws IOException {
     }
 
-    public static void updateProducts() throws IOException {
+    public static void updateProducts() throws IOException, InterruptedException {
         String url = "https://tiki.vn/api/v2/products/";
 
         IProductBLL productBLL = new ProductBLL();
@@ -37,6 +37,7 @@ public class TikiAPI {
 
             for (ProductDTO product : products) {
                 String json = JSON.get(url + product.getId());
+
                 System.out.println(product.getId());
                 if (json == null || json.isEmpty())
                     System.out.println("Product ID: " + product.getId() + " has empty JSON: " + json);
@@ -46,6 +47,7 @@ public class TikiAPI {
                     ProductDTO newProduct = mapper.readValue(json, ProductDTO.class);
                     String descriptionText = Jsoup.parse(newProduct.getDescription()).text();
                     newProduct.setDescription(descriptionText);
+
                     ProductDTO oldProduct = productBLL.findById(newProduct.getId());
                     if (oldProduct == null) continue;
 
@@ -81,6 +83,7 @@ public class TikiAPI {
                             history.setProductId(newProduct.getId());
 
                             historyBLL.save(history);
+                            System.out.println("Saved price");
                         }
                     }
                 }
@@ -88,7 +91,7 @@ public class TikiAPI {
         }
     }
 
-    public static void updateReviews() throws IOException, ParseException {
+    public static void updateReviews() throws IOException, ParseException, InterruptedException {
         String urlPrefix = "https://tiki.vn/api/v2/reviews?product_id=";
         String urlPostfix = "&include=comments&page=1&limit=-1";
 
@@ -151,9 +154,7 @@ public class TikiAPI {
 
         ConfigurableOptionDTO oldCO = configurableOptionBLL.findByProductId(product.getId());
         ConfigurableOptionDTO newCO = mapper.readValue(rootNode.toString(), ConfigurableOptionDTO.class);
-        System.out.println(oldCO);
-        System.out.println("----------------");
-        System.out.println(newCO);
+
         if (oldCO != null) {
             if (!oldCO.equals(newCO))
             {
@@ -325,6 +326,8 @@ public class TikiAPI {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
